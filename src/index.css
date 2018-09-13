@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+.fullPage {
+	height : 95vh;
+	overflow: auto;
+}
+.header {
+	height: 5vh;
+}
+.hidden {
+	display: none;
+}

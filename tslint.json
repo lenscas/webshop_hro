@@ -1,0 +1,27 @@
+{
+	"extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+	"rules" : {
+		"no-console": {
+			"severity": "warning",
+			"options": [
+				"debug",
+				"info",
+				"log",
+				"time",
+				"timeEnd",
+				"trace"
+			]
+		},
+		"interface-over-type-literal": false,
+		"object-literal-sort-keys": false,
+		"ordered-imports": false,
+		"member-access": false,
+		"comment-format": false
+	},
+	"linterOptions": {
+		"exclude": [
+			"config/**/*.js",
+			"node_modules/**/*.ts"
+		]
+	}
+}
