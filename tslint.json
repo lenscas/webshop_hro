@@ -16,7 +16,8 @@
 		"object-literal-sort-keys": false,
 		"ordered-imports": false,
 		"member-access": false,
-		"comment-format": false
+		"comment-format": false,
+		"only-arrow-functions": false
 	},
 	"linterOptions": {
 		"exclude": [

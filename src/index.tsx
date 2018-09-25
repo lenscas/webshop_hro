@@ -25,6 +25,9 @@ class App extends React.Component<{}, appState>{
 	}
 	public render() {
 		const api = new API();
+		api.setOnAll(data=>this.setState((st=>({...st,userId:data.userId}))))
+		api.setOnError(data=>console.error(data))
+		api.doRequest("api/main")
 		const APIS = {
 			setHeader: (header: string) => console.log(header),
 			req: api,
