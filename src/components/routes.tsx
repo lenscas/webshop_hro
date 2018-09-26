@@ -1,12 +1,14 @@
 import * as React from "react";
-import { Route } from "react-router-dom";
-import Welcome from "../pages/welcome";
+import { Route, Switch } from "react-router-dom";
 import BasicComponent from "../types/basicComponent";
 export default class Routes extends BasicComponent {
 	public render(){
 		return (
 			<div>
-				<Route exact={true} path="/" ><Welcome APIS={this.props.APIS}/></Route>
+				<Switch>
+					<Route exact={true} path="/" ><h1>Test</h1></Route>
+				</Switch>
+
 			</div>
 		)
 	}
