@@ -1,7 +1,5 @@
 import {apiUrl} from "../config";
 export type BaseAPIReturn = {
-	codes : any
-	code: number
 	userId? : string
 }
 
@@ -90,14 +88,7 @@ export class API {
 		return json;
 	}
 	private convert<T,T2 = T>(json:APIReturn<T>, converter : (data : APIReturn<T>)=>T2){
-		if(json.code === json.codes.NO_ERROR){
-			return converter(json)
-		} else {
-			return null;
-		}
+		return converter(json)
 	}
-
-
-
 }
 
