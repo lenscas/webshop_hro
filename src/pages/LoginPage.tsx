@@ -1,31 +1,23 @@
 import * as React from "react";
 import BasicComponent from "../types/basicComponent";
 import Form, { InputField, FormData } from "../components/form";
-
-type submit = {
-    test: string
-}
+import {login, credentials} from "../services/users";
 
 export default class Login extends BasicComponent {
-    onSubmit(data: FormData<submit>) {
-        // tslint:disable-next-line:no-console
-        console.log(data.values)
-        // tslint:disable-next-line:no-console
-        console.log(data.event)
-        // tslint:disable-next-line:no-console
-        console.log("Did submit")
+    onSubmit(data: FormData<credentials>) {
+       login(data.values,this.props.APIS.req)
     }
     render() {
         const fields: Array<InputField<string> | InputField<number>> = [
             {
-                name: "E-mail",
+                name: "email",
                 label: "E-mail",
                 innerLabel: "Name@email.com",
                 id: "e-mail",
                 type: "email"
             },
             {
-                name: "Password",
+                name: "password",
                 label: "Password",
                 innerLabel: "C0mp1exXP@$$",
                 id: "password-checker",
@@ -38,7 +30,7 @@ export default class Login extends BasicComponent {
                 type: "button"
             }
         ]
-
-        return <Form<submit> onSubmit={this.onSubmit} inputs={fields}/>
+        const submit = (data : FormData<credentials>)=>this.onSubmit(data)
+        return <Form<credentials> onSubmit={submit} inputs={fields}/>
 	}
 }
