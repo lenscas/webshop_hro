@@ -28,7 +28,6 @@ class App extends React.Component<{}, appState>{
 		api.setOnAll(data=>this.setState((st=>({...st,userId:data.userId}))))
 		// tslint:disable-next-line:no-console
 		api.setOnError(data=>console.error(data))
-		api.doRequest("api/main")
 		const APIS = {
 			// tslint:disable-next-line:no-console
 			setHeader: (header: string) => console.log(header),

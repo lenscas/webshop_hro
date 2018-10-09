@@ -3,7 +3,8 @@ import {Col, FormGroup,Label,Input, Button, FormFeedback, Form as BootForm } fro
 
 export type InputField<ValueType> = {
 	name : string,
-	label : string,
+	label? : string,
+	innerLabel? : string,
 	id : string,
 	defaultValue? : ValueType,
 	type? : "number" | "text" | "hidden" | "email" | "password" | "button" | "textarea"
@@ -23,12 +24,12 @@ export type FormValidationToolTip = {
 	isValid : boolean
 	message : string
 }
-type elementInState =  {
+export type elementInState =  {
 	isValid? : boolean
 	message? : string
 }
 
-type FormState<T extends elementInState> = {
+export type FormState<T extends elementInState> = {
 	values : Partial<T>
 }
 export default class Form<FormType extends {}> extends React.Component<FormProps<FormType>,FormState<FormType>> {
@@ -83,7 +84,7 @@ export default class Form<FormType extends {}> extends React.Component<FormProps
 		const message = this.getMessageFromMaybeToolTip(rawResult)
 		return(
 			<FormGroup row={true} key={input.id}>
-				<Label for={input.id} sm={2}>{input.label}</Label>
+				<Label for={input.id} sm={2}>{input.label||""}</Label>
 				<FormFeedback tooltip={true} valid={isValid}><p>{message}</p></FormFeedback>
 				<Col sm={10}>
 					{this.renderInput(input, {message,isValid})}
@@ -96,7 +97,7 @@ export default class Form<FormType extends {}> extends React.Component<FormProps
 		const onChange = this.createOnChange(input)
 		switch(input.type){
 			case "button":
-				inputElement = <Button id={input.id} type="submit" name={input.name} color="success" >{input.label}</Button>
+				inputElement = <Button id={input.id} type="submit" name={input.name} color="success" >{input.innerLabel}</Button>
 			break;
 			default:
 				inputElement = <Input
@@ -106,7 +107,7 @@ export default class Form<FormType extends {}> extends React.Component<FormProps
 					aria-invalid={!tooltip.isValid}
 					type={input.type}
 					onChange={onChange}
-					placeholder={input.label}
+					placeholder={input.innerLabel||input.label}
 					id={input.id }
 					required={!input.isOptional}
 				/>
@@ -125,7 +126,7 @@ export default class Form<FormType extends {}> extends React.Component<FormProps
 				isValid = elInState.isValid || false
 			}
 		} else {
-			isValid = this.basicValidator(undefined,input)
+			isValid = this.basicValidator(this.state.values[input.name], input)
 		}
 		return isValid
 	}
@@ -145,14 +146,17 @@ export default class Form<FormType extends {}> extends React.Component<FormProps
 	render(){
 		const onSubmit = (e : React.FormEvent<HTMLFormElement> )=>{
 			e.preventDefault();
-			const isValid = Object.keys(this.props.inputs).every(key=>this.maybeToolTipToBoolean(this.checkInputValidity(this.props.inputs[key])))
+			const isValid = this.props.inputs.every(input=>input.type === "button"||this.maybeToolTipToBoolean(this.checkInputValidity(input)))
 			if(!isValid){
 				return;
 			}
+			const values : Partial<FormType> = {}
+			Object.keys(this.state.values).forEach(key => values[key] = this.state.values[key].value)
 			const formData : FormData<FormType> = {
-				values : this.state.values as FormType,
+				values : values as FormType,
 				event : e
 			}
+
 			this.props.onSubmit(formData)
 		}
 		return (<BootForm onSubmit={onSubmit}>
