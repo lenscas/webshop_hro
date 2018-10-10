@@ -1,51 +1,43 @@
 import * as React from "react";
+import {register,RegisterUser} from "../services/users";
 import BasicComponent from "../types/basicComponent";
 import Form, {InputField, FormData} from "../components/form";
 
-type submit = {
-	test : string
-}
-
 export default class Register extends BasicComponent {
-	onSubmit(data : FormData<submit>){
-		// tslint:disable-next-line:no-console
-		console.log(data.values)
-		// tslint:disable-next-line:no-console
-		console.log(data.event)
-		// tslint:disable-next-line:no-console
-		console.log("Did submit")
+	onSubmit(data : FormData<RegisterUser>){
+		register(data.values, this.props.APIS.req);
 	}
 	render(){
 		const fields : Array<InputField<string> | InputField<number>>= [
 			{
-				name : "Username",
+				name : "username",
                 label : "Username",
-                innerLabel: "MagicPro20XX",
+                innerLabel: "Username",
                 id : "username",
             },
             {
-				name : "E-mail",
+				name : "email",
                 label : "E-mail",
-                innerLabel: "Billy@coolmail.com",
+                innerLabel: "E-mail@example.com",
                 id : "e-mail",
                 type: "email"
             },
             {
-				name : "Password",
+				name : "password",
                 label : "Password",
-                innerLabel: "C0mp1exXP@$$",
+                innerLabel: "Password",
                 id : "password-checker",
                 type: "password"
             },
             {
-				name : "Repeat password",
+				name : "repeatPassword",
                 label : "Repeat password",
-                innerLabel: "C0mp1exXP@$$",
+                innerLabel: "Repeat password",
                 id : "password",
                 type: "password"
             },
 			{
-				name : "Honorific",
+				name : "approach",
                 label : "Title",
                 innerLabel: "Mr. / Mrs. etc.",
 				id : "honorific"
@@ -57,7 +49,7 @@ export default class Register extends BasicComponent {
 				type : "button"
 			}
 		]
-
-		return <Form<submit> onSubmit={this.onSubmit} inputs={fields}/>
+		const onSubmit =(data :FormData<RegisterUser> )=>this.onSubmit(data)
+		return <Form<RegisterUser> onSubmit={onSubmit} inputs={fields}/>
 	}
 }

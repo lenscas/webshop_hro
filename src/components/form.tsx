@@ -122,13 +122,11 @@ export default class Form<FormType extends {}> extends React.Component<FormProps
 		if(elInState){
 			if(elInState.message){
 				isValid = {message : elInState.message, isValid : elInState.isValid || false}
-				console.log("is message seems to be ",isValid)
 			} else {
 				isValid = elInState.isValid || false
 			}
 		} else {
 			isValid = this.basicValidator(this.state.values[input.name], input)
-			console.log("basicValidator",isValid)
 		}
 		return isValid
 	}
@@ -149,15 +147,16 @@ export default class Form<FormType extends {}> extends React.Component<FormProps
 		const onSubmit = (e : React.FormEvent<HTMLFormElement> )=>{
 			e.preventDefault();
 			const isValid = this.props.inputs.every(input=>input.type === "button"||this.maybeToolTipToBoolean(this.checkInputValidity(input)))
-			console.log(isValid)
-			console.log(Object.keys)
 			if(!isValid){
 				return;
 			}
+			const values : Partial<FormType> = {}
+			Object.keys(this.state.values).forEach(key => values[key] = this.state.values[key].value)
 			const formData : FormData<FormType> = {
-				values : this.state.values as FormType,
+				values : values as FormType,
 				event : e
 			}
+
 			this.props.onSubmit(formData)
 		}
 		return (<BootForm onSubmit={onSubmit}>

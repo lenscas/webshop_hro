@@ -3,6 +3,8 @@ import { Route, Switch } from "react-router-dom";
 import BasicComponent from "../types/basicComponent";
 import Register from "../pages/Register";
 import ListTest from "../pages/ListTest";
+import Login from "../pages/LoginPage";
+
 export default class Routes extends BasicComponent {
 	public render(){
 		return (
@@ -11,6 +13,7 @@ export default class Routes extends BasicComponent {
 					<Route exact={true} path="/" ><h1>Test</h1></Route>
 					<Route exact={true} path="/Register"><Register APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/ListTest"><ListTest APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/Login"><Login APIS={this.props.APIS}/></Route>
 				</Switch>
 
 			</div>
