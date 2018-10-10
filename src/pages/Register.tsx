@@ -18,7 +18,7 @@ export default class Register extends BasicComponent {
             {
 				name : "email",
                 label : "E-mail",
-                innerLabel: "E-mail@example.com",
+                innerLabel: "name@example.com",
                 id : "e-mail",
                 type: "email"
             },
@@ -39,7 +39,7 @@ export default class Register extends BasicComponent {
 			{
 				name : "approach",
                 label : "Title",
-                innerLabel: "Mr. / Mrs. etc.",
+                innerLabel: "Mr. / Mrs.",
 				id : "honorific"
 			},
 			{

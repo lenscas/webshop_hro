@@ -2,12 +2,16 @@ import * as React from "react";
 import BasicComponent from "../types/basicComponent";
 import Form, { InputField, FormData } from "../components/form";
 import {login, credentials} from "../services/users";
+import { Redirect } from "react-router-dom";
 
 export default class Login extends BasicComponent {
     onSubmit(data: FormData<credentials>) {
        login(data.values,this.props.APIS.req)
     }
     render() {
+        if(this.props.APIS.userId){
+            return <Redirect to="/ListTest"/>
+        }
         const fields: Array<InputField<string> | InputField<number>> = [
             {
                 name: "email",
@@ -19,7 +23,7 @@ export default class Login extends BasicComponent {
             {
                 name: "password",
                 label: "Password",
-                innerLabel: "C0mp1exXP@$$",
+                innerLabel: "Password",
                 id: "password-checker",
                 type: "password"
             },
