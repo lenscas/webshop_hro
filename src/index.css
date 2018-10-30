@@ -50,6 +50,20 @@ body {
 .bg-dark {
   background-color: white !important;
 }
+.cardImage{
+  width: 40%;
+  height: 40%;
+  float:left;
+}
+.details{
+  position: relative;
+  bottom: 44px;
+  float: right;
+}
+.detail{
+  margin: auto;
+  width: 50%;
+}
 nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   float: right !important;
   position: relative;
