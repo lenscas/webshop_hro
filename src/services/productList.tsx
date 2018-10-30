@@ -1,17 +1,21 @@
-//import {API, APIReturn} from "./basics";
+import {API, APIReturn} from "./basics";
 
 export type product = {
     name : string;
-    property : string
+    price : string
 }
 
-export const getList = async (p :product[]) => {
+export const getList = async (api: API) => {
+    const products = await api.doRequest<product[]>("/main/20/1")
+    return products || [];
+    /*
     let productList:product[]; 
     productList = [
-        {name : "Black Lotus", property : "3000.00 EUR"},
-        {name : "Blaze", property : "0.04 EUR"},
-        {name : "Thran Turbine", property : "3.00 EUR"},
-        {name : "Marrow-Gnawer", property : "0.40 EUR"}
+        {name : "Black Lotus", price : "3000.00 EUR"},
+        {name : "Blaze", price : "0.04 EUR"},
+        {name : "Thran Turbine", price : "3.00 EUR"},
+        {name : "Marrow-Gnawer", price : "0.40 EUR"}
     ] 
     return productList;
+    */
 }
