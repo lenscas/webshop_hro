@@ -6,36 +6,54 @@ export type product = {
     name : string;
     property : string
 }
-
+export type renderable = {
+	key : string | number
+	element : string | JSX.Element
+}
 type TableState = {
-	lines : Array<Array<string | JSX.Element>>
+	lines : renderable[][]
 	pageNum : number
 }
-type TableProps<T> = {
-	fetch : (pageNR : number) => Promise<T[]>
-	render : (line : T)=>Array<string | JSX.Element>
-	head : string[]
+type TableProps<rawT, T=rawT> = {
+	fetch : (pageNR : number) => Promise<rawT[]>
+	converter?: (res : rawT[]) => T[]
+	render : (line : T)=>renderable[]
+	head? : string[]
 } & props;
 
-export default class DataTable<T> extends BasicComponent<TableProps<T>,TableState> {
+export default class DataTable<rawT,T=rawT> extends BasicComponent<TableProps<rawT,T>,TableState> {
 	constructor(propsy : TableProps<T>){
 		super(propsy)
 		this.state = {pageNum:1,lines:[]}
 	}
+	conv(rawRes : rawT[]): T[]{
+		if(this.props.converter){
+			return this.props.converter(rawRes)
+		}
+		return rawRes as any[]
+	}
 	async componentDidMount(){
 		const linesRaw = await this.props.fetch(this.state.pageNum)
-		const lines = linesRaw.map(line=>this.props.render(line))
+		const linesRes = this.conv(linesRaw)
+
+		const lines = linesRes.map(
+			line=>this.props.render(line)
+		)
 		this.easySetState({lines})
 	}
 	renderHead(){
-		return this.props.head.map(val=><th key={val}>{val}</th>)
+		if(this.props.head){
+			return this.props.head.map(val=><th key={val}>{val}</th>)
+		}
+		return <></>
+
 	}
 	renderBody(){
 		return this.state.lines.map( (v,k)=><tr key={k}>{this.renderLine(v)}</tr>)
 	}
-	renderLine(line : Array<string | JSX.Element>){
+	renderLine(line : renderable[]){
 		return (
-			line.map(val=><td key={val.toString()}>{val}</td>)
+			line.map(val=><td key={val.key}>{val.element}</td>)
 		)
 	}
 	render(){
