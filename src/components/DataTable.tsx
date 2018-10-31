@@ -8,21 +8,22 @@ export type product = {
 }
 
 type TableState = {
-	lines : string[][]
+	lines : Array<Array<string | JSX.Element>>
+	pageNum : number
 }
 type TableProps<T> = {
-	fetch : (pageNR : product[]) => Promise<T[]>
-	render : (line : T)=>string[]
+	fetch : (pageNR : number) => Promise<T[]>
+	render : (line : T)=>Array<string | JSX.Element>
 	head : string[]
 } & props;
 
 export default class DataTable<T> extends BasicComponent<TableProps<T>,TableState> {
 	constructor(propsy : TableProps<T>){
 		super(propsy)
-		this.state = {lines:[]}
+		this.state = {pageNum:1,lines:[]}
 	}
 	async componentDidMount(){
-		const linesRaw = await this.props.fetch([])
+		const linesRaw = await this.props.fetch(this.state.pageNum)
 		const lines = linesRaw.map(line=>this.props.render(line))
 		this.easySetState({lines})
 	}
@@ -32,9 +33,9 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>,TableStat
 	renderBody(){
 		return this.state.lines.map( (v,k)=><tr key={k}>{this.renderLine(v)}</tr>)
 	}
-	renderLine(line : string[]){
+	renderLine(line : Array<string | JSX.Element>){
 		return (
-			line.map(val=><td key={val}>{val}</td>)
+			line.map(val=><td key={val.toString()}>{val}</td>)
 		)
 	}
 	render(){
