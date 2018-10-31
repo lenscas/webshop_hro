@@ -6,6 +6,7 @@ import ProductList from "../pages/ProductList";
 import Login from "../pages/LoginPage";
 import Home from "src/pages/HomePage";
 import Products from "src/pages/DetailPage";
+import ContactPage from "src/pages/ContactPage";
 
 export default class Routes extends BasicComponent {
 	public render(){
@@ -13,9 +14,10 @@ export default class Routes extends BasicComponent {
 			<div>
 				<Switch>
 					<Route exact={true} path="/" ><Home/></Route>
-					<Route exact={true} path="/Register"><Register APIS={this.props.APIS}/></Route>
-					<Route exact={true} path="/product"><ProductList APIS={this.props.APIS}/></Route>
-					<Route exact={true} path="/Login"><Login APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/register"><Register APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/products"><ProductList APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/login"><Login APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/contact"><ContactPage APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/product/:id"><Products APIS={this.props.APIS}/></Route>
 				</Switch>
 
