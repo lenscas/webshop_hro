@@ -27,6 +27,6 @@ export type product = {
 }
 
 export const getList = async (api: API,pageNum : number) => {
-    const products = await api.doRequest<product[]>(`api/main/20/${ (pageNum * 20) + 1}`,(t : any)=>t)
+    const products = await api.doRequest<product[]>(`api/main/60/${ (pageNum * 60) + 1}`,(t : any)=>t)
     return products || [];
 }

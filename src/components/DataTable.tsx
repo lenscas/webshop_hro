@@ -1,45 +1,40 @@
 import * as React from "react";
-import BasicComponent from "../types/basicComponent";
-import {props} from "../types/BasicProps";
 import Table from "reactstrap/lib/Table";
-export type product = {
-    name : string;
-    property : string
-}
+import LoadSymbol from "./loadSymbol";
+import { defaultTrue } from "src/funcs/easyDefaults";
+import BasicComponent from "src/types/smallComponent";
 export type renderable = {
 	key : string | number
 	element : string | JSX.Element
 }
 type TableState = {
-	lines : renderable[][]
 	pageNum : number
 }
-type TableProps<rawT, T=rawT> = {
-	fetch : (pageNR : number) => Promise<rawT[]>
-	converter?: (res : rawT[]) => T[]
+type TableProps<T> = {
+	fetch : (pageNR : number) => Promise<T[]>
 	render : (line : T)=>renderable[]
 	head? : string[]
-} & props;
+	striped? : boolean
+	hover?: boolean
+}
+export type getDataParams = {
+	pageNum : number
+}
 
-export default class DataTable<rawT,T=rawT> extends BasicComponent<TableProps<rawT,T>,TableState> {
+export default class DataTable<T> extends BasicComponent<TableProps<T>,TableState> {
 	constructor(propsy : TableProps<T>){
 		super(propsy)
-		this.state = {pageNum:1,lines:[]}
+		this.state = {pageNum:1}
+		this.renderTable = this.renderTable.bind(this)
+		this.getData = this.getData.bind(this)
 	}
-	conv(rawRes : rawT[]): T[]{
-		if(this.props.converter){
-			return this.props.converter(rawRes)
-		}
-		return rawRes as any[]
-	}
-	async componentDidMount(){
-		const linesRaw = await this.props.fetch(this.state.pageNum)
-		const linesRes = this.conv(linesRaw)
+	async getData(params : getDataParams){
+		const results = await this.props.fetch(params.pageNum)
 
-		const lines = linesRes.map(
+		const lines = results.map(
 			line=>this.props.render(line)
 		)
-		this.easySetState({lines})
+		return lines
 	}
 	renderHead(){
 		if(this.props.head){
@@ -48,26 +43,39 @@ export default class DataTable<rawT,T=rawT> extends BasicComponent<TableProps<ra
 		return <></>
 
 	}
-	renderBody(){
-		return this.state.lines.map( (v,k)=><tr key={k}>{this.renderLine(v)}</tr>)
+	renderBody(lines){
+		return lines.map( (v,k)=><tr key={k}>{this.renderLine(v)}</tr>)
 	}
 	renderLine(line : renderable[]){
 		return (
 			line.map(val=><td key={val.key}>{val.element}</td>)
 		)
 	}
-	render(){
+	hover(){
+		return defaultTrue(this.props.hover)
+	}
+	striped(){
+		return defaultTrue(this.props.striped)
+	}
+	renderTable(lines : renderable[][]){
 		return (
-			<Table striped={true} hover={true} responsive={true}>
+			<Table striped={this.striped()} hover={this.hover()} responsive={true}>
 				<thead>
 					<tr>
 						{this.renderHead()}
 					</tr>
 				</thead>
 				<tbody>
-					{this.renderBody()}
+					{this.renderBody(lines)}
 				</tbody>
 			</Table>
 		)
+	}
+	render(){
+		return <LoadSymbol<getDataParams,renderable[][]> 
+			params={{pageNum:1}}
+			toRender={this.renderTable}
+			getData={this.getData}
+		/>
 	}
 }

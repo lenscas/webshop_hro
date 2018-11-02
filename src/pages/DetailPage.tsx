@@ -1,7 +1,7 @@
 import * as React from "react";
-import BasicComponent from "src/types/basicComponent";
+import BasicPage from "src/types/basicComponent";
 
-export default class Products extends BasicComponent {
+export default class Products extends BasicPage {
 
     render() {
         return (

@@ -1,12 +1,13 @@
 import * as React from "react";
-import BasicComponent from "../types/basicComponent";
+import BasicPage from "../types/basicComponent";
 import { getList, product } from "../services/productList";
 import DataTable, { renderable } from "../components/DataTable";
 import { Link } from "react-router-dom";
+import { addAsync } from "../funcs/lambdas";
 
 type trippleProducts = [product,product?,product?]
 
-export default class ProductList extends BasicComponent {
+export default class ProductList extends BasicPage {
     makeTriplets(products : product[]){
         const newList : trippleProducts[] = []
         let build : trippleProducts | product[] = []
@@ -39,15 +40,16 @@ export default class ProductList extends BasicComponent {
         }
     }
     render(){
-         const fetch = async (num : number) => await getList(this.props.APIS.req,num)
-         const render = (p : trippleProducts)=>this.makeRenderable(p)
-         const converter = (res : product[])=>this.makeTriplets(res)
+        const fetch = async (num : number) => await getList(this.props.APIS.req,num)
+        const render = (p : trippleProducts)=>this.makeRenderable(p)
+        const converter = (res : product[])=>this.makeTriplets(res)
+        const combined =  addAsync<product[], trippleProducts[]>(fetch,converter)
         return (
-            <DataTable<product,trippleProducts>
-                APIS={this.props.APIS}
-                fetch={fetch}
-                converter={converter}
+            <DataTable<trippleProducts>
+                fetch={combined}
                 render={render}
+                hover={false}
+                striped={false}
             />
         )
 
