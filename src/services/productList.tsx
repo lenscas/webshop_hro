@@ -26,6 +26,16 @@ export type product = {
     color_indicator: null;
 }
 
+export type cartItem = {
+    id:string;
+    name:string;
+    price:string;
+    priceNum:number;
+    count:number;
+    priceTotal:string;
+    priceTotalNum:number;
+}
+
 export const getList = async (api: API,pageNum : number) => {
     const products = await api.doRequest<product[]>(`api/main/20/${ (pageNum * 20) + 1}`,(t : any)=>t)
     return products || [];
@@ -40,3 +50,19 @@ export const getList = async (api: API,pageNum : number) => {
     return productList;
     */
 }
+export const getCart = () => {
+    let cartList:cartItem[]; 
+    cartList = [
+        {id: "1", name : "Black Lotus",price: "", priceNum : 3000.00, count : 6, priceTotal : "", priceTotalNum : 0},
+        {id: "2",name : "Blaze", price: "", priceNum : 0.04, count : 1, priceTotal : "", priceTotalNum : 0},
+        {id: "3",name : "Thran Turbine", price: "", priceNum : 3.00, count : 3, priceTotal : "", priceTotalNum : 0},
+        {id: "4",name : "Marrow-Gnawer", price: "", priceNum : 0.40, count : 99, priceTotal : "", priceTotalNum : 0}
+    ] 
+    let i:any
+    for(i = cartList.length - 1;i>=0;i--) {
+        cartList[i].price = `${cartList[i].priceNum} EUR`
+        cartList[i].priceTotalNum = cartList[i].priceNum * cartList[i].count
+        cartList[i].priceTotal = `${cartList[i].priceTotalNum} EUR`
+    }
+    return cartList;
+};
