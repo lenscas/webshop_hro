@@ -59,10 +59,52 @@ export const getCart = () => {
         {id: "4",name : "Marrow-Gnawer", price: "", priceNum : 0.40, count : 99, priceTotal : "", priceTotalNum : 0}
     ] 
     let i:any
+  
+    // let cutNum:any
+    // let j:any
     for(i = cartList.length - 1;i>=0;i--) {
-        cartList[i].price = `${cartList[i].priceNum} EUR`
+        // cutNum = 0;
+        // while (cartList[i].priceNum > Math.pow(1000 ,(1+cutNum))){
+        //     cutNum += 1;
+        // }
+        cartList[i].price = `${cartList[i].priceNum}`
+
+        cartList[i].price = `${cartList[i].priceNum}`  
+        
+        // for(j = cutNum;j>0;j--) {
+        //     cartList[i].price = cartList[i].price.substring(0, cartList[i].price.length - 3*j) + " " + cartList[i].price.substr(cartList[i].price.length - 3*j ,cartList[i].price.length);
+        // }
+
+        // cutNum = 0
+
+        cartList[i].price += " EUR"  
+         
         cartList[i].priceTotalNum = cartList[i].priceNum * cartList[i].count
-        cartList[i].priceTotal = `${cartList[i].priceTotalNum} EUR`
+
+        // while (cartList[i].priceTotalNum > Math.pow(1000 ,(1+cutNum))){
+        //     cutNum += 1;
+        // }
+
+        cartList[i].priceTotal = `${cartList[i].priceTotalNum}`
+        // for(j = cutNum;j>0;j--) {
+        //     cartList[i].price = cartList[i].price.substring(0, j*3) + " " + cartList[i].price.slice(j*3);
+        // }
+        cartList[i].priceTotal += " EUR"
+
     }
     return cartList;
 };
+
+export const getTotals = () =>{
+    let totalItems:number
+    let totalPrice:number
+    totalItems = 0;
+    totalPrice = 0;
+
+    let i:any
+    for(i = getCart().length - 1;i>=0;i--) {
+        totalItems += getCart()[i].count;
+        totalPrice += getCart()[i].priceTotalNum;
+    }
+    return [totalItems, totalPrice];
+}
