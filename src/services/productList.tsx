@@ -107,4 +107,4 @@ export const getTotals = () =>{
         totalPrice += getCart()[i].priceTotalNum;
     }
     return [totalItems, totalPrice];
-}
+};
