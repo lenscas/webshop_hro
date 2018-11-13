@@ -36,6 +36,27 @@ export type cartItem = {
     priceTotalNum:number;
 }
 
+function sepNum(num){
+    let splitPrice:string[]
+    splitPrice = num.split(".",2)
+    if (splitPrice.length > 1){
+        splitPrice[1] = "." + splitPrice[1]
+    }
+    else{
+        splitPrice.push("")
+    }
+
+    let extraNums = ""
+    while (splitPrice[0].length > 3)
+    {
+        extraNums += " " + splitPrice[0].slice(splitPrice[0].length-3)
+        splitPrice[0] = splitPrice[0].slice(0,-3)
+    }
+    splitPrice[0] += extraNums
+    num = splitPrice[0] + splitPrice [1]
+        return num
+}
+
 export const getList = async (api: API,pageNum : number) => {
     const products = await api.doRequest<product[]>(`api/main/60/${ (pageNum * 60) + 1}`,(t : any)=>t)
     return products || [];
@@ -53,43 +74,32 @@ export const getList = async (api: API,pageNum : number) => {
 export const getCart = () => {
     let cartList:cartItem[]; 
     cartList = [
-        {id: "1", name : "Black Lotus",price: "", priceNum : 3000.00, count : 6, priceTotal : "", priceTotalNum : 0},
-        {id: "2",name : "Blaze", price: "", priceNum : 0.04, count : 1, priceTotal : "", priceTotalNum : 0},
-        {id: "3",name : "Thran Turbine", price: "", priceNum : 3.00, count : 3, priceTotal : "", priceTotalNum : 0},
-        {id: "4",name : "Marrow-Gnawer", price: "", priceNum : 0.40, count : 99, priceTotal : "", priceTotalNum : 0}
+        {id: "1", name : "Black Lotus",price: "", priceNum : 3000000.00, count : 6, priceTotal : "", priceTotalNum : 0},
+        {id: "2",name : "Blaze", price: "", priceNum : 4.00, count : 1, priceTotal : "", priceTotalNum : 0},
+        {id: "3",name : "Thran Turbine", price: "", priceNum : 300, count : 3, priceTotal : "", priceTotalNum : 0},
+        {id: "4",name : "Marrow-Gnawer", price: "", priceNum : 40, count : 99, priceTotal : "", priceTotalNum : 0}
     ] 
     let i:any
   
-    // let cutNum:any
-    // let j:any
     for(i = cartList.length - 1;i>=0;i--) {
-        // cutNum = 0;
-        // while (cartList[i].priceNum > Math.pow(1000 ,(1+cutNum))){
-        //     cutNum += 1;
-        // }
+
+        cartList[i].priceNum = cartList[i].priceNum/100
+
         cartList[i].price = `${cartList[i].priceNum}`
 
         cartList[i].price = `${cartList[i].priceNum}`  
-        
-        // for(j = cutNum;j>0;j--) {
-        //     cartList[i].price = cartList[i].price.substring(0, cartList[i].price.length - 3*j) + " " + cartList[i].price.substr(cartList[i].price.length - 3*j ,cartList[i].price.length);
-        // }
 
-        // cutNum = 0
+        cartList[i].price = sepNum(cartList[i].price)
 
-        cartList[i].price += " EUR"  
-         
+        cartList[i].price = "€ " + cartList[i].price
+     
         cartList[i].priceTotalNum = cartList[i].priceNum * cartList[i].count
 
-        // while (cartList[i].priceTotalNum > Math.pow(1000 ,(1+cutNum))){
-        //     cutNum += 1;
-        // }
-
         cartList[i].priceTotal = `${cartList[i].priceTotalNum}`
-        // for(j = cutNum;j>0;j--) {
-        //     cartList[i].price = cartList[i].price.substring(0, j*3) + " " + cartList[i].price.slice(j*3);
-        // }
-        cartList[i].priceTotal += " EUR"
+
+        cartList[i].priceTotal = sepNum(cartList[i].priceTotal)
+
+        cartList[i].priceTotal = "€ " + cartList[i].priceTotal
 
     }
     return cartList;
@@ -106,5 +116,8 @@ export const getTotals = () =>{
         totalItems += getCart()[i].count;
         totalPrice += getCart()[i].priceTotalNum;
     }
+    totalItems = sepNum(totalItems.toString())
+    totalPrice = sepNum(totalPrice.toString())
+
     return [totalItems, totalPrice];
 };

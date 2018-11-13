@@ -20,7 +20,7 @@ export default class Cart extends BasicComponent{
          const render = (c : cartItem)=>[this.makeLink(c),{key : "cartPrice", element: c.price},{key : "cartCount", element: c.count.toString()},{key : "cartPriceTotal", element: c.priceTotal}]
          const head = ["Name","Price", "Amount", "Total Price"]
          const totals = getTotals()
-         const foot = [{key:"padString1",element:""},{key:"padString2",element:""}, "Total: " + `${totals[0]}`, "Total: " + `${totals[1]}` + " EUR"]
+         const foot = [{key:"padString1",element:""},{key:"padString2",element:""}, "Total: " + `${totals[0]}`, "Total: € " + `${totals[1]}`]
         return (
             <div>
             <DataTable<cartItem> 
