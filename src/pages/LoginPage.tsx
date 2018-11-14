@@ -1,10 +1,10 @@
 import * as React from "react";
-import BasicComponent from "../types/basicComponent";
+import BasicPage from "../types/basicComponent";
 import Form, { InputField, FormData } from "../components/form";
 import {login, credentials} from "../services/users";
 import { Redirect } from "react-router-dom";
 
-export default class Login extends BasicComponent {
+export default class Login extends BasicPage {
     onSubmit(data: FormData<credentials>) {
        login(data.values,this.props.APIS.req)
     }
