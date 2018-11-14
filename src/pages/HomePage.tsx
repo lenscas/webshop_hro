@@ -7,7 +7,7 @@ export default class Home extends React.Component {
             <div className="body">
                 <div className="banner">
                     <div className="quoteEen"><h2>Random quote 1</h2></div>
-                    <div className="logo"><img src="https://mrapption.com/wp-content/uploads/2015/05/logo-placeholder.png"/></div>
+                    <div className="logo"><img src="http://www.tabletopgameshop.co.uk/media/com_easysocial/photos/42/51/mtg-logo-700x560_thumbnail.png"/></div>
                     <div className="quoteTwee"><h2>Random quote 2</h2></div>
                 </div>
                 <div className="accordion">

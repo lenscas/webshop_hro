@@ -1,7 +1,11 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: "magic";
+}
+@font-face {
+  font-family: "magic";
+  src: url('./MAGIC.TTF')  format('truetype');
 }
 .fullPage {
 	height : 95vh;
@@ -22,17 +26,24 @@ body {
   position: relative;
   top: 15px;
   left: 100px;
+  display: none !important;
 }
 .logo{
   position: relative;
-  left: 96%;
-  bottom: 70px;
+  left: 187%;
+  bottom: 107px;
+}
+.logo2{
+  margin-top: -200px;
+  position: relative;
+  left: 237px;
 }
 .quoteTwee{
   float: right;
   position: relative;
   left: 175%;
   bottom: 230px;
+  display: none !important;
 }
 .cart{
   height: 50px;
@@ -57,12 +68,27 @@ body {
 }
 .details{
   position: relative;
-  bottom: 44px;
-  float: right;
+  left: 71px;
 }
 .detail{
   margin: auto;
   width: 50%;
+}
+.detailsText{
+  float: right;
+  position: relative;
+  right: 30px;
+  width: 350px;
+  height: 300px;
+
+}
+#buttonCart{
+  position: relative;
+  left: 268px;
+  bottom: 36px;
+}
+.titleP{
+  width: 2000% !important;
 }
 nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   float: right !important;
@@ -76,7 +102,13 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   overflow: hidden;
   margin: 0px auto;
 }
-
+@media screen and (max-width: 1200px) {
+  .logo {
+    position: relative;
+    left: 107%;
+    bottom: 107px;
+  }
+}
 .accordion ul {
   width: 100%;
   display: table;
@@ -115,7 +147,7 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   text-shadow: 1px 1px 2px #000;
   /filter: invert(100%);/
   text-decoration: none;
-  font-family: Open Sans, sans-serif;
+  font-family: "magic";
 	transition: all 300ms ease-in-out;
 	text-decoration: none;
 }
@@ -146,7 +178,7 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
 	text-decoration: none !important;
 }
 .accordion ul li div a h2 {
-  font-family: Montserrat, sans-serif;
+  font-family: "magic";
   text-overflow: clip;
   font-size: 32px;
   text-transform: uppercase;
@@ -233,5 +265,6 @@ background-position: 50% 50%;
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
+
 
 }
