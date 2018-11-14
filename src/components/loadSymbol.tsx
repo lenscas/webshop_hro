@@ -42,7 +42,9 @@ export default class LoadSymbol<ParamT,ResT> extends BasicComponent<loadProps<Pa
 	}
 	render(){
 		if(!this.state.doneLoading){
-			return <h1>Its loading</h1>
+			return <div id="laadDiv">
+			<i className=" fas fa-spinner fa-spin fa-10x laden" />
+			</div>
 		}
 		const res = this.props.toRender(this.state.results)
 		return res

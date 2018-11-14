@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "magic";
+  font-family: "comic sans-serif";
 }
 @font-face {
   font-family: "magic";
@@ -20,6 +20,13 @@ body {
 .banner{
   position: absolute;
   bottom: 68%;
+}
+@media screen and (max-width: 1280px) {
+  .logo2 {
+    margin-top: -200px;
+    position: relative;
+    left: -86px !important;
+  }
 }
 .quoteEen{
   float: left;
@@ -51,6 +58,10 @@ body {
   position: relative;
   bottom: 5px;
 }
+.price{
+  font-weight: bold;
+  font-family: comic sans-serif;
+}
 .search{
   top: 5px;
   position: relative;
@@ -69,6 +80,7 @@ body {
 .details{
   position: relative;
   left: 71px;
+  font-family: "magic";
 }
 .detail{
   margin: auto;
@@ -80,12 +92,15 @@ body {
   right: 30px;
   width: 350px;
   height: 300px;
+  font-family: comic sans-serif;
+  font-size: larger;
 
 }
 #buttonCart{
   position: relative;
   left: 268px;
   bottom: 36px;
+  font-family: comic sans-serif;
 }
 .titleP{
   width: 2000% !important;
@@ -95,6 +110,8 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   position: relative;
   right: 105px;
   top: 15px;
+  font-family: "magic";
+  font-size: larger;
 }
 .accordion {
   width: 100%;
@@ -166,6 +183,50 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   -webkit-transition: all 400ms ease-in-out;
 	transition: all 400ms ease-in-out;
 	
+}
+.table td, .table th{
+  border-top: none !important;
+}
+#pPrice{
+  float: left;
+  font-size: 25px;
+  margin: 10px;
+}
+#addCart{
+  float: right;
+  margin: 10px;
+  font-family: comic sans-serif;
+  position: relative;
+  left: 17px;
+}
+#pImage{
+  width: 250px;
+}
+#cardList{
+  width: 81%;
+  position: relative;
+  left: 190px;
+}
+.listName{
+  font-family: "magic";
+  text-align: center;
+}
+#testdiv{
+  width: 86%;
+}
+h5{
+  font-weight: bold;
+}
+#MagicLogoPPage{
+  position: relative;
+  margin-top: -200px;
+  margin-left: 400px;
+}
+#laadDiv{
+margin: auto;
+width: 5%;
+margin-top: 10%;
+color:orange;
 }
 .position-relative.row.form-group {
   display: block !important;
@@ -267,4 +328,34 @@ background-position: 50% 50%;
   }
 
 
+  @media screen and (min-width: 1008px){
+    #pImage{
+      width: 200px
+    }
+    h5{
+      font-size: 18px
+    }
+    #pPrice{
+      float: left;
+      font-size: 15px;
+      margin: 10px;
+    }
+    #cardList{
+      width: 91%;
+      position: relative;
+      left: 40px;
+    }
+    #MagicLogoPPage{
+      margin-top: -255px;
+      margin-left: 40%;
+    }
+    #addCart {
+      float: right;
+      margin: 10px;
+      font-family: comic sans-serif;
+    }
+  #pPrice{
+    font-size: 14px;
+    }
+  }
 }
