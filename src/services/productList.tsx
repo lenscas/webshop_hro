@@ -41,6 +41,10 @@ function sepNum(num){
     splitPrice = num.split(".",2)
     if (splitPrice.length > 1){
         splitPrice[1] = "." + splitPrice[1]
+        if (splitPrice[1].length < 3)
+        {
+            splitPrice[1] += "0"
+        }
     }
     else{
         splitPrice.push("")
