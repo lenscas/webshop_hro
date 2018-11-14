@@ -1,6 +1,6 @@
 import * as React from "react";
 import BasicPage from "../types/basicComponent";
-import { getList, productList } from "../services/productList";
+import { getList, productList } from "../services/product";
 import DataTable, { renderable } from "../components/DataTable";
 import { Link } from "react-router-dom";
 import { addAsync } from "../funcs/lambdas";
@@ -35,7 +35,7 @@ export default class ProductList extends BasicPage {
             key : p.id,
             element : (<div id="testdiv"><h5 className="listName">{p.name}</h5>
                 <Link key={p.id} to={`/product/${p.id}`}>
-                    <img id="pImage"src={p.normal}/>
+                    <img id="pImage"src={p.image}/>
                 </Link>
                 <a id="pPrice">€ {p.price / 100}</a>
                 <Button className="btn-sm" id="addCart"color="warning">Add to cart</Button>{' '}

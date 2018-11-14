@@ -16,6 +16,7 @@ const Header: React.StatelessComponent<{}> = () => {
 				<li><img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png"/></li>
 			</ul>
 		</nav>
+		
 	);
 }
 export default Header;

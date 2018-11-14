@@ -1,12 +1,12 @@
 import * as React from "react";
-import BasicComponent from "../types/basicComponent";
+import BasicPage from "../types/basicComponent";
 import Form, {InputField, FormData} from "../components/form";
 
 type testSubmit = {
 	test : string
 }
 
-export default class FormTest extends BasicComponent {
+export default class FormTest extends BasicPage {
 	onSubmit(data : FormData<testSubmit>){
 		// tslint:disable-next-line:no-console
 		console.log(data.values)
