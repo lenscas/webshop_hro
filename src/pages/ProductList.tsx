@@ -1,6 +1,6 @@
 import * as React from "react";
 import BasicPage from "../types/basicComponent";
-import { getList, product } from "../services/productList";
+import { getList, product } from "../services/product";
 import DataTable, { renderable } from "../components/DataTable";
 import { Link } from "react-router-dom";
 import { addAsync } from "../funcs/lambdas";
