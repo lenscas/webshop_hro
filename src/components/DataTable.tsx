@@ -3,6 +3,7 @@ import Table from "reactstrap/lib/Table";
 import LoadSymbol from "./loadSymbol";
 import { defaultTrue } from "src/funcs/easyDefaults";
 import BasicComponent from "src/types/smallComponent";
+
 export type renderable = {
 	key : string | number
 	element : string | JSX.Element
@@ -14,6 +15,7 @@ type TableProps<T> = {
 	fetch : (pageNR : number) => Promise<T[]>
 	render : (line : T)=>renderable[]
 	head? : string[]
+	foot? : Array<string| renderable>
 	striped? : boolean
 	hover?: boolean
 }
@@ -43,6 +45,20 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>,TableStat
 		return <></>
 
 	}
+	renderFoot(){
+		if(this.props.foot){
+			return this.props.foot.map(val=>{
+				if(typeof val ==="string"){
+					return <th key={val}>{val}</th>
+				} else {
+					return  <th key={val.key}>{val.element}</th>
+				}
+			})
+		
+		}
+		return <></>
+
+	}
 	renderBody(lines){
 		return lines.map( (v,k)=><tr key={k}>{this.renderLine(v)}</tr>)
 	}
@@ -68,6 +84,11 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>,TableStat
 				<tbody>
 					{this.renderBody(lines)}
 				</tbody>
+				<tfoot>
+					<tr>
+						{this.renderFoot()}
+					</tr>
+				</tfoot>
 			</Table>
 		)
 	}
