@@ -1,9 +1,9 @@
 import * as React from "react";
 import {register,RegisterUser} from "../services/users";
-import BasicComponent from "../types/basicComponent";
+import BasicPage from "../types/basicComponent";
 import Form, {InputField, FormData} from "../components/form";
 
-export default class Register extends BasicComponent {
+export default class Register extends BasicPage {
 	onSubmit(data : FormData<RegisterUser>){
 		register(data.values, this.props.APIS.req);
 	}

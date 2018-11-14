@@ -1,55 +1,102 @@
 import * as React from "react";
-import BasicComponent from "../types/basicComponent";
-import {props} from "../types/BasicProps";
 import Table from "reactstrap/lib/Table";
-export type product = {
-    name : string;
-    property : string
-}
+import LoadSymbol from "./loadSymbol";
+import { defaultTrue } from "src/funcs/easyDefaults";
+import BasicComponent from "src/types/smallComponent";
 
+export type renderable = {
+	key : string | number
+	element : string | JSX.Element
+}
 type TableState = {
-	lines : Array<Array<string | JSX.Element>>
 	pageNum : number
 }
 type TableProps<T> = {
 	fetch : (pageNR : number) => Promise<T[]>
-	render : (line : T)=>Array<string | JSX.Element>
-	head : string[]
-} & props;
+	render : (line : T)=>renderable[]
+	head? : string[]
+	foot? : Array<string| renderable>
+	striped? : boolean
+	hover?: boolean
+}
+export type getDataParams = {
+	pageNum : number
+}
 
 export default class DataTable<T> extends BasicComponent<TableProps<T>,TableState> {
 	constructor(propsy : TableProps<T>){
 		super(propsy)
-		this.state = {pageNum:1,lines:[]}
+		this.state = {pageNum:1}
+		this.renderTable = this.renderTable.bind(this)
+		this.getData = this.getData.bind(this)
 	}
-	async componentDidMount(){
-		const linesRaw = await this.props.fetch(this.state.pageNum)
-		const lines = linesRaw.map(line=>this.props.render(line))
-		this.easySetState({lines})
+	async getData(params : getDataParams){
+		const results = await this.props.fetch(params.pageNum)
+
+		const lines = results.map(
+			line=>this.props.render(line)
+		)
+		return lines
 	}
 	renderHead(){
-		return this.props.head.map(val=><th key={val}>{val}</th>)
+		if(this.props.head){
+			return this.props.head.map(val=><th key={val}>{val}</th>)
+		}
+		return <></>
+
 	}
-	renderBody(){
-		return this.state.lines.map( (v,k)=><tr key={k}>{this.renderLine(v)}</tr>)
+	renderFoot(){
+		if(this.props.foot){
+			return this.props.foot.map(val=>{
+				if(typeof val ==="string"){
+					return <th key={val}>{val}</th>
+				} else {
+					return  <th key={val.key}>{val.element}</th>
+				}
+			})
+		
+		}
+		return <></>
+
 	}
-	renderLine(line : Array<string | JSX.Element>){
+	renderBody(lines){
+		return lines.map( (v,k)=><tr key={k}>{this.renderLine(v)}</tr>)
+	}
+	renderLine(line : renderable[]){
 		return (
-			line.map(val=><td key={val.toString()}>{val}</td>)
+			line.map(val=><td key={val.key}>{val.element}</td>)
 		)
 	}
-	render(){
+	hover(){
+		return defaultTrue(this.props.hover)
+	}
+	striped(){
+		return defaultTrue(this.props.striped)
+	}
+	renderTable(lines : renderable[][]){
 		return (
-			<Table striped={true} hover={true} responsive={true}>
+			<Table striped={this.striped()} hover={this.hover()} responsive={true}>
 				<thead>
 					<tr>
 						{this.renderHead()}
 					</tr>
 				</thead>
 				<tbody>
-					{this.renderBody()}
+					{this.renderBody(lines)}
 				</tbody>
+				<tfoot>
+					<tr>
+						{this.renderFoot()}
+					</tr>
+				</tfoot>
 			</Table>
 		)
+	}
+	render(){
+		return <LoadSymbol<getDataParams,renderable[][]> 
+			params={{pageNum:1}}
+			toRender={this.renderTable}
+			getData={this.getData}
+		/>
 	}
 }
