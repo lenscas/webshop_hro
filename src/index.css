@@ -1,7 +1,11 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: "comic sans-serif";
+}
+@font-face {
+  font-family: "magic";
+  src: url('./MAGIC.TTF')  format('truetype');
 }
 .fullPage {
 	height : 95vh;
@@ -17,28 +21,46 @@ body {
   position: absolute;
   bottom: 68%;
 }
+@media screen and (max-width: 1280px) {
+  .logo2 {
+    margin-top: -200px;
+    position: relative;
+    left: -86px !important;
+  }
+}
 .quoteEen{
   float: left;
   position: relative;
   top: 15px;
   left: 100px;
+  display: none !important;
 }
 .logo{
   position: relative;
-  left: 96%;
-  bottom: 70px;
+  left: 187%;
+  bottom: 107px;
+}
+.logo2{
+  margin-top: -200px;
+  position: relative;
+  left: 237px;
 }
 .quoteTwee{
   float: right;
   position: relative;
   left: 175%;
   bottom: 230px;
+  display: none !important;
 }
 .cart{
   height: 50px;
   width: 50px;
   position: relative;
   bottom: 5px;
+}
+.price{
+  font-weight: bold;
+  font-family: comic sans-serif;
 }
 .search{
   top: 5px;
@@ -57,18 +79,39 @@ body {
 }
 .details{
   position: relative;
-  bottom: 44px;
-  float: right;
+  left: 71px;
+  font-family: "magic";
 }
 .detail{
   margin: auto;
   width: 50%;
+}
+.detailsText{
+  float: right;
+  position: relative;
+  right: 30px;
+  width: 350px;
+  height: 300px;
+  font-family: comic sans-serif;
+  font-size: larger;
+
+}
+#buttonCart{
+  position: relative;
+  left: 268px;
+  bottom: 36px;
+  font-family: comic sans-serif;
+}
+.titleP{
+  width: 2000% !important;
 }
 nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   float: right !important;
   position: relative;
   right: 105px;
   top: 15px;
+  font-family: "magic";
+  font-size: larger;
 }
 .accordion {
   width: 100%;
@@ -76,7 +119,13 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   overflow: hidden;
   margin: 0px auto;
 }
-
+@media screen and (max-width: 1200px) {
+  .logo {
+    position: relative;
+    left: 107%;
+    bottom: 107px;
+  }
+}
 .accordion ul {
   width: 100%;
   display: table;
@@ -115,7 +164,7 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   text-shadow: 1px 1px 2px #000;
   /filter: invert(100%);/
   text-decoration: none;
-  font-family: Open Sans, sans-serif;
+  font-family: "magic";
 	transition: all 300ms ease-in-out;
 	text-decoration: none;
 }
@@ -135,6 +184,50 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
 	transition: all 400ms ease-in-out;
 	
 }
+.table td, .table th{
+  border-top: none !important;
+}
+#pPrice{
+  float: left;
+  font-size: 25px;
+  margin: 10px;
+}
+#addCart{
+  float: right;
+  margin: 10px;
+  font-family: comic sans-serif;
+  position: relative;
+  left: 17px;
+}
+#pImage{
+  width: 250px;
+}
+#cardList{
+  width: 81%;
+  position: relative;
+  left: 190px;
+}
+.listName{
+  font-family: "magic";
+  text-align: center;
+}
+#testdiv{
+  width: 86%;
+}
+h5{
+  font-weight: bold;
+}
+#MagicLogoPPage{
+  position: relative;
+  margin-top: -200px;
+  margin-left: 400px;
+}
+#laadDiv{
+margin: auto;
+width: 5%;
+margin-top: 10%;
+color:orange;
+}
 .position-relative.row.form-group {
   display: block !important;
   width: 31%;
@@ -146,7 +239,7 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
 	text-decoration: none !important;
 }
 .accordion ul li div a h2 {
-  font-family: Montserrat, sans-serif;
+  font-family: "magic";
   text-overflow: clip;
   font-size: 32px;
   text-transform: uppercase;
@@ -234,4 +327,35 @@ background-position: 50% 50%;
     transform: translateX(0);
   }
 
+
+  @media screen and (min-width: 1008px){
+    #pImage{
+      width: 200px
+    }
+    h5{
+      font-size: 18px
+    }
+    #pPrice{
+      float: left;
+      font-size: 15px;
+      margin: 10px;
+    }
+    #cardList{
+      width: 91%;
+      position: relative;
+      left: 40px;
+    }
+    #MagicLogoPPage{
+      margin-top: -255px;
+      margin-left: 40%;
+    }
+    #addCart {
+      float: right;
+      margin: 10px;
+      font-family: comic sans-serif;
+    }
+  #pPrice{
+    font-size: 14px;
+    }
+  }
 }
