@@ -1,4 +1,5 @@
 import {API} from "./basics";
+//import { readLocal } from "../services/localStorage";
 
 export type cardId = string
 
@@ -27,7 +28,7 @@ export type cartItem = {
     name:string;
     price:string;
     priceNum:number;
-    count:number;
+    quantity:number;
     priceTotal:string;
     priceTotalNum:number;
 }
@@ -77,50 +78,48 @@ export const getCard = async (api: API, id: cardId) :Promise<product | undefined
     return card
 }
 
-export const getCart = () => {
-    let cartList:cartItem[]; 
-    cartList = [
-        {id: "1", name : "Black Lotus",price: "", priceNum : 3000000.00, count : 6, priceTotal : "", priceTotalNum : 0},
-        {id: "2",name : "Blaze", price: "", priceNum : 4.00, count : 1, priceTotal : "", priceTotalNum : 0},
-        {id: "3",name : "Thran Turbine", price: "", priceNum : 300, count : 3, priceTotal : "", priceTotalNum : 0},
-        {id: "4",name : "Marrow-Gnawer", price: "", priceNum : 40, count : 99, priceTotal : "", priceTotalNum : 0}
-    ] 
+export const getCart = async (api: API) => {  
+    
+    const cartList = await api.doRequest<cartItem[]>("api/shoppingcard/",(t : any)=>t)
+    //readLocal<cartItem[]>("cart") || []
+    
     let i:any
   
-    for(i = cartList.length - 1;i>=0;i--) {
+    if(cartList !== undefined){
+            for(i = cartList.length - 1;i>=0;i--) 
+            {
+                cartList[i].priceNum = cartList[i].priceNum/100
 
-        cartList[i].priceNum = cartList[i].priceNum/100
+                cartList[i].price = `${cartList[i].priceNum}`
 
-        cartList[i].price = `${cartList[i].priceNum}`
+                cartList[i].price = `${cartList[i].priceNum}`  
 
-        cartList[i].price = `${cartList[i].priceNum}`  
+                cartList[i].price = sepNum(cartList[i].price)
 
-        cartList[i].price = sepNum(cartList[i].price)
+                cartList[i].price = "€ " + cartList[i].price
+            
+                cartList[i].priceTotalNum = cartList[i].priceNum * cartList[i].quantity
 
-        cartList[i].price = "€ " + cartList[i].price
-     
-        cartList[i].priceTotalNum = cartList[i].priceNum * cartList[i].count
+                cartList[i].priceTotal = `${cartList[i].priceTotalNum}`
 
-        cartList[i].priceTotal = `${cartList[i].priceTotalNum}`
+                cartList[i].priceTotal = sepNum(cartList[i].priceTotal)
 
-        cartList[i].priceTotal = sepNum(cartList[i].priceTotal)
-
-        cartList[i].priceTotal = "€ " + cartList[i].priceTotal
-
-    }
-    return cartList;
+                cartList[i].priceTotal = "€ " + cartList[i].priceTotal
+            }
+        }
+    return cartList || [];
 };
 
-export const getTotals = () =>{
+export const getTotals = (cart: cartItem[]) =>{
     let totalItems:number
     let totalPrice:number
     totalItems = 0;
     totalPrice = 0;
 
     let i:any
-    for(i = getCart().length - 1;i>=0;i--) {
-        totalItems += getCart()[i].count;
-        totalPrice += getCart()[i].priceTotalNum;
+    for(i = cart.length - 1;i>=0;i--) {
+        totalItems += cart[i].quantity;
+        totalPrice += cart[i].priceTotalNum;
     }
     totalItems = sepNum(totalItems.toString())
     totalPrice = sepNum(totalPrice.toString())
