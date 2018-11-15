@@ -42,6 +42,10 @@ function sepNum(num){
         {
             splitPrice[1] += "0"
         }
+        if (splitPrice[1].length > 3)
+        {
+            splitPrice[1] = splitPrice[1].substr(0, 3)
+        }
     }
     else{
         splitPrice.push("")
