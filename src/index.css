@@ -202,9 +202,11 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
 	transition: all 400ms ease-in-out;
 	
 }
+/*
 .table td, .table th{
   border-top: none !important;
 }
+*/
 #pPrice{
   float: left;
   font-size: 25px;
@@ -235,14 +237,15 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
 h5{
   font-weight: bold;
 }
+/*
 #MagicLogoPPage{
  /*
   position: relative;
   margin-top: -200px;
   margin-left: 400px;
-*/
-  
+
 }
+*/
 #laadDiv{
 margin: auto;
 width: 5%;
@@ -259,21 +262,7 @@ color:orange;
 .TitleCard :hover{
 	text-decoration: none !important;
 }
-.accordion ul li div a h2 {
-  font-family: "magic";
-  text-overflow: clip;
-  font-size: 32px;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-  top: 160px;
-  right: 56px;
-}
 
-.accordion ul li div a p {
-  top: 160px;
-  font-size: 18px;
-  padding-left: 1em;
-}
 /*
 .container-fluid {
 	width: 100%;
@@ -286,47 +275,7 @@ color:orange;
 	margin-bottom: 20px;
 }
 /**/
-.accordion ul li:nth-child(1) { 
-  background-image: url("https://magic.wizards.com/sites/mtg/files/images/featured/PW_Ajani_Preloader.jpg"); 
-  background-position: 50% 30%;
-}
 
-.accordion ul li:nth-child(2) { 
-  background-image: url("https://magic.wizards.com/sites/mtg/files/images/featured/EN_Garruk_3_Gallery.jpg"); 
- background-position: 70% 0%;
-}
-
-.accordion ul li:nth-child(3) { 
-  background-image: url("https://magic.wizards.com/sites/mtg/files/images/featured/EN_Liliana_4_Gallery.jpg"); 
-background-position: 50% 50%;
-}
-
-.accordion ul li:nth-child(4) { 
-  background-image: url("https://magic.wizards.com/sites/mtg/files/images/featured/EN_Jace_8_Gallery.jpg"); 
-  background-position: 30% 40%;
-}
-
-.accordion ul li:nth-child(5) { 
-  background-image: url("https://www.desktopbackground.org/p/2015/02/25/908244_1920x1080-chandra-nalaar-wallpapers_1920x1080_h.jpg"); 
-  background-position: 60% 64%;
-}
-
-.accordion ul li:nth-child(6) { 
-  background-image: url("https://magic.wizards.com/sites/mtg/files/images/hero/karn_scion.jpg"); 
-  background-position: 70% 25%;
-}
-
-.accordion ul li { background-size: cover; }
-.accordion ul:hover li { width: 10%; }
-.accordion ul:hover li:hover { width: 30%; }
-
-.accordion ul:hover li:hover a { background: rgba(0, 0, 0, 0.4); }
-
-.accordion ul:hover li:hover a * {
-  opacity: 1;
-  -webkit-transform: translateX(0);
-  transform: translateX(0);
-}
 /*
  @media screen and (max-width: 680px) {
   
@@ -345,12 +294,7 @@ background-position: 50% 50%;
     transition: none;
   }
   */
-  .accordion ul li div a * {
-    opacity: 1;
-    -webkit-transform: translateX(0);
-    transform: translateX(0);
-    
-  }
+ 
 
   /*
   @media screen and (min-width: 1008px){

@@ -40,7 +40,7 @@ class App extends React.Component<{}, appState>{
 			<Router>
 				<div>
 					<Header />
-					<div className="container">
+					<div className="container-fluid">
 						<Routes APIS={APIS} />
 					</div>
 				</div>
