@@ -200,7 +200,7 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
   transform: translateX(-20px);
   -webkit-transition: all 400ms ease-in-out;
 	transition: all 400ms ease-in-out;
-	
+
 }
 /*
 .table td, .table th{
@@ -252,13 +252,7 @@ width: 5%;
 margin-top: 10%;
 color:orange;
 }
-.position-relative.row.form-group {
-  display: block !important;
-  width: 31%;
-  position: relative;
-  left: 35%;
-  bottom: 115px;
-}
+
 .TitleCard :hover{
 	text-decoration: none !important;
 }
@@ -278,7 +272,7 @@ color:orange;
 
 /*
  @media screen and (max-width: 680px) {
-  
+
   body { margin: 0; }
   .accordion { height: auto; }
 
@@ -294,7 +288,7 @@ color:orange;
     transition: none;
   }
   */
- 
+
 
   /*
   @media screen and (min-width: 1008px){

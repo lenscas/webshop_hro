@@ -1,24 +1,44 @@
 import * as React from "react";
-import {Col, FormGroup,Label,Input, Button, FormFeedback, Form as BootForm } from 'reactstrap';
+import {Col, FormGroup,Label,Input, Button, FormFeedback, Form as BootForm, Row } from 'reactstrap';
+import BasicComponent from "src/types/smallComponent";
+import { InputType } from "reactstrap/lib/Input";
 
-export type InputField<ValueType> = {
-	name : string,
+type formValidation<T> = (value : T)=>FormValidationToolTip | true
+
+type BasicInputField = {
+	name : string
+	id: string
 	label? : string,
-	innerLabel? : string,
-	id : string,
-	defaultValue? : ValueType,
-	type? : "number" | "text" | "hidden" | "email" | "password" | "button" | "textarea"
-	isTextArea? : boolean,
+	placeholder? : string,
 	isOptional? : boolean,
-	validator? : (value : ValueType)=>FormValidationToolTip | true
 }
+
+export type InputField = BasicInputField & (
+	{
+		type : "number"
+		validator : formValidation<number>
+
+	} | {
+		type : "email" | "text" | "hidden" | "password"
+		validator : formValidation<string>
+	} |
+	{
+		type : "button"
+		color? : string
+	} |
+	{
+		type: "textarea"
+		validator: formValidation<string>
+	}
+)
+
 export type FormData<T> = {
 	values : T
 	event : React.FormEvent<HTMLFormElement>
 }
 export type FormProps<T> = {
 	onSubmit : (e:FormData<T>)=>void
-	inputs : Array<InputField<unknown>>
+	inputs : InputField[]
 }
 export type FormValidationToolTip = {
 	isValid : boolean
@@ -32,18 +52,19 @@ export type elementInState =  {
 export type FormState<T extends elementInState> = {
 	values : Partial<T>
 }
-export default class Form<FormType extends {}> extends React.Component<FormProps<FormType>,FormState<FormType>> {
-	constructor(propsy : FormProps<FormType>){
+export default class Form<T> extends BasicComponent<FormProps<T>,FormState<T>> {
+	constructor(propsy){
 		super(propsy)
 		this.state = {values:{}}
 	}
 
 
-	basicValidator(value : unknown, input : InputField<unknown>) : boolean | FormValidationToolTip {
-		if(!input.isOptional){
-			if(value === undefined || value === null || value === "" || value ===0){
-				return {message : "This field needs to be filled in", isValid : false}
-			}
+	basicValidator(value : unknown, input : InputField) : boolean | FormValidationToolTip {
+		if(input.type==="button" || input.isOptional){
+			return true;
+		}
+		if(!value === undefined || value === null || value === "" || value ===0){
+			return {message : "This field needs to be filled in", isValid : false}
 		}
 		if(input.type === "number"){
 			if(typeof value==="string" && isNaN(parseInt(value,10))){
@@ -52,71 +73,118 @@ export default class Form<FormType extends {}> extends React.Component<FormProps
 		}
 		return true
 	}
-	createOnChange(input : InputField<unknown>){
-		input.type = input.type ? input.type : "text";
-		return (e : React.ChangeEvent<HTMLInputElement>) =>{
+	runCustomSetInputValidator(input : InputField, answer: string){
+		if("validator" in input){
+			if(input.validator){
+				let rawValidator : true | FormValidationToolTip = true
+				if(input.type === "number"){
+					const asNumber = Number(answer)
+					rawValidator = input.validator(asNumber)
+				} else {
+					rawValidator = input.validator(answer)
+				}
+				return rawValidator
+			}
+		}
+		return true
+	}
+	createOnChange(input : InputField){
+		return (e : React.ChangeEvent<HTMLInputElement>) => {
 			const rawBasicValidator = this.basicValidator(e.target.value, input)
 			let isValid = this.maybeToolTipToBoolean(rawBasicValidator)
 			let message : string | undefined = this.getMessageFromMaybeToolTip(rawBasicValidator)
-
-			if(input.validator){
-				const rawValidator = input.validator(e.target.value)
-				isValid = this.maybeToolTipToBoolean(rawValidator)
-				message = this.getMessageFromMaybeToolTip(rawValidator)
-			}
-
+			const customValidatorAnswer = this.runCustomSetInputValidator(input,e.target.value)
+			isValid =  this.maybeToolTipToBoolean(customValidatorAnswer)
+			message = this.getMessageFromMaybeToolTip(customValidatorAnswer)
 			const newValue = {
 				isValid,
 				message,
 				value : e.target.value
 			}
-			const updateState = (st : FormState<FormType>) => {
-				st.values[input.name] = newValue
-				return st
+			const updateState = (st : FormState<T>) => {
+				const newSt = {...st}
+				newSt.values[input.name] = newValue
+				return newSt
 			}
 			this.setState(updateState)
 		}
 	}
 
-	renderInputGroup(input : InputField<unknown>){
+	hasBeenInsertedOnce(name){
+		return Boolean(this.state.values[name])
+	}
+	renderInputGroup(input : InputField){
 		const rawResult = this.checkInputValidity(input)
 		const isValid = this.maybeToolTipToBoolean(rawResult)
 		const message = this.getMessageFromMaybeToolTip(rawResult)
 		return(
-			<FormGroup row={true} key={input.id}>
-				<Label for={input.id} sm={2}>{input.label||""}</Label>
-				<FormFeedback tooltip={true} valid={isValid}><p>{message}</p></FormFeedback>
-				<Col sm={10}>
-					{this.renderInput(input, {message,isValid})}
-				</Col>
+			<FormGroup key={input.id}>
+				<Row className="justify-content-center">
+					<Col xs={6}>
+						<Label for={input.id}>{input.label||""}</Label>
+						<FormFeedback tooltip={Boolean(message)} valid={isValid}><p>{message}</p></FormFeedback>
+						{this.renderInput(input, {message,isValid})}
+					</Col>
+				</Row>
 			</FormGroup>
 		)
 	}
-	renderInput(input : InputField<unknown>, tooltip : FormValidationToolTip): JSX.Element{
+	renderInput(input : InputField, tooltip : FormValidationToolTip): JSX.Element{
 		let inputElement : JSX.Element;
 		const onChange = this.createOnChange(input)
+		const hasBeenInserted  = this.hasBeenInsertedOnce(input.name)
 		switch(input.type){
 			case "button":
-				inputElement = <Button id={input.id} type="submit" name={input.name} color="success" >{input.innerLabel}</Button>
+				inputElement =(
+					<Button
+						id={input.id}
+						type="submit"
+						name={input.name}
+						color="success"
+						className="ml-1"
+					>
+						{input.placeholder}
+					</Button>
+				)
 			break;
 			default:
-				inputElement = <Input
-					key={input.name}
-					valid={tooltip.isValid}
-					invalid={!tooltip.isValid}
-					aria-invalid={!tooltip.isValid}
-					type={input.type}
-					onChange={onChange}
-					placeholder={input.innerLabel||input.label}
-					id={input.id }
-					required={!input.isOptional}
-				/>
+				const props : {
+					key: string,
+					valid?: boolean,
+					invalid?: boolean ,
+					"aria-invalid"? : boolean,
+					type : InputType,
+					onChange : (e : React.ChangeEvent<HTMLInputElement>)=>void,
+					placeholder?: string,
+					id : string,
+					required: boolean
+				} = {
+					key: input.name,
+					valid: tooltip.isValid,
+					invalid: !tooltip.isValid,
+					"aria-invalid" : !tooltip.isValid,
+					type : input.type,
+					onChange,
+					placeholder: input.placeholder || input.label,
+					id : input.id,
+					required: !input.isOptional
+				}
+				if(!hasBeenInserted){
+					props.valid = undefined
+					props.invalid = undefined
+					props["aria-invalid"] = undefined
+				}
+				inputElement =(
+					<Input
+						{...props}
+					/>
+				)
 			break;
 		}
 		return inputElement
 
 	}
-	checkInputValidity(input : InputField<unknown>): boolean | FormValidationToolTip {
+	checkInputValidity(input : InputField): boolean | FormValidationToolTip {
 		const elInState : elementInState | undefined = this.state.values[input.name]
 		let isValid : boolean | FormValidationToolTip = false
 		if(elInState){
@@ -146,21 +214,23 @@ export default class Form<FormType extends {}> extends React.Component<FormProps
 	render(){
 		const onSubmit = (e : React.FormEvent<HTMLFormElement> )=>{
 			e.preventDefault();
-			const isValid = this.props.inputs.every(input=>input.type === "button"||this.maybeToolTipToBoolean(this.checkInputValidity(input)))
+			const isValid = this.props.inputs.every(input=>this.maybeToolTipToBoolean(this.checkInputValidity(input)))
 			if(!isValid){
 				return;
 			}
-			const values : Partial<FormType> = {}
+			const values : Partial<T> = {}
 			Object.keys(this.state.values).forEach(key => values[key] = this.state.values[key].value)
-			const formData : FormData<FormType> = {
-				values : values as FormType,
+			const formData : FormData<T> = {
+				values : values as T,
 				event : e
 			}
 
 			this.props.onSubmit(formData)
 		}
-		return (<BootForm onSubmit={onSubmit}>
-			{this.props.inputs.map(input=>this.renderInputGroup(input))}
-		</BootForm>)
+		return (
+			<BootForm onSubmit={onSubmit}>
+				{this.props.inputs.map(input=>this.renderInputGroup(input))}
+			</BootForm>
+		)
 	}
 }

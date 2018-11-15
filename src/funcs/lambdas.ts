@@ -8,3 +8,4 @@ export const addAsync = function<T,E=T>(a : (...params : Array<unknown>)=> Promi
 	}
 }
 export const nothing = function(){return }
+export const retTrue = function(...params: Array<unknown>):true {return true}
