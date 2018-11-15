@@ -1,0 +1,125 @@
+.accordion {
+	width: 100%;
+	height: 450px;
+	overflow: hidden;
+	margin: 0px auto;
+}
+.accordion .accordionContainer {
+	width: 100%;
+	display: table;
+	table-layout: fixed;
+	margin: 0;
+	padding: 0;
+}
+.accordion .accordionContainer .accordionItem {
+	padding:0;
+	display: table-cell;
+	vertical-align: bottom;
+	position: relative;
+	width: 16.666%;
+	height: 350px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	transition: all 500ms ease-in-out;
+	text-align: center;
+  }
+  
+  .accordion .accordionContainer .accordionItem div {
+	display: block;
+	overflow: hidden;
+	width: 100%;
+  }
+  
+  .accordion .accordionContainer .accordionItem div a {
+	display: block;
+	height: 450px;
+	width: 100%;
+	position: relative;
+	z-index: 3;
+	/*vertical-align: bottom;*/
+	padding: 15px 20px;
+	box-sizing: border-box;
+	color: #fff;
+	text-shadow: 1px 1px 2px #000;
+	/*filter: invert(100%);
+	text-decoration: none;
+	font-family: "magic";
+	  transition: all 300ms ease-in-out;
+	text-decoration: none;
+	*/
+  }
+  
+  .accordion .accordionContainer .accordionItem div a * {
+	opacity: 1;
+	/*margin: 80px;*/
+	/*margin-left: 10px;*/
+	width: 100%;
+	text-overflow: ellipsis;
+	position: relative;
+	z-index: 5;
+	white-space: nowrap;
+	overflow: hidden;
+	-webkit-transform: translateX(-20px);
+	transform: translateX(-20px);
+	-webkit-transition: all 400ms ease-in-out;
+	  transition: all 400ms ease-in-out;
+	  
+  }
+  .accordion .accordionContainer .accordionItem div a h2 {
+	font-family: "magic";
+	text-overflow: clip;
+	font-size: 32px;
+	text-transform: uppercase;
+	margin-bottom: 2px;
+	top: 160px;
+	/*right: 56px;*/
+  }
+  
+  .accordion .white { 
+	background-image: url("https://magic.wizards.com/sites/mtg/files/images/featured/PW_Ajani_Preloader.jpg"); 
+	background-position: 50% 30%;
+  }
+  
+  .accordion .green { 
+	background-image: url("https://magic.wizards.com/sites/mtg/files/images/featured/EN_Garruk_3_Gallery.jpg"); 
+   background-position: 70% 0%;
+  }
+  
+  .accordion .black { 
+	background-image: url("https://magic.wizards.com/sites/mtg/files/images/featured/EN_Liliana_4_Gallery.jpg"); 
+  background-position: 50% 50%;
+  }
+  
+  .accordion .blue { 
+	background-image: url("https://magic.wizards.com/sites/mtg/files/images/featured/EN_Jace_8_Gallery.jpg"); 
+	background-position: 30% 40%;
+  }
+  
+  .accordion .red { 
+	background-image: url("https://www.desktopbackground.org/p/2015/02/25/908244_1920x1080-chandra-nalaar-wallpapers_1920x1080_h.jpg"); 
+	background-position: 60% 64%;
+  }
+  
+  .accordion .colorless { 
+	background-image: url("https://magic.wizards.com/sites/mtg/files/images/hero/karn_scion.jpg"); 
+	background-position: 70% 25%;
+  }
+  
+  .accordion .accordionItem { background-size: cover; }
+  .accordion .accordionContainer:hover .accordionItem { width: 10%; }
+  .accordion .accordionContainer:hover .accordionItem:hover { width: 30%; }
+  
+  .accordion .accordionContainer:hover .accordionItem:hover a { background: rgba(0, 0, 0, 0.4); }
+  
+  .accordion .accordionContainer:hover .accordionItem:hover a * {
+	opacity: 1;
+	-webkit-transform: translateX(0);
+	transform: translateX(0);
+  }
+
+  .accordion .accordionContainer .accordionItem div a * {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+    
+  }

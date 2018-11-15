@@ -59,7 +59,9 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 						<form className="search"><input type="text" placeholder="Search"/></form>
 					</NavItem> 
 					<NavItem>
-						<img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png"/>
+						<NavLink href="/cart">
+							<img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png"/>
+						</NavLink>
 					</NavItem> 
 
 				  </Nav>
