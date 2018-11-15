@@ -17,7 +17,7 @@ export default class Routes extends BasicPage {
 	/>
 	public render(){
 		return (
-			<div>
+			<>
 				<Switch>
 					<Route exact={true} path="/" ><Home/></Route>
 					<Route exact={true} path="/register"><Register APIS={this.props.APIS}/></Route>
@@ -28,7 +28,7 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/product/:id" render={this.loadProduct} />
 				</Switch>
 
-			</div>
+			</>
 		)
 	}
 
