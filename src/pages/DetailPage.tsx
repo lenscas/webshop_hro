@@ -33,7 +33,13 @@ export default class Products extends BasicComponent<ProductProps> {
             return <></>
         }
         return (
-            <div className="detail">
+
+            <body>
+        <div className="bg">
+
+        <p className="py-5 text-center"/>
+
+            <div className="detail">                
                 <img className="logo2"src="http://www.tabletopgameshop.co.uk/media/com_easysocial/photos/42/51/mtg-logo-700x560_thumbnail.png"/>
                 <img className="cardImage" src={card.image}/>
                 <div className="details">
@@ -47,6 +53,8 @@ export default class Products extends BasicComponent<ProductProps> {
                     {this.renderAbilities(card)}
                 </div>
             </div>
+            </div>
+            </body>
            )
     }
     async getCard(params : paramsForLoad) : Promise<renderType>{
@@ -58,6 +66,7 @@ export default class Products extends BasicComponent<ProductProps> {
             toRender={this.renderCard}
             params={{cardId:this.props.match.params.id}}
             getData={this.getCard}
+            
         />
     }
 }

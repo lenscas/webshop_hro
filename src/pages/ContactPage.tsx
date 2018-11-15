@@ -16,6 +16,7 @@ export default class ContactPage extends BasicPage {
 		console.log("Did submit")
 	}
     render() {
+        
         const fields : Array<InputField<string>> = [
             {
                 name : "firstName",

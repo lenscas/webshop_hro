@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { addAsync } from "../funcs/lambdas";
 import Button from "reactstrap/lib/Button";
 
+
 type fourProducts = [productList,productList?,productList?,productList?]
 
 export default class ProductList extends BasicPage {
@@ -43,6 +44,7 @@ export default class ProductList extends BasicPage {
                 
         }
     }
+
     render(){
         const fetch = async (num : number) => await getList(this.props.APIS.req,num)
         const render = (p : fourProducts)=>this.makeRenderable(p)
