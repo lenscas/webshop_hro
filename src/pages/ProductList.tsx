@@ -7,6 +7,7 @@ import { Link, match } from "react-router-dom";
 import { addAsync, createRouteWithParams } from "../funcs/lambdas";
 import Button from "reactstrap/lib/Button";
 import { props } from "src/types/BasicProps";
+import Price from "src/components/Price";
 
 type fourOfAKind<T> = [T,T?,T?,T?]
 type fourProducts = fourOfAKind<productList>
@@ -69,10 +70,10 @@ export default class ProductList extends BasicPage<ProductListProps> {
                 element: (
                     <div className="row pt-2">
                             <div className="col-8">
-                                <span id="pPrice">€ {p.price / 100}</span>
+                                <span id="pPrice"><Price price={p.price}/></span>
                             </div>
                             <div className="col-4">
-                                <Button className="btn-sm float-right" id="addCart"color="warning">Add to cart</Button>{' '}
+                                <Button className="btn-md float-right" id="addCart"color="success">Add to cart</Button>{' '}
                             </div>
                         </div>
                 )

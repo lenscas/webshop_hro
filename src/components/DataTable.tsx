@@ -68,7 +68,12 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>,TableStat
 
 	}
 	renderBody(lines){
-		return lines.map( (v,k)=><tr key={k}>{this.renderLine(v)}</tr>)
+		
+		let rowClass= ""
+		if(this.props.equalWidth){
+			rowClass= "d-flex"
+		}
+		return lines.map( (v,k)=><tr className={rowClass} key={k}>{this.renderLine(v)}</tr>)
 	}
 	renderLine(line : renderable[]){
 		let colClass = ""
@@ -102,7 +107,7 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>,TableStat
 		return (
 			<>
 				{buttons}
-				<Table striped={this.striped()} hover={this.hover()} borderless={this.props.borderLess !== undefined && this.props.borderLess} >
+				<Table striped={this.striped()} responsive={true} hover={this.hover()} borderless={this.props.borderLess !== undefined && this.props.borderLess} >
 					<thead>
 						<tr>
 							{this.renderHead()}
