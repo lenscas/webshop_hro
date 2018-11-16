@@ -1,0 +1,6 @@
+pre{
+	display: flex;
+	white-space: normal;
+	word-break: break-word;
+	font-family: sans-serif;
+}
