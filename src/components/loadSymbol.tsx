@@ -2,7 +2,7 @@ import * as React from "react";
 import BasicComponent from "src/types/smallComponent";
 
 type loadProps<ParamT,resT> = {
-	toRender : (resT)=> JSX.Element
+	toRender : (data? : resT, getData?: (data : ParamT)=>Promise<void> )=> JSX.Element
 	params : ParamT
 	getData : (params : ParamT)=>Promise<resT>
 }
@@ -15,11 +15,12 @@ export default class LoadSymbol<ParamT,ResT> extends BasicComponent<loadProps<Pa
 	constructor(props){
 		super(props)
 		this.state = {doneLoading:false}
+		this.getData = this.getData.bind(this)
 	}
 	async getData(params : ParamT){
 		this.easySetState({doneLoading: false},async ()=>{
 			const res = await this.props.getData(params)
-			this.easySetState({results:res,doneLoading:true},()=>console.log('its done'))
+			this.easySetState({results:res,doneLoading:true},()=>console.log("it's done"))
 		})
 	}
 	checkEqual(oldProps : ParamT , newProps : ParamT){
@@ -46,7 +47,7 @@ export default class LoadSymbol<ParamT,ResT> extends BasicComponent<loadProps<Pa
 			<i className=" fas fa-spinner fa-spin fa-10x laden" />
 			</div>
 		}
-		const res = this.props.toRender(this.state.results)
+		const res = this.props.toRender(this.state.results,this.getData)
 		return res
 
 	}

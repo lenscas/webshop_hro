@@ -1,5 +1,5 @@
 import {API} from "./basics";
-//import { readLocal } from "../services/localStorage";
+import { readLocal } from "../services/localStorage";
 
 export type cardId = string
 
@@ -84,8 +84,8 @@ export const getCard = async (api: API, id: cardId) :Promise<product | undefined
 
 export const getCart = async (api: API) => {  
     
-    const cartList = await api.doRequest<cartItem[]>("api/shoppingcard/",(t : any)=>t)
-    //readLocal<cartItem[]>("cart") || []
+    const cartList = readLocal<cartItem[]>("cart") || undefined
+    //cartList = await api.doRequest<cartItem[]>("api/shoppingcart/",(t : any)=>t)
     
     let i:any
   

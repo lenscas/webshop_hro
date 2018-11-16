@@ -1,9 +1,10 @@
 import * as React from "react";
 import BasicComponent from "src/types/basicComponent";
-import { getCard, product,cardId } from "../services/product";
+import { getCard, product,cardId, cartItem } from "../services/product";
 import LoadSymbol from "../components/loadSymbol";
 import { props } from "src/types/BasicProps";
 import { match } from "react-router";
+import { quantMod } from "src/components/addToCart";
 type ProductProps =  props &  {match :match<{id:string}>}
 type paramsForLoad = {cardId : cardId}
 type renderType = product | undefined
@@ -14,6 +15,10 @@ export default class Products extends BasicComponent<ProductProps> {
         this.renderAbilities  = this.renderAbilities.bind(this)
         this.renderCard       = this.renderCard.bind(this)
         this.getCard          = this.getCard.bind(this)
+    }
+    modOnClick(cart: product, mod: number){
+        const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.price, quantity : 1, priceTotal : "", priceTotalNum : 0}
+        return ()=>quantMod(cartThing, mod)
     }
     renderLowerStats(card: product){
         if(card.toughness && card.power){
@@ -41,7 +46,7 @@ export default class Products extends BasicComponent<ProductProps> {
                     <h3>{card.typeLine}</h3>
                     {this.renderLowerStats(card)}
                     <h3>Price: {card.price}</h3>
-                    <button className="btn btn-warning" id="buttonCart">Add to cart</button>
+                    <button className="btn btn-warning" id="buttonCart" onClick={this.modOnClick(card, 1)}>Add to cart</button>
                 </div>
                 <div className="detailsText">
                     {this.renderAbilities(card)}
