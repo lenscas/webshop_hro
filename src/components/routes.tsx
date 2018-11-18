@@ -8,6 +8,8 @@ import Home from "src/pages/HomePage";
 import Products from "src/pages/DetailPage";
 import ContactPage from "src/pages/ContactPage";
 import Cart from "src/pages/Cart"
+import Decks from "src/pages/decks";
+import DeckList from "src/pages/DeckList";
 
 
 export default class Routes extends BasicPage {
@@ -16,6 +18,10 @@ export default class Routes extends BasicPage {
 		match={props.match}
 	/>
 	cardListPage = (props : RouteComponentProps<{pageNum:string}>) => <ProductList
+		APIS={this.props.APIS}
+		match={props.match}
+	/>
+	deckListPage = (props :RouteComponentProps<{id:string}>) =><DeckList
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
@@ -31,6 +37,8 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/login"><Login APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/contact"><ContactPage APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/product/:id" render={this.cardPage} />
+					<Route exact={true} path="/decks"><Decks APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/decks/:id" render={this.deckListPage}/>
 				</Switch>
 
 			</>

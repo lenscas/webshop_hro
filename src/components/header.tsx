@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 export default class Header extends React.Component<{},{isOpen:boolean}> {
 	constructor(props) {
 		super(props);
-	
+
 		this.toggle = this.toggle.bind(this);
 		this.state = {
 		  isOpen: false
@@ -26,7 +26,7 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 		  isOpen: !this.state.isOpen
 		});
 	  }
-	
+
 	render() {
 		return(
 			<div>
@@ -45,7 +45,7 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 					  <NavLink tag={Link} to="/">Boosters</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink tag={Link} to="/">Decks</NavLink>
+					  <NavLink tag={Link} to="/decks">Decks</NavLink>
 					</NavItem>
 					<NavItem>
 					  <NavLink tag={Link} to="/contact">Contact us</NavLink>
@@ -58,24 +58,24 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 					</NavItem>
 					<NavItem>
 						<form className="search"><input type="text" placeholder="Search"/></form>
-					</NavItem> 
+					</NavItem>
 					<NavItem>
 						<NavLink tag={Link} to="/cart">
 							<img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png"/>
 						</NavLink>
-					</NavItem> 
+					</NavItem>
 
 				  </Nav>
 				</Collapse>
 			  </Navbar>
 			</div>
-		  ); 
-		
+		  );
+
 		// (
 		// 	<nav className="navbar navbar-expand-lg navbar-light bg-dark text-white header">
 		// 		<ul className="nav navbar-nav">
 		// 		<NavbarToggler onClick={this.toggle} />
-		// 		<Collapse isOpen={this.state.isOpen} navbar>	
+		// 		<Collapse isOpen={this.state.isOpen} navbar>
 		// 			<li><Link className="nav nav-link text-white" to="/">Home</Link></li>
 		// 			<li><Link className="nav nav-link text-white" to="/products">Cards</Link></li>
 		// 			<li><Link className="nav nav-link text-white" to="/products">Boosters</Link></li>
@@ -89,7 +89,7 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 		// 		</NavbarToggler>
 		// 		</ul>
 		// 	</nav>
-			
+
 		// );
 	}
 }
