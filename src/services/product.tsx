@@ -1,5 +1,4 @@
 import {API} from "./basics";
-//import { readLocal } from "../services/localStorage";
 
 export type cardId = string
 
@@ -22,10 +21,6 @@ export type product = {
     price:      number;
     typeLine:   string;
 }
-
-
-
-
 
 export const getList = async (api: API,pageNum : number) => {
     const products = await api.doRequest<productList[]>(`api/main/20/${pageNum}`,(t : any)=>t)

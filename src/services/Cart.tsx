@@ -1,5 +1,6 @@
 import { sepNum } from "../funcs/lambdas";
 import { API } from "./basics";
+import { readLocal } from "./localStorage";
 
 export type cartItem = {
     id:string;
@@ -12,25 +13,25 @@ export type cartItem = {
 }
 export const getCart = async (api: API) => {  
     
-    const cartList = await api.doRequest<cartItem[]>("api/shoppingcard/",(t : any)=>t)
-    //readLocal<cartItem[]>("cart") || []
+    const cartList = readLocal<cartItem[]>("cart") || undefined
+    //cartList = await api.doRequest<cartItem[]>("api/shoppingcart/",(t : any)=>t)
     
     let i:any
   
     if(cartList !== undefined){
             for(i = cartList.length - 1;i>=0;i--) 
             {
+                cartList[i].priceTotalNum = cartList[i].priceNum * cartList[i].quantity
+                
                 cartList[i].priceNum = cartList[i].priceNum/100
 
-                cartList[i].price = `${cartList[i].priceNum}`
+                cartList[i].priceTotalNum = cartList[i].priceTotalNum/100
 
-                cartList[i].price = `${cartList[i].priceNum}`  
+                cartList[i].price = `${cartList[i].priceNum}`
 
                 cartList[i].price = sepNum(cartList[i].price)
 
                 cartList[i].price = "€ " + cartList[i].price
-            
-                cartList[i].priceTotalNum = cartList[i].priceNum * cartList[i].quantity
 
                 cartList[i].priceTotal = `${cartList[i].priceTotalNum}`
 

@@ -38,11 +38,12 @@ export function sepNum(num: string){
 		splitPrice.push("")
 	}
 	let extraNums = ""
-	while (splitPrice[0].length > 3){
-		extraNums += " " + splitPrice[0].slice(splitPrice[0].length-3)
-		splitPrice[0] = splitPrice[0].slice(0,-3)
-	}
-	splitPrice[0] += extraNums
-	num = splitPrice[0] + splitPrice [1]
-	return num
+    while (splitPrice[0].length > 3)
+    {
+        extraNums = " " + splitPrice[0].slice(splitPrice[0].length-3) + extraNums
+        splitPrice[0] = splitPrice[0].slice(0,-3)
+    }
+    splitPrice[0] = splitPrice[0] + extraNums
+    num = splitPrice[0] + splitPrice [1]
+    return num
 }
