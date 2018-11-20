@@ -1,6 +1,7 @@
 import * as React from "react";
 import BasicPage from "../types/basicComponent";
 import Form, {InputField, FormData} from "../components/form";
+import { retTrue } from "src/funcs/lambdas";
 
 type testSubmit = {
 	test : string
@@ -16,19 +17,23 @@ export default class FormTest extends BasicPage {
 		console.log("Did submit")
 	}
 	render(){
-		const fields : Array<InputField<string> | InputField<number>>= [
+		const fields : InputField[]= [
 			{
+				type:"text",
 				name : "testString",
 				label : "This is to test strings",
 				id : "teststring",
+				validator: retTrue
 			},
 			{
+				type : "number",
 				name : "testNumber",
 				label : "This is to test number",
 				id : "testnumber",
-				type : "number"
+				validator:retTrue
 			},
 			{
+				type:"text",
 				name: "limited",
 				label : "can't enter test",
 				id : "limited",

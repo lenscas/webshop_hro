@@ -1,6 +1,20 @@
-pre{
-	display: flex;
-	white-space: normal;
-	word-break: break-word;
-	font-family: sans-serif;
+#pPrice{
+	float: left;
+	font-size: 25px;
+	margin: 10px;
+}
+#addCart{
+	float: right;
+	margin: 10px;
+	font-family: comic sans-serif;
+	position: relative;
+	left: 17px;
+}
+.listNameContainer{
+	font-family: "magic";
+	font-weight: bold;
+	text-align: center;
+}
+.listName{
+	font-weight: bold
 }

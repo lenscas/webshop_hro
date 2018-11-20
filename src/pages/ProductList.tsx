@@ -1,15 +1,29 @@
 import * as React from "react";
+import "../style/productList.css"
 import BasicPage from "../types/basicComponent";
-import { getList, productList } from "../services/product";
+import { getList, productList, cardId } from "../services/product";
 import DataTable, { renderable } from "../components/DataTable";
-import { Link } from "react-router-dom";
-import { addAsync } from "../funcs/lambdas";
+import { Link, match } from "react-router-dom";
+import { addAsync, createRouteWithParams } from "../funcs/lambdas";
 import Button from "reactstrap/lib/Button";
+import { props } from "src/types/BasicProps";
+import Price from "src/components/Price";
 
-
-type fourProducts = [productList,productList?,productList?,productList?]
-
-export default class ProductList extends BasicPage {
+type fourOfAKind<T> = [T,T?,T?,T?]
+type fourProducts = fourOfAKind<productList>
+type splittedCard = {
+    title : string
+    id: cardId
+} | {
+    image : string,
+    id : cardId
+} |
+    {
+        id:cardId,
+        price: number
+    }
+type ProductListProps = props &  {match? :match<{pageNum:string}>}
+export default class ProductList extends BasicPage<ProductListProps> {
     makeTriplets(products : productList[]){
         const newList : fourProducts[] = []
         let build : fourProducts | productList[] = []
@@ -23,42 +37,114 @@ export default class ProductList extends BasicPage {
         newList.push(build as fourProducts)
         return newList
     }
-    makeRenderable(products : fourProducts){
+    makeRenderable(products : splittedCard[]){
         return products.map( (prod,key)=>{
             if(prod){
-                return this.makeLink(prod)
+                return this.makeLink(prod,key)
             }
             return {key,element:<></>}
         })
     }
-    makeLink(p :productList) : renderable{
-        return {
-            key : p.id,
-            element : (<div id="testdiv"><h5 className="listName">{p.name}</h5>
-                <Link key={p.id} to={`/product/${p.id}`}>
-                    <img id="pImage"src={p.image}/>
-                </Link>
-                <a id="pPrice">€ {p.price / 100}</a>
-                <Button className="btn-sm" id="addCart"color="warning">Add to cart</Button>{' '}
-                </div>)
-                
+    makeLink(p :splittedCard,key:number) : renderable{
+        if("title" in p){
+            return {
+                key: p.id +" title",
+                element :(
+                    <div className="listNameContainer">
+                        <h4 className="listName">{p.title}</h4>
+                    </div>
+                )
+            }
+        } else if("image" in p){
+            return {
+                key : p.id + " image",
+                element: (
+                    <Link key={p.id} to={`/product/${p.id}`}>
+                        <img className="img-fluid"src={p.image}/>
+                    </Link>
+                )
+            }
+        } else if("price" in p){
+            return {
+                key: p.id + "price",
+                element: (
+                    <div className="row pt-2">
+                            <div className="col-8">
+                                <span id="pPrice"><Price price={p.price}/></span>
+                            </div>
+                            <div className="col-4">
+                                <Button className="btn-md float-right" id="addCart"color="success">Add to cart</Button>{' '}
+                            </div>
+                        </div>
+                )
+            }
         }
+        return {key,element:<></>}
     }
 
     render(){
         const fetch = async (num : number) => await getList(this.props.APIS.req,num)
-        const render = (p : fourProducts)=>this.makeRenderable(p)
-        const converter = (res : productList[])=>this.makeTriplets(res)
-        const combined =  addAsync<productList[], fourProducts[]>(fetch,converter)
+        const render = (p : splittedCard[])=>this.makeRenderable(p)
+        const combined =  addAsync<productList[],splittedCard[][]>(
+            fetch,
+            (prodList:productList[] )=>{
+                prodList.reverse()
+                let firstSplit:splittedCard[][] = []
+                const secondSplit:splittedCard[][] = []
+                const putIntoSplit = (splited : splittedCard[][])=> {
+                    const nameLines:splittedCard[] = []
+                    firstSplit.forEach(split=>{const item = split.pop(); if(item){nameLines.unshift(item)}})
+                    secondSplit.push(nameLines)
+                    const imageLines:splittedCard[] = []
+                    firstSplit.forEach(split=>{const item = split.pop(); if(item){imageLines.unshift(item)}})
+                    secondSplit.push(imageLines)
+                    const priceLines : splittedCard[] =[]
+                    firstSplit.forEach(split=>{const item = split.pop(); if(item){priceLines.unshift(item)}})
+                    secondSplit.push(priceLines)
+                }
+                prodList.forEach( (product,key) => {
+                    const last:splittedCard[] = []
+                    last.push({
+                        id:product.id,
+                        title:product.name
+                    })
+                    last.push({
+                        image:product.image,
+                        id:product.id
+                    })
+                    last.push({price:product.price,id:product.id})
+                    firstSplit.push(last)
+                    if( (key+1) % 4===0){
+                        putIntoSplit(firstSplit)
+                        firstSplit=[]
+                    }
+                });
+                putIntoSplit(firstSplit)
+                secondSplit.reverse();
+                return secondSplit;
+            }
+        )
+        let pageNumber = 1
+        if(this.props.match ){
+            pageNumber = Number(this.props.match.params.pageNum)
+        }
         return (
-            <div id="cardList">
-            <img id="MagicLogoPPage"src="http://www.tabletopgameshop.co.uk/media/com_easysocial/photos/42/51/mtg-logo-700x560_thumbnail.png"/>
-            <DataTable<fourProducts>
-                fetch={combined}
-                render={render}
-                hover={false}
-                striped={false}
-            />
+            <div id="cardList" className="row">
+                <div className="col-2" style={{"border":"solid black 1px"}}>
+                    <h2>Filters</h2>
+                </div>
+                <div className="col-10">
+                    <DataTable<splittedCard[]>
+                        fetch={combined}
+                        render={render}
+                        pageNumber= {pageNumber}
+                        setUrlHandler = {createRouteWithParams("/products")}
+                        hover={false}
+                        striped={false}
+                        equalWidth={true}
+                        borderLess={true}
+                    />
+                </div>
         </div>)
 
 	}

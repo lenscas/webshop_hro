@@ -8,11 +8,13 @@ import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import { API } from "./services/basics";
 import { props } from './types/BasicProps';
+import {storeLocalRaw, readLocalRaw} from "./services/localStorage";
 
 
 type appState = {
 	userId?: string
 	alerts: string[]
+	token?: string
 }
 
 class App extends React.Component<{}, appState>{
@@ -23,8 +25,13 @@ class App extends React.Component<{}, appState>{
 	public clearAlerts() {
 		this.setState(st => ({ ...st, alerts: [] }))
 	}
+	public setToken(token :string){
+		this.setState(st=>({...st,token}))
+		storeLocalRaw("token",token)
+	}
 	public render() {
-		const api = new API();
+		const maybeToken = this.state.token || readLocalRaw("token")
+		const api = new API( (token :string)=>this.setState(st=>({...st,token})),maybeToken);
 		api.setOnAll(data=>this.setState((st=>({...st,userId:data.userId}))))
 		// tslint:disable-next-line:no-console
 		api.setOnError(data=>console.error(data))

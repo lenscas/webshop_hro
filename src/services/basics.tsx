@@ -10,13 +10,16 @@ type APIError = BaseAPIReturn & {
 	data : any
 }
 export class API {
+	public setToken : (token : string)=>void
 	private path?   : string
 	private config? : any
+	private token? : string
 	private converter : any
-
 	private onAll? : (data : BaseAPIReturn)=>void
-	constructor(){
+	constructor(setToken : (token : string)=>void, token?:string){
 		this.resetBuilder();
+		this.setToken = setToken
+		this.token = token
 	}
 	public setOnError( errorHandler : (error : APIError)=>void){
 		this.onError = errorHandler;
@@ -81,6 +84,9 @@ export class API {
 		config.mode = "cors"
 		config.credentials = "include"
 		config.headers["Content-Type"] = "application/json"
+		if(this.token){
+			config.headers.Autorization = "Bearer " + this.token
+		}
 		const res : Response = await fetch(apiUrl + path, config);
 	//	debugger;
 		const json = await res.json() as APIReturn<T>;

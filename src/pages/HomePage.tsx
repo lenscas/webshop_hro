@@ -1,6 +1,6 @@
 import * as React from "react";
-
 import "../style/accordion.css"
+import { Link } from "react-router-dom";
 const colors = [
     "white",
     "blue",
@@ -12,13 +12,13 @@ const colors = [
 export default class Home extends React.Component {
     renderCardSelector(name : string){
         return (
-            <div key={name} className={"col accordionItem "+ name}>
+            <Link to="/products" key={name} className={"col accordionItem "+ name}>
                 <div>
-                    <a href="#" className="sliderLink">
+                    <a>
                         <h2 className="TitleCard">{name}</h2>
                     </a>
                 </div>
-            </div>
+            </Link>
         )
     }
     render() {
