@@ -50,18 +50,22 @@ export const getCart = async (api: API) => {
 };
 
 export const getTotals = (cart: cartItem[]) => {
-    let totalItems: string
-    let totalPrice: string
-    totalItems = "0";
-    totalPrice = "0";
+    let totalItems: number
+    let totalPrice: number
+    totalItems = 0;
+    totalPrice = 0;
+    let totalItemsStr: string
+    let totalPriceStr: string
 
     let i: any
     for (i = cart.length - 1; i >= 0; i--) {
         totalItems += cart[i].quantity;
         totalPrice += cart[i].priceTotalNum;
     }
-    totalItems = sepNum(totalItems.toString())
-    totalPrice = sepNum(totalPrice.toString())
+    console.log(totalItems)
+    console.log(totalPrice)
+    totalItemsStr = sepNum(totalItems.toString())
+    totalPriceStr = sepNum(totalPrice.toString())
 
-    return [totalItems, totalPrice];
+    return [totalItemsStr, totalPriceStr];
 };
