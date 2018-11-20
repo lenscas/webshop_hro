@@ -24,11 +24,7 @@ export default class Products extends BasicComponent<ProductProps> {
     }
     modOnClick(cart: product, mod: number){
         const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.price, quantity : 1, priceTotal : "", priceTotalNum : 0}
-        const shoppingCartId = this.props.APIS.shoppingCartId;
-        if(shoppingCartId !== undefined) {
-            return ()=>quantMod(cartThing, mod, this.props.APIS.req, shoppingCartId)
-        }
-        return ()=>quantMod(cartThing, mod, this.props.APIS.req, -1)
+        return ()=>quantMod(cartThing, mod, this.props.APIS.req)
     }
     renderLowerStats(card: product){
         if(card.toughness && card.power){

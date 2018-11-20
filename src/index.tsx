@@ -29,6 +29,10 @@ class App extends React.Component<{}, appState>{
 	public setToken(token :string){
 		this.setState(st=>({...st,token}))
 		storeLocalRaw("token",token)
+		const shoppingCartId = this.state.shoppingCartId
+		if (shoppingCartId !== undefined){
+		storeLocalRaw("shoppingCartId", shoppingCartId.toString())
+		}
 	}
 	public render() {
 		const maybeToken = this.state.token || readLocalRaw("token")

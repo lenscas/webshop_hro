@@ -21,10 +21,7 @@ export const getCart = async (api: API) => {
         }
 
     }
-    cartList = readLocal<cartItem[]>("cart") || []
-    if(cartList.length === 0) {
-        storeLocal("cart", []);
-    }
+    cartList = readLocal<cartItem[]>("cart") || undefined
 
     let i: any
 
