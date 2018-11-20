@@ -4,6 +4,7 @@ export type props = {
 		setHeader : (header:string)=>void;
 		req : API;
 		userId? : string;
+		shoppingCartId?: number
 		setUserId : (newUserId? : string)=>void;
 		clearAlerts :()=>void;
 	}

@@ -13,6 +13,7 @@ import {storeLocalRaw, readLocalRaw} from "./services/localStorage";
 
 type appState = {
 	userId?: string
+	shoppingCartId?: number
 	alerts: string[]
 	token?: string
 }
@@ -32,14 +33,13 @@ class App extends React.Component<{}, appState>{
 	public render() {
 		const maybeToken = this.state.token || readLocalRaw("token")
 		const api = new API( (token :string)=>this.setState(st=>({...st,token})),maybeToken);
-		api.setOnAll(data=>this.setState((st=>({...st,userId:data.userId}))))
-		// tslint:disable-next-line:no-console
+		api.setOnAll(data=>this.setState((st=>({...st,userId:data.userId,shoppingCartId:data.cartId}))))
 		api.setOnError(data=>console.error(data))
 		const APIS = {
-			// tslint:disable-next-line:no-console
 			setHeader: (header: string) => console.log(header),
 			req: api,
 			userId: this.state.userId,
+			shoppingCartId: this.state.shoppingCartId,
 			setUserId: (newUserId?: string) => this.setState((st) => ({ ...st, userId: newUserId })),
 			clearAlerts: () => this.clearAlerts(),
 		}
