@@ -1,13 +1,15 @@
 import * as React from "react";
 import "../style/productList.css"
 import BasicPage from "../types/basicComponent";
-import { getList, productList, cardId } from "../services/product";
+import { getList, productList, cardId} from "../services/product";
 import DataTable, { renderable } from "../components/DataTable";
 import { Link, match } from "react-router-dom";
 import { addAsync, createRouteWithParams } from "../funcs/lambdas";
 import Button from "reactstrap/lib/Button";
 import { props } from "src/types/BasicProps";
 import Price from "src/components/Price";
+import { quantMod } from "src/components/addToCart";
+import { cartItem } from "src/services/Cart";
 
 type fourOfAKind<T> = [T,T?,T?,T?]
 type fourProducts = fourOfAKind<productList>
@@ -20,10 +22,19 @@ type splittedCard = {
 } |
     {
         id:cardId,
-        price: number
+        price: number,
+        name: string
     }
 type ProductListProps = props &  {match? :match<{pageNum:string}>}
 export default class ProductList extends BasicPage<ProductListProps> {
+    modOnClick(cart: cartItem, mod: number){
+        const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.priceNum, quantity : 1, priceTotal : "", priceTotalNum : 0}
+        const shoppingCartId = this.props.APIS.shoppingCartId;
+        if(shoppingCartId !== undefined) {
+            return ()=>quantMod(cartThing, mod, this.props.APIS.req, shoppingCartId)
+        }
+        return ()=>quantMod(cartThing, mod, this.props.APIS.req, -1)
+    }
     makeTriplets(products : productList[]){
         const newList : fourProducts[] = []
         let build : fourProducts | productList[] = []
@@ -73,7 +84,15 @@ export default class ProductList extends BasicPage<ProductListProps> {
                                 <span id="pPrice"><Price price={p.price}/></span>
                             </div>
                             <div className="col-4">
-                                <Button className="btn-md float-right" id="addCart"color="success">Add to cart</Button>{' '}
+                                <Button onClick={this.modOnClick({
+                                    id: p.id,
+                                    name: p.name,
+                                    price: "",
+                                    priceNum: p.price,
+                                    quantity: 0,
+                                    priceTotal: "",
+                                    priceTotalNum: 1
+                                }, 1)} className="btn-md float-right" id="addCart"color="success">Add to cart</Button>{' '}
                             </div>
                         </div>
                 )
@@ -112,7 +131,7 @@ export default class ProductList extends BasicPage<ProductListProps> {
                         image:product.image,
                         id:product.id
                     })
-                    last.push({price:product.price,id:product.id})
+                    last.push({price:product.price, id:product.id, name:product.name})
                     firstSplit.push(last)
                     if( (key+1) % 4===0){
                         putIntoSplit(firstSplit)
