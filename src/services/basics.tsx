@@ -88,7 +88,8 @@ export class API {
 			config.headers.Authorization = "Bearer " + this.token
 		}
 		const res : Response = await fetch(apiUrl + path, config);
-	//	debugger;
+		// tslint:disable-next-line:no-debugger
+		//debugger;
 		const json = await res.json() as APIReturn<T>;
 		//debugger;
 		return json;
