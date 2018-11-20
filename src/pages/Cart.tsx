@@ -26,7 +26,12 @@ export default class Cart extends BasicComponent<props,{modif: number}>{
       }
     
     modOnClick(cartThing: cartItem, mod: number, update : (params : {})=>Promise<void>){
-        return ()=>quantMod(cartThing, mod, this.props.APIS.req ,update)
+        const shoppingCartId = this.props.APIS.shoppingCartId;
+        if(shoppingCartId !== undefined) {
+            return ()=>quantMod(cartThing, mod, this.props.APIS.req, shoppingCartId,update)
+        } 
+        return ()=>quantMod(cartThing, mod, this.props.APIS.req, -1,update)
+        
     }
 
 

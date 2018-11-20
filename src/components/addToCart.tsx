@@ -10,7 +10,7 @@ export class AddToCartBtn extends BasicComponent<{}, {}>{
 }
 
 
-export async function quantMod(cartThing: cartItem, modifier: number, api: API, update?: (params: {}) => Promise<void>) {
+export async function quantMod(cartThing: cartItem, modifier: number, api: API, shoppingCartId : number, update?: (params: {}) => Promise<void>) {
 
     let cart: cartItem[] | undefined = []
     cart = readLocal<cartItem[]>("cart") || undefined
@@ -27,7 +27,7 @@ export async function quantMod(cartThing: cartItem, modifier: number, api: API, 
         }
         await (api.buildRequest("path", "api/shoppingcart")
                 .buildRequest("method", "POST")
-                .buildRequest("body", { shoppingcardId: 53, printId: cartThing.id, quantity: item.quantity })
+                .buildRequest("body", { shoppingcardId: shoppingCartId, printId: cartThing.id, quantity: item.quantity })
                 .buildRequest("converter", (t: APIReturn<{ data: string, success: boolean }>) => console.log(t.data.data))).run()
         storeLocal("cart", cart)
     }
