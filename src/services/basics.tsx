@@ -10,13 +10,16 @@ type APIError = BaseAPIReturn & {
 	data : any
 }
 export class API {
+	public setToken : (token : string)=>void
 	private path?   : string
 	private config? : any
+	private token? : string
 	private converter : any
-
 	private onAll? : (data : BaseAPIReturn)=>void
-	constructor(){
+	constructor(setToken : (token : string)=>void, token?:string){
 		this.resetBuilder();
+		this.setToken = setToken
+		this.token = token
 	}
 	public setOnError( errorHandler : (error : APIError)=>void){
 		this.onError = errorHandler;
@@ -81,7 +84,9 @@ export class API {
 		config.mode = "cors"
 		config.credentials = "include"
 		config.headers["Content-Type"] = "application/json"
-		config.headers.Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0aW1AZGFsbGF1LmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJUaW0gRGFsbGF1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI0IiwibmJmIjoiMTU0MjI5MDExMiIsImV4cCI6IjE1NDIzNzY1MTIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc2VyIn0.EeKzbSx2ufTa3o9b2LYYDTlaw9aqBze2IdOm73aQXxk"
+		if(this.token){
+			config.headers.Autorization = "Bearer " + this.token
+		}
 		const res : Response = await fetch(apiUrl + path, config);
 	//	debugger;
 		const json = await res.json() as APIReturn<T>;
