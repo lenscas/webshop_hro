@@ -1,14 +1,57 @@
-    import * as React from "react";
-    import {register,RegisterUser} from "../services/users";
-    import BasicPage from "../types/basicComponent";
-    import Form, {InputField, FormData} from "../components/form";
-    import { retTrue } from "src/funcs/lambdas";
+import * as React from "react";
+import {register,RegisterUser} from "../services/users";
+import BasicPage from "../types/basicComponent";
+import Form, {InputField, FormData} from "../components/form";
+import { retTrue } from "src/funcs/lambdas";
+import { Redirect } from "react-router";
+import { props } from "src/types/BasicProps";
+import CardBody from "reactstrap/lib/CardBody";
+import Card from "reactstrap/lib/Card";
 
-export default class Register extends BasicPage {
-    onSubmit(data : FormData<RegisterUser>){
-        register(data.values, this.props.APIS.req);
+type registerState = {
+    success? : boolean | {success: boolean, message}
+}
+export default class Register extends BasicPage<props,registerState> {
+    constructor(propsy){
+        super(propsy)
+        this.state = {}
+    }
+    async onSubmit(data : FormData<RegisterUser>){
+        const res = await register(data.values, this.props.APIS.req);
+        if(res === false || res===true){
+            this.easySetState({success:res})
+        } else if(res === undefined){
+            this.easySetState({success: false})
+        } else {
+            this.easySetState({success:res})
+        }
     }
     render(){
+        if(this.props.APIS.userId){
+            return <Redirect to="/"/>
+        }
+        let warnings = <></>
+        if(this.state.success !== undefined){
+            if(this.state.success ===false){
+                warnings = (
+                    <Card color="warning">
+                        <CardBody>
+                            Something wend wrong, please try again later.
+                        </CardBody>
+                    </Card>
+                )
+            } else if (this.state.success !== true  && this.state.success.success === false){
+                warnings = (
+                    <Card color="warning">
+                        <CardBody>
+                            {this.state.success.message}
+                        </CardBody>
+                    </Card>
+                )
+            }
+        }
+        
+
         const fields : InputField[]= [
             {
                 type:"text",
@@ -58,6 +101,9 @@ export default class Register extends BasicPage {
             }
         ]
         const onSubmit =(data :FormData<RegisterUser> )=>this.onSubmit(data)
-        return <Form<RegisterUser> onSubmit={onSubmit} inputs={fields}/>
+        return <>
+            {warnings}
+            <Form<RegisterUser> onSubmit={onSubmit} inputs={fields}/>
+        </>
     }
 }

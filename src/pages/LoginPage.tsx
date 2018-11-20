@@ -11,7 +11,7 @@ export default class Login extends BasicPage {
     }
     render() {
         if(this.props.APIS.userId){
-            return <Redirect to="/ListTest"/>
+            return <Redirect to="/"/>
         }
         const fields: InputField[] = [
             {
