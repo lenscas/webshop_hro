@@ -101,8 +101,27 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
 #laadDiv{
 margin: auto;
 width: 5%;
-margin-top: 10%;
-color:orange;
+text-align: center;
+margin-top: 25%;
+color: orange;
+}
+#addDeck{
+  height: calc(100% - 2.5rem);
+}
+#addDeckBackground{
+  color: orange;
+  text-align: center;
+  display: table;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.center {
+  vertical-align: middle;
+  display: table-cell !important;
+  background-color: rgba(0,0,0,0.2);
+  height: 100%;
 }
 
 .TitleCard :hover{

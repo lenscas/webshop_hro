@@ -7,15 +7,48 @@ import Col from "reactstrap/lib/Col";
 import OnHoverNearMouse from "src/components/onHoverNearMouse";
 import { Link } from "react-router-dom";
 import "../style/deckList.css"
+
+
 type loadParams = {}
+type buttonOrCard = decks | {id:string, element : JSX.Element,type: "button"}
 export default class Decks extends BasicPage{
 	constructor(props){
 		super(props)
 		this.renderList = this.renderList.bind(this)
 		this.getData = this.getData.bind(this)
 	}
-	renderColl(decksInRow : decks[]){
+	renderBtn() : buttonOrCard{
+		return {
+			type:"button",
+			id: "button",
+			element : (
+				<div className="col-4">
+					<Row  id="addDeck">
+						<Col>
+							<div id="addDeckBackground">
+								<span  className="fas fa-plus fa-10x center"/>
+							</div>
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+						<h3>New Deck</h3>
+						</Col>
+					
+					</Row>
+					
+				</div>
+			)
+		}
+	}
+	renderColl(decksInRow : buttonOrCard[]){
 		return decksInRow.map(deck=>{
+
+			if("type" in deck){
+				return(
+					deck.element
+				)
+			}
 			const onHover = ()=><img className="img-fluid onHoverImage" src={deck.fullImage}/>
 			return <Col xs="4" key={deck.id}>
 				<Link to={"/decks/"+deck.id}>
@@ -41,21 +74,22 @@ export default class Decks extends BasicPage{
 			</Col>
 		})
 	}
-	renderRows(allDecks: decks[][]){
-		return allDecks.map(row=>(
-			<Row key={row.map(v=>v.id).join("")}>
-				{this.renderColl(row)}
-			</Row>
-		))
+	renderRows(allDecks: buttonOrCard[][]){
+		return allDecks.map(row=>{
+			return( 
+				<Row className="row-eq-height" key={row.map(v=>v.id ).join("")}>
+					{this.renderColl(row)}
+				</Row>
+			)
+		})
 	}
 	renderList(allDecks :decks[]){
-		const inThrees : decks[][] = []
-		let last : decks[] = []
+		const inThrees : buttonOrCard[][] = []
+		let last :buttonOrCard[] = [this.renderBtn()]
 		allDecks.forEach(deck=>{
 			if(last.length === 3){
 				inThrees.push(last)
 				last = []
-
 			}
 			last.push(deck)
 		})
