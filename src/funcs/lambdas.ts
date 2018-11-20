@@ -15,7 +15,7 @@ export const createRouteWithParams = function(route :string){
 		route = route + "/"
 	}
 	return function(param : string) : string{
-		return route + param 
+		return route + param
 	}
 }
 
