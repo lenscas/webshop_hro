@@ -54,10 +54,10 @@ function sepNum(num){
     let extraNums = ""
     while (splitPrice[0].length > 3)
     {
-        extraNums += " " + splitPrice[0].slice(splitPrice[0].length-3)
+        extraNums = " " + splitPrice[0].slice(splitPrice[0].length-3) + extraNums
         splitPrice[0] = splitPrice[0].slice(0,-3)
     }
-    splitPrice[0] += extraNums
+    splitPrice[0] = splitPrice[0] + extraNums
     num = splitPrice[0] + splitPrice [1]
         return num
 }
@@ -92,17 +92,17 @@ export const getCart = async (api: API) => {
     if(cartList !== undefined){
             for(i = cartList.length - 1;i>=0;i--) 
             {
+                cartList[i].priceTotalNum = cartList[i].priceNum * cartList[i].quantity
+                
                 cartList[i].priceNum = cartList[i].priceNum/100
 
-                cartList[i].price = `${cartList[i].priceNum}`
+                cartList[i].priceTotalNum = cartList[i].priceTotalNum/100
 
-                cartList[i].price = `${cartList[i].priceNum}`  
+                cartList[i].price = `${cartList[i].priceNum}`
 
                 cartList[i].price = sepNum(cartList[i].price)
 
                 cartList[i].price = "€ " + cartList[i].price
-            
-                cartList[i].priceTotalNum = cartList[i].priceNum * cartList[i].quantity
 
                 cartList[i].priceTotal = `${cartList[i].priceTotalNum}`
 
