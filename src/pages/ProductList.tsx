@@ -81,6 +81,7 @@ export default class ProductList extends BasicPage<ProductListProps> {
         }
         return {key,element:<></>}
     }
+
     render(){
         const fetch = async (num : number) => await getList(this.props.APIS.req,num)
         const render = (p : splittedCard[])=>this.makeRenderable(p)

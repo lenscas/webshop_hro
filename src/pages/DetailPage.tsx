@@ -77,7 +77,7 @@ export default class Products extends BasicComponent<ProductProps> {
                     </Row>
                 </Col>
             </div>
-           )
+            )
     }
     async getCard(params : paramsForLoad) : Promise<renderType>{
         const test = await getCard(this.props.APIS.req,params.cardId)
@@ -88,6 +88,7 @@ export default class Products extends BasicComponent<ProductProps> {
             toRender={this.renderCard}
             params={{cardId:this.props.match.params.id}}
             getData={this.getCard}
+            
         />
     }
 }
