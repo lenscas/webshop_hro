@@ -34,11 +34,6 @@ export default class Products extends BasicComponent<ProductProps> {
         }
         return (
 
-            <body>
-        <div className="bg">
-
-        <p className="py-5 text-center"/>
-
             <div className="detail">                
                 <img className="logo2"src="http://www.tabletopgameshop.co.uk/media/com_easysocial/photos/42/51/mtg-logo-700x560_thumbnail.png"/>
                 <img className="cardImage" src={card.image}/>
@@ -53,9 +48,7 @@ export default class Products extends BasicComponent<ProductProps> {
                     {this.renderAbilities(card)}
                 </div>
             </div>
-            </div>
-            </body>
-           )
+            )
     }
     async getCard(params : paramsForLoad) : Promise<renderType>{
         const test = await getCard(this.props.APIS.req,params.cardId)
