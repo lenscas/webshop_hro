@@ -53,9 +53,9 @@ export class API {
 	}
 	public async doRequest<T,T2 =T >(path:string,converter? : (json:APIReturn<T>)=>T2,config?:object) : Promise<T2|undefined>{
 		const baseIndex = await this.baseReq<T>(path,config);
-		if(this.onAll){
+		/*if(this.onAll){
 			this.onAll(baseIndex);
-		}
+		}*/
 		if(converter){
 			const converted = await this.convert<T,T2>(baseIndex,converter);
 			if(converted===null){
