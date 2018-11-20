@@ -1,6 +1,7 @@
 import * as React from "react";
 import BasicPage from "src/types/basicComponent";
 import Form, {InputField, FormData} from "../components/form";
+import { retTrue } from "src/funcs/lambdas";
 
 type testSubmit = {
 	test : string
@@ -16,29 +17,35 @@ export default class ContactPage extends BasicPage {
 		console.log("Did submit")
 	}
     render() {
-        const fields : Array<InputField<string>> = [
+        const fields : InputField[] = [
             {
+                type:"text",
                 name : "firstName",
                 label : "First name",
                 id : "firstName",
+                validator: retTrue
             },
             {
+                type:"text",
                 name : "lastName",
                 label : "Last name",
                 id : "lastName",
+                validator:retTrue
+
             },
             {
                 name: "subject",
                 label: "Subject",
                 id : "subject",
-                type: "textarea", 
+                type: "textarea",
+                validator:retTrue
             },
             {
+                type:"button",
                 name : "submit",
                 label: "Submit",
-                innerLabel: "Submit",
+                placeholder: "Submit",
                 id : "submit",
-                type : "button"
             }
         ]
 

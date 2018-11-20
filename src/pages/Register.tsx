@@ -1,55 +1,63 @@
-import * as React from "react";
-import {register,RegisterUser} from "../services/users";
-import BasicPage from "../types/basicComponent";
-import Form, {InputField, FormData} from "../components/form";
+    import * as React from "react";
+    import {register,RegisterUser} from "../services/users";
+    import BasicPage from "../types/basicComponent";
+    import Form, {InputField, FormData} from "../components/form";
+    import { retTrue } from "src/funcs/lambdas";
 
 export default class Register extends BasicPage {
-	onSubmit(data : FormData<RegisterUser>){
-		register(data.values, this.props.APIS.req);
-	}
-	render(){
-		const fields : Array<InputField<string> | InputField<number>>= [
-			{
-				name : "username",
+    onSubmit(data : FormData<RegisterUser>){
+        register(data.values, this.props.APIS.req);
+    }
+    render(){
+        const fields : InputField[]= [
+            {
+                type:"text",
+                validator:retTrue,
+                name : "username",
                 label : "Username",
-                innerLabel: "Username",
+                placeholder: "Username",
                 id : "username",
             },
             {
-				name : "email",
+                validator:retTrue,
+                name : "email",
                 label : "E-mail",
-                innerLabel: "name@example.com",
+                placeholder: "name@example.com",
                 id : "e-mail",
                 type: "email"
             },
             {
-				name : "password",
+                validator:retTrue,
+                name : "password",
                 label : "Password",
-                innerLabel: "Password",
+                placeholder: "Password",
                 id : "password-checker",
                 type: "password"
             },
             {
-				name : "repeatPassword",
+                validator:retTrue,
+                name : "repeatPassword",
                 label : "Repeat password",
-                innerLabel: "Repeat password",
+                placeholder: "Repeat password",
                 id : "password",
                 type: "password"
             },
-			{
-				name : "approach",
+            {
+                type:"text",
+                validator:retTrue,
+                name : "approach",
                 label : "Title",
-                innerLabel: "Mr. / Mrs.",
-				id : "honorific"
-			},
-			{
-				name : "Submit",
-                innerLabel: "Submit",
-				id : "submit",
-				type : "button"
-			}
-		]
-		const onSubmit =(data :FormData<RegisterUser> )=>this.onSubmit(data)
-		return <Form<RegisterUser> onSubmit={onSubmit} inputs={fields}/>
-	}
+                placeholder: "Mr. / Mrs.",
+                id : "honorific"
+            },
+            {
+                name : "Submit",
+                placeholder: "Submit",
+                id : "submit",
+                type : "button"
+            }
+        ]
+        const onSubmit =(data :FormData<RegisterUser> )=>this.onSubmit(data)
+        return <Form<RegisterUser> onSubmit={onSubmit} inputs={fields}/>
+    }
 }

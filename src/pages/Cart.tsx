@@ -1,6 +1,6 @@
 import * as React from "react";
 import BasicComponent from "../types/basicComponent";
-import { getCart, getTotals, cartItem } from "../services/product";
+import { getCart, getTotals, cartItem } from "../services/Cart";
 import { Link } from "react-router-dom";
 import LoadSymbol from "src/components/loadSymbol";
 import { Table } from 'reactstrap';

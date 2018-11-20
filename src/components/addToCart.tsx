@@ -1,7 +1,7 @@
 // import * as React from "react";
 import BasicComponent from "src/types/smallComponent";
 import { readLocal, storeLocal } from "src/services/localStorage";
-import { cartItem } from "src/services/product";
+import { cartItem } from "src/services/Cart";
 
 export class AddToCartBtn extends BasicComponent<{},{}>{
 

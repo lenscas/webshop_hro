@@ -11,7 +11,11 @@ import Cart from "src/pages/Cart"
 
 
 export default class Routes extends BasicPage {
-	loadProduct = (props :RouteComponentProps<{id:string}>) => <Products
+	cardPage = (props :RouteComponentProps<{id:string}>) => <Products
+		APIS={this.props.APIS}
+		match={props.match}
+	/>
+	cardListPage = (props : RouteComponentProps<{pageNum:string}>) => <ProductList
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
@@ -22,10 +26,11 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/" ><Home/></Route>
 					<Route exact={true} path="/register"><Register APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/products"><ProductList APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/products/:pageNum" render={this.cardListPage}/>
 					<Route exact={true} path="/cart"><Cart APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/login"><Login APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/contact"><ContactPage APIS={this.props.APIS}/></Route>
-					<Route exact={true} path="/product/:id" render={this.loadProduct} />
+					<Route exact={true} path="/product/:id" render={this.cardPage} />
 				</Switch>
 
 			</>
