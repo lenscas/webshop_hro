@@ -32,7 +32,7 @@ class App extends React.Component<{}, appState>{
 	}
 	public render() {
 		const maybeToken = this.state.token || readLocalRaw("token")
-		const api = new API( (token :string)=>this.setState(st=>({...st,token})),maybeToken);
+		const api = new API( (token :string)=>this.setToken(token),maybeToken);
 		api.setOnAll(data=>this.setState((st=>({...st,userId:data.userId,shoppingCartId:data.cartId}))))
 		api.setOnError(data=>console.error(data))
 		const APIS = {
