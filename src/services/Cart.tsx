@@ -1,6 +1,6 @@
 import { sepNum } from "../funcs/lambdas";
 import { API } from "./basics";
-import { readLocal } from "./localStorage";
+import { readLocal, readLocalRaw } from "./localStorage";
 
 export type cartItem = {
     id:string;
@@ -13,8 +13,14 @@ export type cartItem = {
 }
 export const getCart = async (api: API) => {  
     
-    const cartList = readLocal<cartItem[]>("cart") || undefined
-    //cartList = await api.doRequest<cartItem[]>("api/shoppingcart/",(t : any)=>t)
+    let cartList : cartItem[] | undefined = []
+    console.log(readLocalRaw("token"))
+    if (readLocalRaw("token") !== undefined) {
+        cartList = await api.doRequest<cartItem[]>("api/shoppingcart/",(t : any)=>t)
+    }
+    else {
+        cartList = readLocal<cartItem[]>("cart") || undefined
+    }
     
     let i:any
   

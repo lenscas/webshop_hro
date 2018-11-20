@@ -85,7 +85,7 @@ export class API {
 		config.credentials = "include"
 		config.headers["Content-Type"] = "application/json"
 		if(this.token){
-			config.headers.Autorization = "Bearer " + this.token
+			config.headers.Authorization = "Bearer " + this.token
 		}
 		const res : Response = await fetch(apiUrl + path, config);
 	//	debugger;

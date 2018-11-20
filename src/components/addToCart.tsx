@@ -1,22 +1,31 @@
 // import * as React from "react";
 import BasicComponent from "src/types/smallComponent";
-import { readLocal, storeLocal } from "src/services/localStorage";
+import { readLocal, storeLocal, readLocalRaw } from "src/services/localStorage";
 import { cartItem } from "src/services/Cart";
+import { API, APIReturn } from "src/services/basics";
+// import { afterLogin } from "src/services/users";
 
 export class AddToCartBtn extends BasicComponent<{},{}>{
 
 }
 
 
-export const quantMod = (cartThing : cartItem, modifier: number, update? : (params : {})=>Promise<void>) =>{
-    const cart = readLocal<cartItem[]>("cart") 
+export async function quantMod(cartThing : cartItem, modifier: number, api: API, update? : (params : {})=>Promise<void>) {
+    
+    let cart : cartItem[] | undefined = []
+    if (readLocalRaw("token") !== undefined) {
+        cart = await api.doRequest<cartItem[]>("api/shoppingcart/",(t : any)=>t)
+    }
+    else {
+        cart = readLocal<cartItem[]>("cart") || undefined
+    }
     let changed : cartItem | undefined
     if (cart !== undefined){
         changed = cart.find(x => {return x.id === cartThing.id
     })  
     }
     if (changed !== undefined && changed.quantity + modifier > -1){
-    changed.quantity += modifier
+        changed.quantity += modifier
     }
     
     if(changed === undefined){
@@ -30,12 +39,21 @@ export const quantMod = (cartThing : cartItem, modifier: number, update? : (para
         }), 1)
     }
 
+    if (readLocalRaw("token") !== undefined && changed !== undefined){
+        
+        api.buildRequest("path","api/shoppingcart")
+        .buildRequest("method","POST")
+        .buildRequest("body",{shoppingcartId : 53, printId : cartThing.id, quantity : changed.quantity})
+        .buildRequest("converter",(t:APIReturn<{data: string, success: boolean}>)=>console.log(t.data)).run()
+        //<cartItem[]>("api/shoppingcart/",(t : any)=>t)
+    }
+
     if (cart !== undefined){
-    //api.buildRequest
-    //<cartItem[]>("api/shoppingcart/",(t : any)=>t)
-    storeLocal("cart", cart)
+       
+            storeLocal("cart", cart)
     }
     if (update !== undefined){
     update({})
     }
+        
 }
