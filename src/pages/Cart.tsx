@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import LoadSymbol from "src/components/loadSymbol";
 import { Table } from 'reactstrap';
 import { quantMod } from "src/components/addToCart";
+import { props } from "src/types/BasicProps";
 // import { storeLocal } from "src/services/localStorage";
 
 // storeLocal("cart",
@@ -16,16 +17,16 @@ import { quantMod } from "src/components/addToCart";
 // ]
 //  )
 
-export default class Cart extends BasicComponent<{ APIS},{modif: number}>{
+export default class Cart extends BasicComponent<props,{modif: number}>{
     
-    constructor(props) {
-        super(props);
+    constructor(propsy) {
+        super(propsy);
         this.modOnClick = this.modOnClick.bind(this)
         this.renderCart = this.renderCart.bind(this)
       }
     
     modOnClick(cartThing: cartItem, mod: number, update : (params : {})=>Promise<void>){
-        return ()=>quantMod(cartThing, mod,update)
+        return ()=>quantMod(cartThing, mod, this.props.APIS.req ,update)
     }
 
 
