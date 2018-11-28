@@ -1,6 +1,8 @@
 import {apiUrl} from "../config";
 export type BaseAPIReturn = {
+	cartId? : number
 	userId? : string
+	success? : boolean
 }
 
 export type APIReturn<T> = BaseAPIReturn & {
@@ -10,13 +12,16 @@ type APIError = BaseAPIReturn & {
 	data : any
 }
 export class API {
+	public setToken : (token : string)=>void
+	public onAll? : (data : BaseAPIReturn)=>void
 	private path?   : string
 	private config? : any
+	private token? : string
 	private converter : any
-
-	private onAll? : (data : BaseAPIReturn)=>void
-	constructor(){
+	constructor(setToken : (token : string)=>void, token?:string){
 		this.resetBuilder();
+		this.setToken = setToken
+		this.token = token
 	}
 	public setOnError( errorHandler : (error : APIError)=>void){
 		this.onError = errorHandler;
@@ -48,9 +53,9 @@ export class API {
 	}
 	public async doRequest<T,T2 =T >(path:string,converter? : (json:APIReturn<T>)=>T2,config?:object) : Promise<T2|undefined>{
 		const baseIndex = await this.baseReq<T>(path,config);
-		if(this.onAll){
+		/*if(this.onAll){
 			this.onAll(baseIndex);
-		}
+		}*/
 		if(converter){
 			const converted = await this.convert<T,T2>(baseIndex,converter);
 			if(converted===null){
@@ -81,8 +86,12 @@ export class API {
 		config.mode = "cors"
 		config.credentials = "include"
 		config.headers["Content-Type"] = "application/json"
+		if(this.token){
+			config.headers.Authorization = "Bearer " + this.token
+		}
 		const res : Response = await fetch(apiUrl + path, config);
-	//	debugger;
+		// tslint:disable-next-line:no-debugger
+		//debugger;
 		const json = await res.json() as APIReturn<T>;
 		//debugger;
 		return json;

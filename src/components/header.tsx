@@ -10,11 +10,12 @@ import {
 	NavItem,
 	NavLink,
 	 } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 export default class Header extends React.Component<{},{isOpen:boolean}> {
 	constructor(props) {
 		super(props);
-	
+
 		this.toggle = this.toggle.bind(this);
 		this.state = {
 		  isOpen: false
@@ -25,7 +26,7 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 		  isOpen: !this.state.isOpen
 		});
 	  }
-	
+
 	render() {
 		return(
 			<div>
@@ -35,44 +36,46 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 				<Collapse isOpen={this.state.isOpen} navbar={true}>
 				  <Nav className="ml-auto" navbar={true}>
 					<NavItem>
-					  <NavLink href="/">Home</NavLink>
+					  <NavLink tag={Link} to="/" href="/">Home</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink href="/products">Cards</NavLink>
+					  <NavLink tag={Link} to="/products">Cards</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink href="/">Boosters</NavLink>
+					  <NavLink tag={Link} to="/">Boosters</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink href="/">Decks</NavLink>
+					  <NavLink tag={Link} to="/decks">Decks</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink href="/contact">Contact us</NavLink>
+					  <NavLink tag={Link} to="/contact">Contact us</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink href="/register">Register</NavLink>
+					  <NavLink tag={Link} to="/register">Register</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink href="/login">Login</NavLink>
+					  <NavLink tag={Link} to="/login">Login</NavLink>
 					</NavItem>
 					<NavItem>
 						<form className="search"><input type="text" placeholder="Search"/></form>
-					</NavItem> 
+					</NavItem>
 					<NavItem>
-						<img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png"/>
-					</NavItem> 
+						<NavLink tag={Link} to="/cart">
+							<img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png"/>
+						</NavLink>
+					</NavItem>
 
 				  </Nav>
 				</Collapse>
 			  </Navbar>
 			</div>
-		  ); 
-		
+		  );
+
 		// (
 		// 	<nav className="navbar navbar-expand-lg navbar-light bg-dark text-white header">
 		// 		<ul className="nav navbar-nav">
 		// 		<NavbarToggler onClick={this.toggle} />
-		// 		<Collapse isOpen={this.state.isOpen} navbar>	
+		// 		<Collapse isOpen={this.state.isOpen} navbar>
 		// 			<li><Link className="nav nav-link text-white" to="/">Home</Link></li>
 		// 			<li><Link className="nav nav-link text-white" to="/products">Cards</Link></li>
 		// 			<li><Link className="nav nav-link text-white" to="/products">Boosters</Link></li>
@@ -86,7 +89,7 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 		// 		</NavbarToggler>
 		// 		</ul>
 		// 	</nav>
-			
+
 		// );
 	}
 }

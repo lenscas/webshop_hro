@@ -3,33 +3,36 @@ import BasicPage from "../types/basicComponent";
 import Form, { InputField, FormData } from "../components/form";
 import {login, credentials} from "../services/users";
 import { Redirect } from "react-router-dom";
+import { retTrue } from "src/funcs/lambdas";
 
 export default class Login extends BasicPage {
     onSubmit(data: FormData<credentials>) {
-       login(data.values,this.props.APIS.req)
+        login(data.values,this.props.APIS.req)
     }
     render() {
         if(this.props.APIS.userId){
-            return <Redirect to="/ListTest"/>
+            return <Redirect to="/"/>
         }
-        const fields: Array<InputField<string> | InputField<number>> = [
+        const fields: InputField[] = [
             {
                 name: "email",
                 label: "E-mail",
-                innerLabel: "Name@email.com",
+                placeholder: "Name@email.com",
                 id: "e-mail",
-                type: "email"
+                type: "email",
+                validator: retTrue
             },
             {
                 name: "password",
                 label: "Password",
-                innerLabel: "Password",
+                placeholder: "Password",
                 id: "password-checker",
-                type: "password"
+                type: "password",
+                validator: retTrue
             },
             {
                 name: "Submit",
-                innerLabel: "Submit",
+                placeholder: "Submit",
                 id: "submit",
                 type: "button"
             }

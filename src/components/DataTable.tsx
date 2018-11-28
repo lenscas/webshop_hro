@@ -3,21 +3,28 @@ import Table from "reactstrap/lib/Table";
 import LoadSymbol from "./loadSymbol";
 import { defaultTrue } from "src/funcs/easyDefaults";
 import BasicComponent from "src/types/smallComponent";
+import PageButtons from "./pageButtons";
+import { Redirect } from "react-router";
 
 export type renderable = {
 	key : string | number
 	element : string | JSX.Element
 }
-type TableState = {
-	pageNum : number
-}
 type TableProps<T> = {
 	fetch : (pageNR : number) => Promise<T[]>
 	render : (line : T)=>renderable[]
+	pageNumber: number
+	setUrlHandler : (param: string)=>string
 	head? : string[]
 	foot? : Array<string| renderable>
 	striped? : boolean
 	hover?: boolean
+	equalWidth? : boolean
+	borderLess? : boolean
+
+}
+type TableState = {
+	newPageNumber : number
 }
 export type getDataParams = {
 	pageNum : number
@@ -26,9 +33,10 @@ export type getDataParams = {
 export default class DataTable<T> extends BasicComponent<TableProps<T>,TableState> {
 	constructor(propsy : TableProps<T>){
 		super(propsy)
-		this.state = {pageNum:1}
+		this.state = {newPageNumber:this.props.pageNumber}
 		this.renderTable = this.renderTable.bind(this)
 		this.getData = this.getData.bind(this)
+		this.setPageNumberState = this.setPageNumberState.bind(this)
 	}
 	async getData(params : getDataParams){
 		const results = await this.props.fetch(params.pageNum)
@@ -60,11 +68,21 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>,TableStat
 
 	}
 	renderBody(lines){
-		return lines.map( (v,k)=><tr key={k}>{this.renderLine(v)}</tr>)
+		
+		let rowClass= ""
+		if(this.props.equalWidth){
+			rowClass= "d-flex"
+		}
+		return lines.map( (v,k)=><tr className={rowClass} key={k}>{this.renderLine(v)}</tr>)
 	}
 	renderLine(line : renderable[]){
+		let colClass = ""
+		if(this.props.equalWidth){
+			const size = 12 / line.length
+			colClass = "col-"+size.toString()
+		}
 		return (
-			line.map(val=><td key={val.key}>{val.element}</td>)
+			line.map(val=><td className={colClass} key={val.key}>{val.element}</td>)
 		)
 	}
 	hover(){
@@ -73,28 +91,44 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>,TableStat
 	striped(){
 		return defaultTrue(this.props.striped)
 	}
+	setPageNumberState(newPageNum:number){
+		this.easySetState({newPageNumber:newPageNum})
+	}
 	renderTable(lines : renderable[][]){
+		if(this.state.newPageNumber !== this.props.pageNumber){
+			return <Redirect to={this.props.setUrlHandler(this.state.newPageNumber.toString())}/>
+		}
+		const buttons =(
+			<PageButtons
+				setNewNumber={this.setPageNumberState}
+				page={this.props.pageNumber}
+			/>
+		)
 		return (
-			<Table striped={this.striped()} hover={this.hover()} responsive={true}>
-				<thead>
-					<tr>
-						{this.renderHead()}
-					</tr>
-				</thead>
-				<tbody>
-					{this.renderBody(lines)}
-				</tbody>
-				<tfoot>
-					<tr>
-						{this.renderFoot()}
-					</tr>
-				</tfoot>
-			</Table>
+			<>
+				{buttons}
+				<Table striped={this.striped()} responsive={true} hover={this.hover()} borderless={this.props.borderLess !== undefined && this.props.borderLess} >
+					<thead>
+						<tr>
+							{this.renderHead()}
+						</tr>
+					</thead>
+					<tbody>
+						{this.renderBody(lines)}
+					</tbody>
+					<tfoot>
+						<tr>
+							{this.renderFoot()}
+						</tr>
+					</tfoot>
+				</Table>
+				{buttons}
+			</>
 		)
 	}
 	render(){
 		return <LoadSymbol<getDataParams,renderable[][]> 
-			params={{pageNum:1}}
+			params={{pageNum:this.props.pageNumber}}
 			toRender={this.renderTable}
 			getData={this.getData}
 		/>
