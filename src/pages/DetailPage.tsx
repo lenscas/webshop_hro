@@ -11,6 +11,7 @@ import Price from "src/components/Price";
 import Row from "reactstrap/lib/Row";
 import Button from "reactstrap/lib/Button";
 import SuperDropDown from "src/components/SuperDropDown";
+import TextWithSymbols from "src/components/textWithSymbols";
 type ProductProps =  props &  {match :match<{id:string}>}
 type paramsForLoad = {cardId : cardId}
 type renderType = product | undefined
@@ -35,9 +36,7 @@ export default class Products extends BasicComponent<ProductProps> {
         return ""
     }
     renderAbilities(card:product){
-        return <pre className="border-bottom">
-            {card.oracleText}
-        </pre>
+        return <TextWithSymbols text={card.oracleText} />
     }
     renderCard(card :renderType){
         if(!card){
@@ -49,7 +48,7 @@ export default class Products extends BasicComponent<ProductProps> {
                     <img className="img-fluid" src={card.image}/>
                 </Col>
                 <Col xs="4">
-                    <h2 className="titleP border-bottom">{card.name}<img src="https://i.gyazo.com/0fbff9fe447e21c128869c660bde71ae.png"/></h2>
+                    <h2 className="titleP border-bottom">{card.name}<TextWithSymbols classSymbols="bigSymbol" text={"{1}{G}{G}"}/></h2>
                     <h3 className="border-bottom">{card.typeLine}</h3>
                     {this.renderAbilities(card)}
                     {this.renderLowerStats(card)}
