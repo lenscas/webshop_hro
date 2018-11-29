@@ -124,3 +124,6 @@ export const getDecks = async (_api : API): Promise<decks[]> => {
 		}
 	]
 }
+export const createDeck = async()=>{
+	return "1"
+}

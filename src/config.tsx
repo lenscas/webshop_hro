@@ -1,1 +1,2 @@
-export const apiUrl = "http://145.24.244.45:5000/"
+export const apiUrl = "http://145.137.62.177:5000/"
+export const searchUrl = "https://api.scryfall.com/cards/search?"
