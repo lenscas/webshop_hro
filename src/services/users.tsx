@@ -42,7 +42,7 @@ export const register = async (user : RegisterUser, api : API) => {
 		return res
 	}
 	if(res.success){
-		return login({email: user.email,password: user.password}, api)
+		return true//login({email: user.email,password: user.password}, api)
 	} else {
 		return {success : false, message:res.message}
 	}
