@@ -4,7 +4,6 @@ import LoadSymbol from "./loadSymbol";
 import { defaultTrue } from "src/funcs/easyDefaults";
 import BasicComponent from "src/types/smallComponent";
 import PageButtons from "./pageButtons";
-import { Redirect } from "react-router";
 
 export type renderable = {
 	key : string | number
@@ -14,7 +13,7 @@ type TableProps<T> = {
 	fetch : (pageNR : number) => Promise<T[]>
 	render : (line : T)=>renderable[]
 	pageNumber: number
-	setUrlHandler : (param: string)=>string
+	setUrlHandler : (param: string)=>void
 	head? : string[]
 	foot? : Array<string| renderable>
 	striped? : boolean
@@ -23,14 +22,11 @@ type TableProps<T> = {
 	borderLess? : boolean
 
 }
-type TableState = {
-	newPageNumber : number
-}
 export type getDataParams = {
 	pageNum : number
 }
 
-export default class DataTable<T> extends BasicComponent<TableProps<T>,TableState> {
+export default class DataTable<T> extends BasicComponent<TableProps<T>> {
 	constructor(propsy : TableProps<T>){
 		super(propsy)
 		this.state = {newPageNumber:this.props.pageNumber}
@@ -92,12 +88,9 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>,TableStat
 		return defaultTrue(this.props.striped)
 	}
 	setPageNumberState(newPageNum:number){
-		this.easySetState({newPageNumber:newPageNum})
+		this.props.setUrlHandler(newPageNum.toString())
 	}
 	renderTable(lines : renderable[][]){
-		if(this.state.newPageNumber !== this.props.pageNumber){
-			return <Redirect to={this.props.setUrlHandler(this.state.newPageNumber.toString())}/>
-		}
 		const buttons =(
 			<PageButtons
 				setNewNumber={this.setPageNumberState}
