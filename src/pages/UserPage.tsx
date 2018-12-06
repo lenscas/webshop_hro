@@ -5,6 +5,11 @@ import LoadSymbol from "src/components/loadSymbol";
 import { props } from "src/types/BasicProps";
 //import { readLocalRaw, storeLocal } from "src/services/localStorage";
 import { getUserData, UserData, Address } from "src/services/users";
+import FormGroup from "reactstrap/lib/FormGroup";
+import Input from "reactstrap/lib/Input";
+import Label from "reactstrap/lib/Label";
+import Button from "reactstrap/lib/Button";
+import Form from "reactstrap/lib/Form";
 
 export default class UserPage extends BasicComponent<props, {render : string}>{
     
@@ -107,6 +112,57 @@ export default class UserPage extends BasicComponent<props, {render : string}>{
                         </table>
                     </div>
             </div>
+            )
+        }
+        if(id === "Edit"){
+            return(
+                <div>
+                    <h5>Change Details</h5>
+                    <Form>
+                        <FormGroup>
+                            <Label for="email">Name</Label>
+                            <Input type="email" name="email" id="email" placeholder={userData.email} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="approach">Approach</Label>
+                            <Input name="approach" id="approach" placeholder = {userData.approach} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="name">Name</Label>
+                            <Input name="name" id="name" placeholder = {userData.name} />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="password">Password</Label>
+                            <Input type="password" name="password" id="password" placeholder = "Please input your password" />
+                        </FormGroup>
+
+                        <Button>Submit</Button>
+                    </Form>
+                    <br/>
+                    <h5>Add Address</h5>
+                    <Form>
+                        <FormGroup>
+                            <Label for="street">Street</Label>
+                            <Input name="street" id="street" placeholder = "e.g. Lullaby Lane" />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="number">Number</Label>
+                            <Input name="number" id="number" placeholder = "e.g. 135" />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="zipCode">Zip Code</Label>
+                            <Input name="zipCode" id="zipCode" placeholder = "e.g. 9753AB" />
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="city">City</Label>
+                            <Input name="city" id="city" placeholder = "Zwammerdam" />
+                        </FormGroup>
+
+                        <Button>Add</Button>
+                    </Form>
+                    <br/>
+                    <Button>Remove All Addresses</Button>
+                </div>
             )
         }
         else{
