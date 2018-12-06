@@ -11,7 +11,7 @@ import Price from "src/components/Price";
 import { quantMod } from "src/components/addToCart";
 import { cartItem } from "src/services/Cart";
 
-type fourOfAKind<T> = [T,T?,T?,T?]
+export type fourOfAKind<T> = [T,T?,T?,T?]
 type fourProducts = fourOfAKind<productList>
 type splittedCard = {
     title : string
@@ -106,7 +106,7 @@ export default class ProductList extends BasicPage<ProductListProps> {
                 prodList.reverse()
                 let firstSplit:splittedCard[][] = []
                 const secondSplit:splittedCard[][] = []
-                const putIntoSplit = (splited : splittedCard[][])=> {
+                const putIntoSplit = ()=> {
                     const nameLines:splittedCard[] = []
                     firstSplit.forEach(split=>{const item = split.pop(); if(item){nameLines.unshift(item)}})
                     secondSplit.push(nameLines)
@@ -130,11 +130,11 @@ export default class ProductList extends BasicPage<ProductListProps> {
                     last.push({price:product.price, id:product.id, name:product.name})
                     firstSplit.push(last)
                     if( (key+1) % 4===0){
-                        putIntoSplit(firstSplit)
+                        putIntoSplit()
                         firstSplit=[]
                     }
                 });
-                putIntoSplit(firstSplit)
+                putIntoSplit()
                 secondSplit.reverse();
                 return secondSplit;
             }
