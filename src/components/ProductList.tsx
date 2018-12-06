@@ -10,6 +10,10 @@ import Price from "src/components/Price";
 import { quantMod } from "src/components/addToCart";
 import { cartItem } from "src/services/Cart";
 import { API } from "src/services/basics";
+import Modal from "reactstrap/lib/Modal";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalFooter from "reactstrap/lib/ModalFooter";
 
 type fourOfAKind<T> = [T,T?,T?,T?]
 type fourProducts = fourOfAKind<productList>
@@ -32,10 +36,21 @@ type ProductListProps = {
     urlHandler : (param :string)=>void
     pageNum: number
 }
-export default class CardList extends BasicPage<ProductListProps> {
+type productState = {modal: boolean}
+export default class CardList extends BasicPage<ProductListProps,productState> {
+    constructor(propsi : ProductListProps){
+        super(propsi);
+        this.productAdded     = this.productAdded.bind(this);
+        this.state            = {modal:false}
+    }
+    async productAdded() {
+        this.easySetState({
+          modal: !this.state.modal
+        });
+    }
     modOnClick(cart: cartItem, mod: number){
         const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.priceNum, quantity : 1, priceTotal : "", priceTotalNum : 0}
-        return ()=>quantMod(cartThing, mod, this.props.req)
+        return ()=>quantMod(cartThing, mod, this.props.req,this.productAdded)
     }
     makeTriplets(products : productList[]){
         const newList : fourProducts[] = []
@@ -145,6 +160,18 @@ export default class CardList extends BasicPage<ProductListProps> {
             }
         )
         return (
+            <>
+            <div>
+                <Modal isOpen={this.state.modal} toggle={this.productAdded}>
+                <ModalHeader toggle={this.productAdded}>Product added to cart.</ModalHeader>
+                <ModalBody>
+                    {"You need more magic!"}
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="success" onClick={this.productAdded}>Magical!</Button>{' '}
+                </ModalFooter>
+                </Modal>
+            </div>
             <div id="cardList" className="row">
                 <div className="col-2" style={{"border":"solid black 1px"}}>
                     <h2>Filters</h2>
@@ -161,7 +188,9 @@ export default class CardList extends BasicPage<ProductListProps> {
                         borderLess={true}
                     />
                 </div>
-        </div>)
+        </div>
+        </>
+        )
 
 	}
 }
