@@ -22,7 +22,7 @@ export default class Decks extends BasicPage{
 			type:"button",
 			id: "button",
 			element : (
-				<div className="col-4">
+				<Link to="/deck/new" className="col-4">
 					<Row  id="addDeck">
 						<Col>
 							<div id="addDeckBackground">
@@ -34,10 +34,8 @@ export default class Decks extends BasicPage{
 						<Col>
 						<h3>New Deck</h3>
 						</Col>
-					
 					</Row>
-					
-				</div>
+				</Link>
 			)
 		}
 	}
