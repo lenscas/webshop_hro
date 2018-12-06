@@ -64,8 +64,7 @@ export default class Products extends BasicComponent<ProductProps,productState> 
                         {"You have added the product : " + card.name + " to your shopping cart."}
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.productAdded}>Magical!</Button>{' '}
-                        <Button color="secondary" onClick={this.productAdded}>Cancel</Button>
+                        <Button color="success" onClick={this.productAdded}>Magical!</Button>{' '}
                     </ModalFooter>
                     </Modal>
                 </div>
