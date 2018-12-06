@@ -161,6 +161,28 @@ export default class UserPage extends BasicComponent<props, {render : string}>{
                         <Button>Add</Button>
                     </Form>
                     <br/>
+                    <h5>Change Password</h5>
+                    <Form>
+                        
+                        <FormGroup>
+                            <Label for="password">Password</Label>
+                            <Input type="password" name="newPassword" id="newPassword" placeholder = "Please input a strong password" />
+                        </FormGroup>
+
+                        <FormGroup>
+                            <Label for="password">Password</Label>
+                            <Input type="password" name="repeatPassword" id="repeatPassword" placeholder = "Please repeat your password" />
+                        </FormGroup>
+
+                        <FormGroup>
+                            <Label for="password">Password</Label>
+                            <Input type="password" name="password" id="password" placeholder = "Please input your current password" />
+                        </FormGroup>
+
+                        <Button>Submit</Button>
+                    </Form>
+                    <br/>
+
                     <Button>Remove All Addresses</Button>
                 </div>
             )
