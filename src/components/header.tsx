@@ -11,6 +11,7 @@ import {
 	NavLink,
 	 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { NameSearch } from './nameSearch';
 
 export default class Header extends React.Component<{},{isOpen:boolean}> {
 	constructor(props) {
@@ -57,7 +58,7 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 					  <NavLink tag={Link} to="/login">Login</NavLink>
 					</NavItem>
 					<NavItem>
-						<form className="search"><input type="text" placeholder="Search"/></form>
+						<NameSearch/>
 					</NavItem>
 					<NavItem>
 						<NavLink tag={Link} to="/cart">
