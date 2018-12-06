@@ -10,9 +10,14 @@ import { props } from "src/types/BasicProps";
 import Price from "src/components/Price";
 import { quantMod } from "src/components/addToCart";
 import { cartItem } from "src/services/Cart";
+import Modal from "reactstrap/lib/Modal";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalFooter from "reactstrap/lib/ModalFooter";
 
 type fourOfAKind<T> = [T,T?,T?,T?]
 type fourProducts = fourOfAKind<productList>
+type productState = {modal: boolean}
 type splittedCard = {
     title : string
     id: cardId
@@ -26,10 +31,20 @@ type splittedCard = {
         name: string
     }
 type ProductListProps = props &  {match? :match<{pageNum:string}>}
-export default class ProductList extends BasicPage<ProductListProps> {
+export default class ProductList extends BasicPage<ProductListProps,productState> {
+    constructor(propsi : ProductListProps){
+        super(propsi);
+        this.productAdded     = this.productAdded.bind(this);
+        this.state            = {modal:false}
+    }
     modOnClick(cart: cartItem, mod: number){
         const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.priceNum, quantity : 1, priceTotal : "", priceTotalNum : 0}
-        return ()=>quantMod(cartThing, mod, this.props.APIS.req)
+        return ()=>quantMod(cartThing, mod, this.props.APIS.req,this.productAdded)
+    }
+    async productAdded() {
+        this.easySetState({
+          modal: !this.state.modal
+        });
     }
     makeTriplets(products : productList[]){
         const newList : fourProducts[] = []
@@ -75,6 +90,8 @@ export default class ProductList extends BasicPage<ProductListProps> {
             return {
                 key: p.id + "price",
                 element: (
+                    <>
+                    
                     <div className="row pt-2">
                             <div className="col-8">
                                 <span id="pPrice"><Price price={p.price}/></span>
@@ -91,7 +108,7 @@ export default class ProductList extends BasicPage<ProductListProps> {
                                 }, 1)} className="btn-md float-right" id="addCart"color="success">Add to cart</Button>{' '}
                             </div>
                         </div>
-                )
+               </> )
             }
         }
         return {key,element:<></>}
@@ -144,23 +161,37 @@ export default class ProductList extends BasicPage<ProductListProps> {
             pageNumber = Number(this.props.match.params.pageNum)
         }
         return (
-            <div id="cardList" className="row">
-                <div className="col-2" style={{"border":"solid black 1px"}}>
-                    <h2>Filters</h2>
-                </div>
-                <div className="col-10">
-                    <DataTable<splittedCard[]>
-                        fetch={combined}
-                        render={render}
-                        pageNumber= {pageNumber}
-                        setUrlHandler = {createRouteWithParams("/products")}
-                        hover={false}
-                        striped={false}
-                        equalWidth={true}
-                        borderLess={true}
-                    />
-                </div>
-        </div>)
+            <>
+                <div>
+                            <Modal isOpen={this.state.modal} toggle={this.productAdded}>
+                            <ModalHeader toggle={this.productAdded}>Product added to cart.</ModalHeader>
+                            <ModalBody>
+                                {"You need more magic!"}
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="success" onClick={this.productAdded}>Magical!</Button>{' '}
+                            </ModalFooter>
+                            </Modal>
+                        </div>
+                <div id="cardList" className="row">
+                    <div className="col-2" style={{"border":"solid black 1px"}}>
+                        <h2>Filters</h2>
+                    </div>
+                    <div className="col-10">
+                        <DataTable<splittedCard[]>
+                            fetch={combined}
+                            render={render}
+                            pageNumber= {pageNumber}
+                            setUrlHandler = {createRouteWithParams("/products")}
+                            hover={false}
+                            striped={false}
+                            equalWidth={true}
+                            borderLess={true}
+                        />
+                    </div>
+            </div>
+        </>
+    )
 
 	}
 }
