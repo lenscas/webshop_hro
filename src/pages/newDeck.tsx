@@ -12,7 +12,7 @@ import { createDeck } from "src/services/Decks";
 import { Redirect } from "react-router";
 type NewDeckState = {
 	autoCompleted : searchResult[][]
-	redirectTo? : string
+	redirectTo? : number
 }
 
 export default class NewDeck extends BasicPage<props,NewDeckState>{
@@ -37,8 +37,33 @@ export default class NewDeck extends BasicPage<props,NewDeckState>{
 		e.preventDefault()
 		const test = new FormData(e.target)
 		console.log(test)
-		const res = await createDeck()
-		this.easySetState({redirectTo:res})
+		const mainCommander = test.get("commander_name0")
+		const secondCommander = test.get("commander_name1")
+		const deckName = test.get("deck_name")
+		if(! (mainCommander && deckName) ){
+			// tslint:disable-next-line:no-debugger
+			debugger;
+			return
+		}
+		if(! (
+			typeof mainCommander === "string" &&
+			typeof secondCommander === "string" &&
+			typeof deckName === "string"
+		)){
+			// tslint:disable-next-line:no-debugger
+			debugger;
+			return 
+		}
+		const res = await createDeck(this.props.APIS.req,{
+			commander_name_1 : mainCommander,
+			commander_name_2 : secondCommander,
+			deck_name : deckName
+
+		})
+		if(res){
+			this.easySetState({redirectTo:res})
+		}
+		
 	}
 	getItemValue(item : searchResult){
 		return item.id
@@ -59,7 +84,7 @@ export default class NewDeck extends BasicPage<props,NewDeckState>{
 				<Row className="justify-content-center">
 					<Col xs={6}>
 						<Label for={"deck_name"}>{name}</Label>
-						<Input required={num === 0} list={"commander_name"+num} placeholder="Commander name" name={"cammander_name"+num} id="commander_name" onChange={onChange}/>
+						<Input required={num === 0} list={"commander_name"+num} placeholder="Commander name" name={"commander_name"+num} id="commander_name" onChange={onChange}/>
 					</Col>
 				</Row>
 				{this.renderOptions(num)}
