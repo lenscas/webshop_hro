@@ -23,7 +23,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
     }
 
     renderAddresses(addresses : Address[], rowLength : number, pageLength : number, width : string, short : boolean){
-        storeLocal("defaultAddress", addresses[0])
+        //storeLocal("defaultAddress", addresses[0])
         console.log(addresses)
         console.log(this.state.page)
         const rows : JSX.Element[] = []
@@ -32,7 +32,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
         const addressButton = (addressItem) => {
             if (this.state.selectingDefaultAddress){
                 return (
-                    <Button onClick = {this.setDefaultOnClick(addressItem)}>Select</Button>
+                    <Button color = "primary" onClick = {this.setDefaultOnClick(addressItem)}>Select</Button>
                 )
             }
             return <Button>Delete</Button>
@@ -132,7 +132,21 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
     }
     
     setDefaultOnClick(address: Address){
-        return ()=> storeLocal("defaultAddress", address)
+        
+        return ()=> this.setDefault(address)
+    }
+
+    setDefault(address: Address){
+        this.setSelect(false)
+        storeLocal("defaultAddress", address)
+    }
+
+    setSelectOnClick(selectingDefAddress : boolean){
+        return ()=> this.setSelect(selectingDefAddress)
+    }
+
+    setSelect(selectingDefAddress : boolean){
+        this.easySetState( {selectingDefaultAddress : selectingDefAddress})
     }
 
     setTab(id: string){
@@ -154,27 +168,46 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                     <div><Button>Add</Button></div>
                     <div><Button onClick = {this.modPageOnClick(1)}>View More</Button></div>
             </div>;
-            //let normalButtons = <div/>;
             if(this.state.page > 0)
             {
                 columns = 4;
                 shorten = false;
-                // normalButtons = <div>
-                //     <Button className="float-left">Add</Button>
-                //     <Button className="float-right"  onClick = {this.modPageOnClick(-(this.state.page))}>View Less</Button>
-                // </div>;
                 shortenButtons = <div/>
             }
             const defaultAddress : Address|undefined = readLocal("defaultAddress")
-            let defaultAddressView = <div/>
+            let defaultAddressView = (
+                <div>
+                    <div className = "card">
+                        <div className="card-body">
+                            <div className="card-text float-left">
+                                <b>You don't have a default address set!</b>
+                                <p>Press select to pick one now.</p>
+                                <Button onClick = {this.setSelectOnClick(true)}>Select</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>)
+            if (this.state.selectingDefaultAddress){
+                defaultAddressView = (
+                    <div>
+                    <div className = "card">
+                        <div className="card-body">
+                            <div className="card-text float-left">
+                                <b>You don't have a default address set!</b>
+                                <p>Please select an address or press cancel.</p>
+                                <Button onClick = {this.setSelectOnClick(false)}>Cancel</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>)
+            }
             if (defaultAddress !== undefined){
                 defaultAddressView = (
                     <div>
                         <div className = "card">
                             <div className="card-body">
-                                {/* <h5 className="card-title"> Address {(Math.floor(addresses.length/rowLength)) * rowLength + j + 1} </h5> */}
                                 <div className="card-text float-left">
-                                    <b>Your Main Address:</b>
+                                    <b>Your Default Address:</b>
                                     <p>{defaultAddress.street} {defaultAddress.number}</p>
                                     <p>{defaultAddress.zipCode}</p>
                                     <p>{defaultAddress.city}</p>
@@ -197,7 +230,6 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                             <div>
                                 <div className = "card">
                                     <div className="card-body">
-                                        {/* <h5 className="card-title"> Address {(Math.floor(addresses.length/rowLength)) * rowLength + j + 1} </h5> */}
                                         <div className="card-text float-left">
                                             <b>Your Details:</b>
                                             <p>Title: {userData.approach} {userData.name}</p>
@@ -222,7 +254,6 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                             {shortenButtons}
                         </tbody>
                         </table>
-                        {/*normalButtons*/}
                     </div>
             </div>
             )
