@@ -1,5 +1,6 @@
 import * as React from 'react';
 // import { Link } from 'react-router-dom';
+import "../style/header.css";
 
 import {
 	Collapse,
@@ -31,7 +32,7 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 	render() {
 		return(
 			<div>
-			  <Navbar color="light" light={true} expand="md">
+			  <Navbar color="light" light={true} expand="md" className="navh">
 				<NavbarBrand href="/">reactstrap</NavbarBrand>
 				<NavbarToggler onClick={this.toggle} />
 				<Collapse isOpen={this.state.isOpen} navbar={true}>
