@@ -24,8 +24,8 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
 
     renderAddresses(addresses : Address[], rowLength : number, pageLength : number, width : string, short : boolean){
         //storeLocal("defaultAddress", addresses[0])
+        console.log("Addresses from DB")
         console.log(addresses)
-        console.log(this.state.page)
         const rows : JSX.Element[] = []
         const row : Address[] = []
         
@@ -120,6 +120,8 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                 </tr>
             )
         }
+        console.log("Generated address table")
+        console.log(rows)
         return rows
     }
 
