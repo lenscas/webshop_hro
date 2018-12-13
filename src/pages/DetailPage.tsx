@@ -9,18 +9,21 @@ import Col from "reactstrap/lib/Col";
 import Price from "src/components/Price";
 import Row from "reactstrap/lib/Row";
 import Button from "reactstrap/lib/Button";
-import SuperDropDown from "src/components/SuperDropDown";
+import SuperDropDown, { dropDownItems } from "src/components/SuperDropDown";
 import TextWithSymbols from "src/components/textWithSymbols";
 import Modal from "reactstrap/lib/Modal";
 import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalBody from "reactstrap/lib/ModalBody";
 import ModalFooter from "reactstrap/lib/ModalFooter";
 import { quantMod } from "src/components/addToCart";
+import { decks, getDecks, addCardToDeck } from "src/services/Decks";
+import { addDoubleAsync } from "src/funcs/lambdas";
+import { Link } from "react-router-dom";
 
 type ProductProps =  props &  {match :match<{id:string}>}
 type paramsForLoad = {cardId : cardId}
-type renderType = product | undefined
-type productState = {modal: boolean}
+type renderType = {0:product|undefined, 1: decks[]}// product | undefined
+type productState = {modal: boolean, pushedButton : "deck" | "card"}
 export default class Products extends BasicComponent<ProductProps,productState> {
     constructor(propsi : ProductProps){
         super(propsi)
@@ -29,15 +32,18 @@ export default class Products extends BasicComponent<ProductProps,productState> 
         this.renderCard       = this.renderCard.bind(this)
         this.getCard          = this.getCard.bind(this)
         this.productAdded     = this.productAdded.bind(this);
-        this.state            = {modal:false}
+        this.getDecks         = this.getDecks.bind(this)
+        this.state            = {modal:false,pushedButton:"deck"}
+         
     }
     modOnClick(cart: product, mod: number){
         const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.price, quantity : 1, priceTotal : "", priceTotalNum : 0}
         return ()=>quantMod(cartThing, mod, this.props.APIS.req,this.productAdded)
     }
     async productAdded() {
-        this.setState({
-          modal: !this.state.modal
+        this.easySetState({
+          modal: !this.state.modal,
+          pushedButton : "card"
         });
     }
     renderLowerStats(card: product){
@@ -51,17 +57,45 @@ export default class Products extends BasicComponent<ProductProps,productState> 
     renderAbilities(card:product){
         return <TextWithSymbols text={card.oracleText} />
     }
-    renderCard(card :renderType){
+    renderDropDOwn(deckList : decks[], printId : cardId){
+        return <div className="btn-group">
+            <Link to={"/deck/new/"+printId} className="btn btn-secondary">New Deck</Link>
+            <SuperDropDown
+                caret={true}
+                items={
+                    deckList.map<dropDownItems>(
+                        v=>({
+                            text : v.name,
+                            onClick : async ()=>{
+                                if(await addCardToDeck(this.props.APIS.req, v.id,printId)){
+                                    this.easySetState({modal:true,pushedButton:"deck"})
+                                }
+                            }
+                        })
+                    )
+                }
+                text= ""
+            />
+        </div>
+    }
+    renderCard(data :renderType){
+        const card = data[0]
         if(!card){
             return <></>
         }
+        
+        const deckList = data[1]
         return (
             <>
                 <div>
                     <Modal isOpen={this.state.modal} toggle={this.productAdded}>
                     <ModalHeader toggle={this.productAdded}>Product added to cart</ModalHeader>
                     <ModalBody>
-                        {"You have added the product : " + card.name + " to your shopping cart."}
+                        {this.state.pushedButton === "card" ?
+                            "You have added the product : " + card.name + " to your shopping cart."
+                            :
+                            "You have added the product : " + card.name + " to your deck."
+                        }
                     </ModalBody>
                     <ModalFooter>
                         <Button color="success" onClick={this.productAdded}>Magical!</Button>{' '}
@@ -86,18 +120,7 @@ export default class Products extends BasicComponent<ProductProps,productState> 
                                 <button onClick={this.modOnClick(card, 1)} className="btn btn-success float-right" id="buttonCart">Add to cart</button>
                             </Col>
                             <Col>
-                                <div className="btn-group">
-                                    <Button color="secondary">New Deck</Button>
-                                    <SuperDropDown
-                                        caret={true}
-                                        items={[{
-                                            text:"Ach, Hans Run!",
-                                            header:true,
-
-                                        }]}
-                                        text= ""
-                                    />
-                                </div>
+                                {this.renderDropDOwn(deckList,card.id)}
                             </Col>
                         </Row>
                     </Col>
@@ -105,18 +128,30 @@ export default class Products extends BasicComponent<ProductProps,productState> 
             </>
             )
     }
-    async getCard(params : paramsForLoad) : Promise<renderType>{
-        const test = await getCard(this.props.APIS.req,params.cardId)
-        return test
+    async getCard(params : paramsForLoad) : Promise<product |undefined>{
+        return await getCard(this.props.APIS.req,params.cardId)
+
+    }
+    async getDecks() : Promise<decks[]>{
+        try{
+            return await getDecks(this.props.APIS.req);
+        }
+        catch(e){
+            return []
+        }
     }
     render() {
+        const getData = addDoubleAsync<product |undefined,decks[],paramsForLoad>(
+            this.getCard,
+            this.getDecks
+        );
         return (
             <>
                 
                 <LoadSymbol<paramsForLoad,renderType> 
                     toRender={this.renderCard}
                     params={{cardId:this.props.match.params.id}}
-                    getData={this.getCard}
+                    getData={getData}
                     
                 />
             </>
