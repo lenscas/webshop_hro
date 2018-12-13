@@ -234,7 +234,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                                     <div className="card-body">
                                         <div className="card-text float-left">
                                             <b>Your Details:</b>
-                                            <p>Title: {userData.approach} {userData.name}</p>
+                                            <p>Title: {userData.approach}</p>
                                             <p>Name: {userData.name}</p>
                                             <p>E-Mail: {userData.email}</p>
                                         </div>
