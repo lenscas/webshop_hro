@@ -210,3 +210,13 @@ export const createDeck = async(api:API,deck:insertDeck)=>{
 	).run<number>()
 	return res
 }
+export const addCardToDeck = async (api : API, deckId : number ,printId : string)=>{
+	const res = await(
+		api.buildRequest("path","api/decks/addCard")
+		.buildRequest("method","POST")
+		.buildRequest("body",{
+			printId ,deckId
+		}).buildRequest("converter",(t:any)=>t.success)
+	).run<boolean>()
+	return res
+}

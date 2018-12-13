@@ -5,8 +5,10 @@ import { defaultTrue } from 'src/funcs/easyDefaults';
 
 export type dropDownItems = {
 	text : string
+	onClick : ()=>void
 	disabled?: boolean
 	header?: boolean
+	
 } | {
 	divider : true
 }
@@ -41,11 +43,13 @@ export default class SuperDropDown extends BasicComponent<dropDownProps,dropdown
 			if("divider" in item){
 				return <DropdownItem divider={true}/>
 			} else {
+				console.log(item.onClick)
 				return <DropdownItem 
 					header={defaultTrue(item.header)}
 					disabled={defaultTrue(item.disabled)}
+					onClick={item.onClick}
 				>
-					{item.text}
+					{<div onClick={item.onClick}>{item.text}</div>}
 				</DropdownItem>
 			}
 		})

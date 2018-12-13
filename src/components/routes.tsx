@@ -32,6 +32,10 @@ export default class Routes extends BasicPage {
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
+	newDeckPage = (props: RouteComponentProps<{cardId:string}>) => <NewDeck
+		APIS={this.props.APIS}
+		match={props.match}
+	/>
 	public render(){
 		return (
 			<>
@@ -49,6 +53,7 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/decks"><Decks APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/decks/:id" render={this.deckListPage}/>
 					<Route exact={true} path="/deck/new"><NewDeck APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/deck/new/:cardId" render={this.newDeckPage}/>
 				</Switch>
 			</>
 		)

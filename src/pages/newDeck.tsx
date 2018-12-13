@@ -8,14 +8,17 @@ import Input from "reactstrap/lib/Input";
 import { Button } from "reactstrap";
 import { searchResult, searchCommander } from "src/services/search";
 import { props } from "src/types/BasicProps";
-import { createDeck } from "src/services/Decks";
-import { Redirect } from "react-router";
+import { createDeck, addCardToDeck } from "src/services/Decks";
+import { Redirect, match } from "react-router";
+
+type NewDeckProps = {match? : match<{cardId:string}>} & props
 type NewDeckState = {
 	autoCompleted : searchResult[][]
 	redirectTo? : number
+	
 }
 
-export default class NewDeck extends BasicPage<props,NewDeckState>{
+export default class NewDeck extends BasicPage<NewDeckProps,NewDeckState>{
 	constructor(propsy : props){
 		super(propsy)
 		this.state = {autoCompleted:[[],[]]}
@@ -36,13 +39,10 @@ export default class NewDeck extends BasicPage<props,NewDeckState>{
 	async submit(e : any){
 		e.preventDefault()
 		const test = new FormData(e.target)
-		console.log(test)
 		const mainCommander = test.get("commander_name0")
 		const secondCommander = test.get("commander_name1")
 		const deckName = test.get("deck_name")
 		if(! (mainCommander && deckName) ){
-			// tslint:disable-next-line:no-debugger
-			debugger;
 			return
 		}
 		if(! (
@@ -61,6 +61,9 @@ export default class NewDeck extends BasicPage<props,NewDeckState>{
 
 		})
 		if(res){
+			if(this.props.match){
+				await addCardToDeck(this.props.APIS.req,res,this.props.match.params.cardId)
+			}
 			this.easySetState({redirectTo:res})
 		}
 		
