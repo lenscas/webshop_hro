@@ -3,90 +3,136 @@ import BasicComponent from "../types/basicComponent";
 import LoadSymbol from "src/components/loadSymbol";
 //import { Table } from 'reactstrap';
 import { props } from "src/types/BasicProps";
-//import { readLocalRaw, storeLocal } from "src/services/localStorage";
 import { getUserData, UserData, Address } from "src/services/users";
 import FormGroup from "reactstrap/lib/FormGroup";
 import Input from "reactstrap/lib/Input";
 import Label from "reactstrap/lib/Label";
 import Button from "reactstrap/lib/Button";
 import Form from "reactstrap/lib/Form";
+import { storeLocal, readLocal } from "src/services/localStorage";
 
-export default class UserPage extends BasicComponent<props, {render : string}>{
+export default class UserPage extends BasicComponent<props, {render : string, page : number, selectingDefaultAddress : boolean}>{
     
     tabClasses : {[key:string] : string} = {Details : "nav-link active", Edit : "nav-link"}
 
     constructor(propsy) {
         super(propsy);
-        this.state = { render : "Details" }
+        this.state = { render : "Details", page : 0, selectingDefaultAddress : false}
         this.renderUserData = this.renderUserData.bind(this)
         this.renderAddresses = this.renderAddresses.bind(this)
     }
 
-    renderAddresses(addresses : Address[]){
+    renderAddresses(addresses : Address[], rowLength : number, pageLength : number, width : string, short : boolean){
+        storeLocal("defaultAddress", addresses[0])
+        console.log(addresses)
+        console.log(this.state.page)
         const rows : JSX.Element[] = []
         const row : Address[] = []
-        console.log(addresses)
+        
+        const addressButton = (addressItem) => {
+            if (this.state.selectingDefaultAddress){
+                return (
+                    <Button onClick = {this.setDefaultOnClick(addressItem)}>Select</Button>
+                )
+            }
+            return <Button>Delete</Button>
+        }
+
+        
+
+        let page = this.state.page
+        if (page === 0){
+            page++
+        }
         addresses.forEach( (address, i) => {
-            row.push(address)
-            console.log(row)
-            if (row.length === 4){
+            if ((page - 1) * pageLength < i++ && i++ <= (page * pageLength) + 1){
+                row.push(address)
+            }
+            
+            if (row.length === rowLength){
                 rows.push(
                     <tr>
                     {row.map( (addressItem,j) => (!addressItem) ? <h1>lol</h1> :
-                            <td key={addressItem.zipCode}>
-                                <div className = "card">
-                                    <div className="card-body">
-                                        <h5 className="card-title"> Address {i - (4-j) + 2} </h5>
-                                        <div className="card-text">
-                                            <p>{addressItem.street} {addressItem.number}</p>
-                                            <p>{addressItem.zipCode} {addressItem.city}</p>
-                                        </div>
+                        <td key={addressItem.id}>
+                            <div className = "card" style = {{"width" : width, "height" : "12rem"}}>
+                                <div className="card-body">
+                                    <div className="card-text float-left">
+                                        <p>{addressItem.street} {addressItem.number}</p>
+                                        <p>{addressItem.zipCode}</p>
+                                        <p>{addressItem.city}</p>
+                                        {addressButton(addressItem)}
                                     </div>
                                 </div>
-                            </td>)}
-                        </tr>
+                            </div>
+                        </td>)}
+                    </tr>
                 )
+                if (!short){
                 row.length = 0
+                }
             }
         })
-        rows.push(
-            <tr>
-            {row.map( (addressItem,j) => (!addressItem) ? <h1>lol</h1> :
-                    <td key={addressItem.zipCode}>
-                        <div className = "card">
+        if (!short){
+            rows.push(
+                <tr>
+                {row.map( (addressItem,j) => (!addressItem) ? <h1>lol</h1> :
+                    <td key={addressItem.id}>
+                        <div className = "card" style = {{"width" : width, "height" : "12rem"}}>
                             <div className="card-body">
-                                <h5 className="card-title"> Address {(Math.floor(addresses.length/4)) * 4 + j + 1} </h5>
-                                <div className="card-text">
+                                <div className="card-text float-left">
                                     <p>{addressItem.street} {addressItem.number}</p>
-                                    <p>{addressItem.zipCode} {addressItem.city}</p>
+                                    <p>{addressItem.zipCode}</p>
+                                    <p>{addressItem.city}</p>
+                                    <Button>Delete</Button>
                                 </div>
                             </div>
                         </div>
                     </td>)}
                 </tr>
-        )
+            )
+            const addButton = <Button className="float-left">Add</Button>
+           
+            const viewLessButton = <Button className="float-right"  onClick = {this.modPageOnClick(-(this.state.page))}>View Less</Button>
+            
+            let prevButton = <td/>
+            let nextButton = <td/>
+            if (this.state.page > 1){
+                prevButton = <Button className="float-left" onClick = {this.modPageOnClick(-1)}>Prev Page</Button> 
+            }
+            if (this.state.page < (addresses.length / pageLength)){
+                nextButton = <Button className="float-right" onClick = {this.modPageOnClick(1)}>Next Page</Button>
+            }
+            const middle : JSX.Element[] = []
+            for (let i = 0; i < (rowLength - 2); i++){
+                middle.push(<td/>)}
+            rows.push(
+                <tr>
+                    {prevButton}
+                    {middle}
+                    {nextButton}
+                </tr>
+            )
+            rows.push(
+                <tr>
+                    {addButton}
+                    {middle}
+                    {viewLessButton}
+                </tr>
+            )
+        }
         return rows
-    
-        //groupedAddresses = 
+    }
 
-        // return (
-        // <tr key={rows}>
-        //         <td>
-        //             <div className = "card">
-        //                 <div className="card-body">
-        //                     <h5 className="card-title"> Address {i + 1} </h5>
-        //                     <p className="card-text">
-        //                         <div>{address.street} {address.number}</div>
-        //                         <div>{address.zipCode} {address.city}</div>
-        //                     </p>
-        //                 </div>
-        //             </div>
-        //         </td>
-        //     </tr> ) 
+    modPageOnClick(pageMod: number){
+        return ()=> this.modPage(pageMod)
     }
 
     setTabOnClick(id: string){
     return ()=> this.setTab(id)
+    }
+    
+    setDefaultOnClick(address: Address){
+        return ()=> storeLocal("defaultAddress", address)
     }
 
     setTab(id: string){
@@ -94,22 +140,89 @@ export default class UserPage extends BasicComponent<props, {render : string}>{
         Object.keys(this.tabClasses).filter((v) => v !== id).forEach( (tabId) => this.tabClasses[tabId] = "nav-link" )
         this.easySetState( { render:id })
     }
+
+    modPage(pageMod:number){
+        this.easySetState( { page : this.state.page + pageMod })
+    }
     
     renderTab(id: string, userData: UserData){
         if(id === "Details"){
-            return(
-            <div>
-                <div>{userData.approach} {userData.name}</div>
-                <div>{userData.email}</div>
+            let columns = 3;
+            const perPage = 8;
+            let shorten = true;
+            let shortenButtons = <div  className="float-right">
+                    <div><Button>Add</Button></div>
+                    <div><Button onClick = {this.modPageOnClick(1)}>View More</Button></div>
+            </div>;
+            //let normalButtons = <div/>;
+            if(this.state.page > 0)
+            {
+                columns = 4;
+                shorten = false;
+                // normalButtons = <div>
+                //     <Button className="float-left">Add</Button>
+                //     <Button className="float-right"  onClick = {this.modPageOnClick(-(this.state.page))}>View Less</Button>
+                // </div>;
+                shortenButtons = <div/>
+            }
+            const defaultAddress : Address|undefined = readLocal("defaultAddress")
+            let defaultAddressView = <div/>
+            if (defaultAddress !== undefined){
+                defaultAddressView = (
                     <div>
+                        <div className = "card">
+                            <div className="card-body">
+                                {/* <h5 className="card-title"> Address {(Math.floor(addresses.length/rowLength)) * rowLength + j + 1} </h5> */}
+                                <div className="card-text float-left">
+                                    <b>Your Main Address:</b>
+                                    <p>{defaultAddress.street} {defaultAddress.number}</p>
+                                    <p>{defaultAddress.zipCode}</p>
+                                    <p>{defaultAddress.city}</p>
+                                </div>
+                                <div className="d-flex flex-column float-right" style = {{"width" : "4rem"}}>
+                                    <Button className="justify-content-start" style = {{"margin-bottom" : "2rem", "margin-top" : "2rem"}}>Edit</Button>
+                                    <Button className="justify-content-end">Delete</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+            return( 
+            <div>
+                <h4><b>Welcome, {userData.approach} {userData.name}!</b></h4>
+                    <div>
+                        <div  className="d-flex flex-row">
+                            {defaultAddressView}
+                            <div>
+                                <div className = "card">
+                                    <div className="card-body">
+                                        {/* <h5 className="card-title"> Address {(Math.floor(addresses.length/rowLength)) * rowLength + j + 1} </h5> */}
+                                        <div className="card-text float-left">
+                                            <b>Your Details:</b>
+                                            <p>Title: {userData.approach} {userData.name}</p>
+                                            <p>Name: {userData.name}</p>
+                                            <p>E-Mail: {userData.email}</p>
+                                        </div>
+                                        <div className="d-flex flex-column float-right" style = {{"width" : "4rem"}}>
+                                            <Button className="justify-content-start" style = {{"margin-bottom" : "2rem", "margin-top" : "2rem"}}>Edit</Button>
+                                            <Button className="justify-content-end">Delete</Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <table>
                         <tbody>
-                        <tr>
-                        <th>My addresses:</th>
-                        </tr>
-                        {this.renderAddresses(userData.addresses)}
+                            <tr><th>All Addresses:</th></tr>
+                            <div className = "float-left">
+                            {this.renderAddresses(userData.addresses, columns, perPage, "12rem", shorten)}
+                            </div>
+                            {shortenButtons}
                         </tbody>
                         </table>
+                        {/*normalButtons*/}
                     </div>
             </div>
             )

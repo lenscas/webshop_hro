@@ -14,12 +14,13 @@ export type Address = {
 	number: number
 	city: string
 	zipCode: string
+	id: number
 }
 
 export type fourAddresses = fourOfAKind<Address>
 
 export type UserData = {
-	id: string
+	id: number
 	name: string
 	email: string
 	role:string

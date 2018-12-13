@@ -23,7 +23,7 @@ export type product = {
 }
 
 export const getList = async (api: API,pageNum : number) => {
-    const products = await api.doRequest<productList[]>(`api/main/20/${pageNum}`,(t : any)=>t)
+    const products = await api.doRequest<productList[]>(`api/main/20/${pageNum}`,(t : any)=>t.data.cards)
     return products || [];
 }
 export const getCard = async (api: API, id: cardId) :Promise<product | undefined> =>  {
