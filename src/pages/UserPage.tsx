@@ -336,7 +336,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                     <Form>
                         <FormGroup className = {this.editClasses.addAddress}>
                             <Label for="street">Street</Label>
-                            <Input name="street" id="street" placeholder = "e.g. Lullaby Lane" />
+                            <Input name="street" id="street" placeholder = "e.g. Lelielaan" />
                         </FormGroup>
                         <FormGroup className = {this.editClasses.addAddress}>
                             <Label for="number">Number</Label>
@@ -348,7 +348,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                         </FormGroup>
                         <FormGroup className = {this.editClasses.addAddress}>
                             <Label for="city">City</Label>
-                            <Input name="city" id="city" placeholder = "Zwammerdam" />
+                            <Input name="city" id="city" placeholder = "e.g. Zwammerdam" />
                         </FormGroup>
 
                         <Button className = {this.editClasses.addAddress}>Add</Button>
