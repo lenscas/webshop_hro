@@ -34,6 +34,13 @@ body, html {
 .hidden {
 	display: none;
 }
+.card-page{
+  position: relative;
+  top: 20vh;
+}
+.magic-font{
+  font-family: "magic";
+}
 .banner{
   position: absolute;
   bottom: 68%;

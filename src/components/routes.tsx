@@ -10,7 +10,12 @@ import ContactPage from "src/pages/ContactPage";
 import Cart from "src/pages/Cart"
 import Decks from "src/pages/decks";
 import DeckList from "src/pages/DeckList";
+<<<<<<< HEAD
 import UserPage from "src/pages/UserPage";
+=======
+import NewDeck from "src/pages/newDeck";
+import SearchList from "src/pages/SearchList";
+>>>>>>> sprint_4
 
 
 export default class Routes extends BasicPage {
@@ -22,7 +27,16 @@ export default class Routes extends BasicPage {
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
+	searchListPage = (props : RouteComponentProps<{pageNum:string,name:string}>)=><SearchList
+		APIS={this.props.APIS}
+		match={props.match}
+
+	/>
 	deckListPage = (props :RouteComponentProps<{id:string}>) =><DeckList
+		APIS={this.props.APIS}
+		match={props.match}
+	/>
+	newDeckPage = (props: RouteComponentProps<{cardId:string}>) => <NewDeck
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
@@ -33,6 +47,8 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/" ><Home/></Route>
 					<Route exact={true} path="/register"><Register APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/products"><ProductList APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/search/:name" render={this.searchListPage}/>
+					<Route exact={true} path="/search/:name/:pageNum" render={this.searchListPage}/>
 					<Route exact={true} path="/products/:pageNum" render={this.cardListPage}/>
 					<Route exact={true} path="/cart"><Cart APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/login"><Login APIS={this.props.APIS}/></Route>
@@ -40,9 +56,13 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/product/:id" render={this.cardPage} />
 					<Route exact={true} path="/decks"><Decks APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/decks/:id" render={this.deckListPage}/>
+<<<<<<< HEAD
 					<Route exact={true} path="/user"><UserPage APIS={this.props.APIS}/></Route>
+=======
+					<Route exact={true} path="/deck/new"><NewDeck APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/deck/new/:cardId" render={this.newDeckPage}/>
+>>>>>>> sprint_4
 				</Switch>
-
 			</>
 		)
 	}
