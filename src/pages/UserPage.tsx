@@ -9,7 +9,7 @@ import Input from "reactstrap/lib/Input";
 import Label from "reactstrap/lib/Label";
 import Button from "reactstrap/lib/Button";
 import Form from "reactstrap/lib/Form";
-import { storeLocal, readLocal } from "src/services/localStorage";
+import { storeLocal, readLocal, removeLocal } from "src/services/localStorage";
 
 export default class UserPage extends BasicComponent<props, {render : string, page : number, selectingDefaultAddress : boolean}>{
     
@@ -146,9 +146,19 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
         return ()=> this.setDefault(address)
     }
 
+    unsetsetDefaultOnClick(){
+        
+        return ()=> this.unsetDefault()
+    }
+
     setDefault(address: Address){
         this.setSelect(false)
         storeLocal("defaultAddress", address)
+    }
+
+    unsetDefault(){
+        removeLocal("defaultAddress")
+        this.easySetState( {render: this.state.render})
     }
 
     setSelectOnClick(selectingDefAddress : boolean){
@@ -236,7 +246,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                                 </div>
                                 <div className="d-flex flex-column float-right" style = {{"width" : "4rem"}}>
                                     <Button className="justify-content-start" style = {{"marginBottom" : "2rem", "marginTop" : "2rem"}}>Edit</Button>
-                                    <Button className="justify-content-end">Delete</Button>
+                                    <Button className="justify-content-end" onClick = {this.unsetsetDefaultOnClick()}>Unset</Button>
                                 </div>
                             </div>
                         </div>
@@ -366,7 +376,8 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                     </Form>
                     <br/>
 
-                    <Button>Remove All Addresses</Button>
+                    <h5>Remove All Addresses</h5>
+                    <Button>Remove</Button>
                 </div>
             )
         }

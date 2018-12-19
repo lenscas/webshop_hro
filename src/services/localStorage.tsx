@@ -19,4 +19,7 @@ export function readLocal<ReturnType>(key:string): ReturnType | undefined // Rea
   }
   return
 }
-
+export function removeLocal(key: string) // Remove item:
+{
+  localStorage.removeItem(key)
+}
