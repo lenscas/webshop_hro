@@ -8,6 +8,11 @@ export type productList = {
     price:  number;
     image: string;
 }
+export interface IManaResponce {
+	id:          number;
+	strSymbol:   string;
+	picturePath: null;
+}
 
 export type product = {
     id:         string;
@@ -20,6 +25,7 @@ export type product = {
     toughness:  string;
     price:      number;
     typeLine:   string;
+    mana:       IManaResponce[];
 }
 
 export const getList = async (api: API,pageNum : number) => {

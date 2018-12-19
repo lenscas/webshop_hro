@@ -107,7 +107,8 @@ export default class Products extends BasicComponent<ProductProps,productState> 
                         <img className="img-fluid" src={card.image}/>
                     </Col>
                     <Col xs="4">
-                        <h2 className="titleP magic-font">{card.name}<TextWithSymbols classSymbols="bigSymbol" text={"{1}{G}{G}"}/></h2>
+                       
+                        <h2 className="titleP magic-font">{card.name}<TextWithSymbols classSymbols="bigSymbol" text={card.mana.map(v => v.strSymbol).join("")}/></h2>
                         <h3 className="magic-font">{card.typeLine}</h3>
                         {this.renderAbilities(card)}
                         {this.renderLowerStats(card)}
