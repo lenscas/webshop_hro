@@ -15,6 +15,8 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
     
     tabClasses : {[key:string] : string} = {Details : "nav-link active", Edit : "nav-link"}
 
+    editClasses : {[key:string] : string} = {changeDetails : "visible", addAddress : "hidden", changePassword : "hidden"}
+
     constructor(propsy) {
         super(propsy);
         this.state = { render : "Details", page : 0, selectingDefaultAddress : false}
@@ -28,7 +30,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
         console.log(addresses)
         const rows : JSX.Element[] = []
         const row : Address[] = []
-        
+
         const addressButton = (addressItem) => {
             if (this.state.selectingDefaultAddress){
                 return (
@@ -45,13 +47,13 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
             page++
         }
         addresses.forEach( (address, i) => {
-            if ((page - 1) * pageLength < i++ && i++ <= (page * pageLength) + 1){
+            if ((page - 1) * pageLength < i+1 && i+1 <= (page * pageLength)){
                 row.push(address)
             }
             
             if (row.length === rowLength){
                 rows.push(
-                    <tr>
+                    <tr key = {"a" + i}>
                     {row.map( (addressItem,j) => (!addressItem) ? <h1>lol</h1> :
                         <td key={addressItem.id}>
                             <div className = "card" style = {{"width" : width, "height" : "12rem"}}>
@@ -67,14 +69,12 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                         </td>)}
                     </tr>
                 )
-                if (!short){
                 row.length = 0
-                }
             }
         })
-        if (!short){
+        
             rows.push(
-                <tr>
+                <tr key = {"b" + addresses.length}>
                 {row.map( (addressItem,j) => (!addressItem) ? <h1>lol</h1> :
                     <td key={addressItem.id}>
                         <div className = "card" style = {{"width" : width, "height" : "12rem"}}>
@@ -83,37 +83,37 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                                     <p>{addressItem.street} {addressItem.number}</p>
                                     <p>{addressItem.zipCode}</p>
                                     <p>{addressItem.city}</p>
-                                    <Button>Delete</Button>
+                                    {addressButton(addressItem)}
                                 </div>
                             </div>
                         </div>
                     </td>)}
                 </tr>
             )
-            const addButton = <Button className="float-left">Add</Button>
+            const addButton = <td key = {"c"}><Button className="float-left" onClick = {this.setTabAndEditOnClick("Edit", "addAddress")}>Add</Button></td>
            
-            const viewLessButton = <Button className="float-right"  onClick = {this.modPageOnClick(-(this.state.page))}>View Less</Button>
-            
+            const viewLessButton = <td key = {"d"}><Button onClick = {this.modPageOnClick(-(this.state.page))}>View Less</Button></td>
+            if (!short){
             let prevButton = <td/>
             let nextButton = <td/>
             if (this.state.page > 1){
-                prevButton = <Button className="float-left" onClick = {this.modPageOnClick(-1)}>Prev Page</Button> 
+                prevButton = <td><Button className="float-left" onClick = {this.modPageOnClick(-1)}>Prev Page</Button></td> 
             }
             if (this.state.page < (addresses.length / pageLength)){
-                nextButton = <Button className="float-right" onClick = {this.modPageOnClick(1)}>Next Page</Button>
+                nextButton = <td><Button className="float-right" onClick = {this.modPageOnClick(1)}>Next Page</Button></td>
             }
             const middle : JSX.Element[] = []
             for (let i = 0; i < (rowLength - 2); i++){
-                middle.push(<td/>)}
+                middle.push(<td key = {"g" + i}/>)}
             rows.push(
-                <tr>
+                <tr key = {"e"}>
                     {prevButton}
                     {middle}
                     {nextButton}
                 </tr>
             )
             rows.push(
-                <tr>
+                <tr key = {"f"}>
                     {addButton}
                     {middle}
                     {viewLessButton}
@@ -130,7 +130,15 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
     }
 
     setTabOnClick(id: string){
-    return ()=> this.setTab(id)
+        return ()=> this.setTab(id)
+    }
+
+    setEditOnClick(id: string){
+        return ()=> this.setEdit(id)
+    }
+
+    setTabAndEditOnClick(tabId: string, editId: string){
+        return ()=> this.setTabAndEdit(tabId, editId)
     }
     
     setDefaultOnClick(address: Address){
@@ -157,6 +165,17 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
         this.easySetState( { render:id })
     }
 
+    setEdit(id: string){
+        this.editClasses[id] = "visible"
+        Object.keys(this.editClasses).filter((v) => v !== id).forEach( (editId) => this.editClasses[editId] = "hidden" )
+        this.easySetState( {render:this.state.render})
+    }
+
+    setTabAndEdit(tabId: string, editId: string){
+        this.setEdit(editId)
+        this.setTab(tabId)
+    }
+
     modPage(pageMod:number){
         this.easySetState( { page : this.state.page + pageMod })
     }
@@ -164,17 +183,18 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
     renderTab(id: string, userData: UserData){
         if(id === "Details"){
             let columns = 3;
-            const perPage = 8;
+            let perPage = 3;
             let shorten = true;
-            let shortenButtons = <div  className="float-right">
-                    <div><Button>Add</Button></div>
-                    <div><Button onClick = {this.modPageOnClick(1)}>View More</Button></div>
-            </div>;
+            let shortenButtons = <tr  className="float-right">
+                    <td><Button onClick = {this.setTabAndEditOnClick("Edit", "addAddress")}>Add</Button></td>
+                    <td><Button onClick = {this.modPageOnClick(1)} >View More</Button></td>
+            </tr>;
             if(this.state.page > 0)
             {
                 columns = 4;
+                perPage = 8;
                 shorten = false;
-                shortenButtons = <div/>
+                shortenButtons = <tr/>
             }
             const defaultAddress : Address|undefined = readLocal("defaultAddress")
             let defaultAddressView = (
@@ -215,7 +235,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                                     <p>{defaultAddress.city}</p>
                                 </div>
                                 <div className="d-flex flex-column float-right" style = {{"width" : "4rem"}}>
-                                    <Button className="justify-content-start" style = {{"margin-bottom" : "2rem", "margin-top" : "2rem"}}>Edit</Button>
+                                    <Button className="justify-content-start" style = {{"marginBottom" : "2rem", "marginTop" : "2rem"}}>Edit</Button>
                                     <Button className="justify-content-end">Delete</Button>
                                 </div>
                             </div>
@@ -239,7 +259,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                                             <p>E-Mail: {userData.email}</p>
                                         </div>
                                         <div className="d-flex flex-column float-right" style = {{"width" : "4rem"}}>
-                                            <Button className="justify-content-start" style = {{"margin-bottom" : "2rem", "margin-top" : "2rem"}}>Edit</Button>
+                                            <Button className="justify-content-start" style = {{"marginBottom" : "2rem", "marginTop" : "2rem"}} onClick = {this.setTabAndEditOnClick("Edit", "changeDetails")}>Edit</Button>
                                             <Button className="justify-content-end">Delete</Button>
                                         </div>
                                     </div>
@@ -248,84 +268,101 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
                         </div>
 
                         <table>
-                        <tbody>
+                        <tbody className = "float-left">
                             <tr><th>All Addresses:</th></tr>
-                            <div className = "float-left">
+  
                             {this.renderAddresses(userData.addresses, columns, perPage, "12rem", shorten)}
-                            </div>
-                            {shortenButtons}
+
+                            
                         </tbody>
+                        {shortenButtons}
                         </table>
                     </div>
             </div>
             )
         }
         if(id === "Edit"){
+            let changeDetailsButtonShow = "hidden"
+            let addAddressButtonShow = "hidden"
+            let changePasswordButtonShow = "hidden"
+
+            if (this.editClasses.changeDetails === "hidden"){
+                changeDetailsButtonShow = "visible"
+            }
+            if (this.editClasses.addAddress === "hidden"){
+                addAddressButtonShow = "visible"
+            }
+            if (this.editClasses.changePassword === "hidden"){
+                changePasswordButtonShow = "visible"
+            }
+
             return(
                 <div>
                     <h5>Change Details</h5>
+                    <Button className = {changeDetailsButtonShow} onClick = {this.setEditOnClick("changeDetails")}>Edit</Button>
                     <Form>
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.changeDetails}>
                             <Label for="email">Name</Label>
                             <Input type="email" name="email" id="email" placeholder={userData.email} />
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.changeDetails}>
                             <Label for="approach">Approach</Label>
                             <Input name="approach" id="approach" placeholder = {userData.approach} />
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.changeDetails}>
                             <Label for="name">Name</Label>
                             <Input name="name" id="name" placeholder = {userData.name} />
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.changeDetails}>
                             <Label for="password">Password</Label>
                             <Input type="password" name="password" id="password" placeholder = "Please input your password" />
                         </FormGroup>
 
-                        <Button>Submit</Button>
+                        <Button className = {this.editClasses.changeDetails}>Submit</Button>
                     </Form>
                     <br/>
                     <h5>Add Address</h5>
+                    <Button className = {addAddressButtonShow} onClick = {this.setEditOnClick("addAddress")}>Edit</Button>
                     <Form>
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.addAddress}>
                             <Label for="street">Street</Label>
                             <Input name="street" id="street" placeholder = "e.g. Lullaby Lane" />
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.addAddress}>
                             <Label for="number">Number</Label>
                             <Input name="number" id="number" placeholder = "e.g. 135" />
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.addAddress}>
                             <Label for="zipCode">Zip Code</Label>
                             <Input name="zipCode" id="zipCode" placeholder = "e.g. 9753AB" />
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.addAddress}>
                             <Label for="city">City</Label>
                             <Input name="city" id="city" placeholder = "Zwammerdam" />
                         </FormGroup>
 
-                        <Button>Add</Button>
+                        <Button className = {this.editClasses.addAddress}>Add</Button>
                     </Form>
                     <br/>
                     <h5>Change Password</h5>
+                    <Button className = {changePasswordButtonShow} onClick = {this.setEditOnClick("changePassword")}>Edit</Button>
                     <Form>
-                        
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.changePassword}>
                             <Label for="password">Password</Label>
                             <Input type="password" name="newPassword" id="newPassword" placeholder = "Please input a strong password" />
                         </FormGroup>
 
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.changePassword}>
                             <Label for="password">Password</Label>
                             <Input type="password" name="repeatPassword" id="repeatPassword" placeholder = "Please repeat your password" />
                         </FormGroup>
 
-                        <FormGroup>
+                        <FormGroup className = {this.editClasses.changePassword}>
                             <Label for="password">Password</Label>
                             <Input type="password" name="password" id="password" placeholder = "Please input your current password" />
                         </FormGroup>
 
-                        <Button>Submit</Button>
+                        <Button className = {this.editClasses.changePassword}>Submit</Button>
                     </Form>
                     <br/>
 

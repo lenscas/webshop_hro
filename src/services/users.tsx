@@ -26,7 +26,6 @@ export type UserData = {
 	role:string
 	approach: string
 	addresses: Address[]
-	
 }
 
 type registerRes = {
@@ -80,10 +79,69 @@ export const login = async (creds : credentials, api: API) : Promise<boolean> =>
 
 export const getUserData = async (api: API) => {
 	
-	const user = await api.doRequest<Partial<UserData>>("api/user/", (t: any) => t.data)
+	//const user = await api.doRequest<Partial<UserData>>("api/user/", (t: any) => t.data)
 
-	const addresses : Array<Partial<UserData>> | undefined = await api.doRequest<Array<Partial<UserData>>>("api/address/", (t: any) => t.data)
+	const user = {id: 1,
+		name: "Bruijn",
+		email: "beerbruijn@grizzly.nl",
+		role:"user",
+		approach: "Beer"
 
+	}
+
+	//const addresses : Address[] | undefined = await api.doRequest<Address[]>("api/address/", (t: any) => t.data)
+
+	const addresses : Address[] | undefined = [
+			{
+				street: "Honingplein",
+				number: 255,
+				city: "Lekkerdam",
+				zipCode: "1999OR",
+				id: 1
+			},
+			{
+				street: "Bimbamblv",
+				number: 3453,
+				city: "Gabberen",
+				zipCode: "4574HW",
+				id: 2
+			},
+			{
+				street: "Bazelweg",
+				number: 4,
+				city: "Appeldrecht",
+				zipCode: "3930AH",
+				id: 3
+			},
+			{
+				street: "Juiststraat",
+				number: 1,
+				city: "Enige a/d IJssel",
+				zipCode: "4321AB",
+				id: 4
+			},
+			{
+				street: "Honingplein",
+				number: 255,
+				city: "Lekkerdam",
+				zipCode: "1999OR",
+				id: 5
+			},
+			{
+				street: "Honingplein",
+				number: 255,
+				city: "Lekkerdam",
+				zipCode: "1999OR",
+				id: 6
+			},
+			{
+				street: "Honingplein",
+				number: 255,
+				city: "Lekkerdam",
+				zipCode: "1999OR",
+				id: 7
+			}
+	 	]
 	if (user !== undefined && addresses !== undefined){
 
 		const userData = 
