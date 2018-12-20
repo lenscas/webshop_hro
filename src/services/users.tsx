@@ -13,19 +13,20 @@ type registerRes = {
 	success: boolean,
 	message: string
 }
-export type afterLogin = {
-	user: { userId: string, shoppingCartId: number }
-	token: string
-	id: string
+export type afterLogin ={
+	user : {userId:string, shoppingCartId : number}
+	token : string
+	refreshToken:string
+	id : string
 }
 export type credentials = {
 	email: string,
 	password: string
 }
-const dealWithToken = (api: API, token?: afterLogin) => {
-	if (token) {
-		if (api.onAll) {
-			const asBase: BaseAPIReturn = { userId: token.user.userId, cartId: token.user.shoppingCartId }
+const dealWithToken = (api:API,token? : afterLogin) => {
+	if(token){
+		if(api.onAll){
+			const asBase : BaseAPIReturn = {refreshToken:token.refreshToken, userId:token.user.userId, cartId:token.user.shoppingCartId}
 			api.onAll(asBase)
 		}
 		api.setToken(token.token)
@@ -61,8 +62,8 @@ export const register = async (user: RegisterUser, api: API) => {
 	if (res === undefined) {
 		return res
 	}
-	if (res.success) {
-		return login({ email: user.email, password: user.password }, api)
+	if(res.success){
+		return true//login({email: user.email,password: user.password}, api)
 	} else {
 		return { success: false, message: res.message }
 	}
@@ -74,4 +75,11 @@ export const login = async (creds: credentials, api: API): Promise<boolean> => {
 			.buildRequest("body", creds)
 			.buildRequest("converter", (t: APIReturn<afterLogin>) => t.data)
 	).run<afterLogin>())
+}
+export const logOut = async (api: API) : Promise<void> => {
+	await (
+		api.buildRequest("path","auth/logout")
+		.buildRequest("method","POST")
+		.buildRequest("body", JSON.stringify({"refreshToken":api.refreshToken}))
+	).run()
 }

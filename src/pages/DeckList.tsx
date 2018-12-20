@@ -1,5 +1,4 @@
 import * as React from "react";
-//import { Redirect } from "react-router-dom";
 import LoadSymbol from "src/components/loadSymbol";
 import BasicPage from "../types/basicComponent";
 import { deckList, getDeckList, cardInDeck } from "src/services/Decks";
@@ -10,7 +9,12 @@ import { props } from "src/types/BasicProps";
 import Button from "reactstrap/lib/Button";
 import OnHoverNearMouse from "src/components/onHoverNearMouse";
 import "../style/deckList.css"
-import { match } from "react-router";
+import { match} from "react-router";
+import { retTrue } from "src/funcs/lambdas";
+import Label from "reactstrap/lib/Label";
+import Input from "reactstrap/lib/Input";
+import { FormGroup} from "reactstrap";
+import { Link } from "react-router-dom";
 
 
 type LoadParams = {
@@ -27,13 +31,14 @@ type sortOptions = "cost" | "color"
 type DeckListProps = props & {match : match<{id:string}>}
 type DeckListState = {
 	sortOn :sortOptions
+	filterLands : boolean
 }
 export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 	constructor(propsy){
 		super(propsy)
 		this.renderCards = this.renderCards.bind(this)
 		this.renderList = this.renderList.bind(this)
-		this.state = {sortOn : "color"}
+		this.state = {sortOn : "color",filterLands:true}
 	}
 	sortByColor(cards:cardInDeck[]) : sortedByColor {
 		const sortedList : sortedByColor = {}
@@ -62,7 +67,7 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		}
 		return this.sortByColor(cards)
 	}
-	renderButton(){
+	renderSortButton(){
 		let onClick = ()=>this.easySetState({sortOn:"color"})
 		let text = "Color"
 		if(this.state.sortOn==="color"){
@@ -71,45 +76,52 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		}
 		return <Button color="success" onClick={onClick}>{text}</Button>
 	}
+	renderFilterButton(){
+		let onClick = ()=>this.easySetState({filterLands:false})
+		if(!this.state.filterLands){
+			onClick = ()=>this.easySetState({filterLands:true})
+		}
+		return (
+			<FormGroup check={true}>
+				<Input id="showLands" type="checkbox" onClick={onClick}/>
+				<span><Label for="showLands" check={true}>Show lands</Label></span>
+				
+			</FormGroup>
+		)
+	}
+	renderBuyButton(){
+		return <Link to={"/cart/"+this.props.match.params.id} className="btn btn-success">Buy</Link>
+	}
 	renderCards(cards : Array<cardInDeck | undefined>,extraId:string){
 		return cards.map( (card,key)=>{
 			if(!card){
-				return <td key={extraId+key} colSpan={2}/>
+				return <td key={extraId+key+Math.random()}/>
 			}
 			const onHover = ()=><img className="onHoverImage" src={card.image}/>
-			const name = ()=>card.name
-			const amount = ()=> (card.amount || 1).toString()
+			const name = ()=><span key={extraId+"name"+key}>{card.name}</span>
 			return(
 				<>
-					<td key={extraId+card.name+"name"}>
+					<td key={extraId+card.name+"name"+key}>
 						<OnHoverNearMouse
 							onHover={onHover}
 							alwaysShow={name}
 						/>
 
 					</td>
-					<td key={extraId+card.name+"amount"}>
-						<OnHoverNearMouse
-							onHover={onHover}
-							alwaysShow={amount}
-						/>
-					</td>
 				</>
 			)
 		})
 	}
 	renderColumns(sortedCards : Array<Array<cardInDeck|undefined>>) {
-		//const list = []
-
-		return sortedCards.map(item=>{
-			const key = item.map(card=>card && card.name.split(" ").join("")).join("")
+		return sortedCards.map( (item,key2)=>{
+			const key = item.map(card=>card && card.name.split(" ").join("")+key2).join("")
 			return <tr key={key}>
 				{this.renderCards(item,key)}
 			</tr>
 		})
 	}
 	renderHead(keys:string[]){
-		return keys.map(key=><th colSpan={2} key={key} className="text-center">{key}</th>)
+		return keys.map(key=><th key={key} className="text-center">{key}</th>)
 	}
 	getOrderOfColors(colors : string){
 		const colorOrder = {
@@ -122,7 +134,15 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		return colors.split("").map(v=>colorOrder[v]).sort()
 	}
 	renderList(list : deckList){
-		list.cards.sort( (v,k)=>{
+		let filter : (v:cardInDeck)=>boolean = retTrue
+		if(this.state.filterLands){
+			filter = (v : cardInDeck)=>{
+				const lowerTypes = v.typeLine.toLowerCase()
+				return !(lowerTypes.includes("land ") || lowerTypes.endsWith("land"))
+			}
+		}
+		const useCards = list.cards.filter(filter) 
+		useCards.sort( (v,k)=>{
 			if(v.name === k.name){
 				return 0
 			}
@@ -131,7 +151,7 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 			}
 			return -1
 		})
-		const sortedList = this.sort(list.cards,this.state.sortOn)
+		const sortedList = this.sort(useCards,this.state.sortOn)
 		const keys = Object.keys(sortedList)
 
 		keys.sort( (key1,key2)=>{
@@ -183,7 +203,9 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 					<Col xs={1}/>
 					<Col>
 						<h1>Hier is nog plaats voor andere dingen</h1>
-						{this.renderButton()}
+						{this.renderBuyButton()}
+						{this.renderSortButton()}
+						{this.renderFilterButton()}
 					</Col>
 				</Row>
 				<Row>
@@ -205,11 +227,10 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		if(!this.props.APIS.userId){
 			this.props.APIS.setUserId("1");
 			return null;
-			//return <Redirect to="/"/>
 		}
 		const getData = (params : LoadParams)=>getDeckList(this.props.APIS.req,params.deckId)
 		return (
-			<LoadSymbol<LoadParams,deckList>
+			<LoadSymbol<LoadParams,deckList | undefined>
 				toRender = {this.renderList}
 				params = {{userId : this.props.APIS.userId, deckId:this.props.match.params.id}}
 				getData ={getData}

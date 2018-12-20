@@ -16,6 +16,7 @@ type appState = {
 	shoppingCartId?: number
 	alerts: string[]
 	token?: string
+	refreshToken?:string
 }
 
 class App extends React.Component<{}, appState>{
@@ -37,10 +38,9 @@ class App extends React.Component<{}, appState>{
 	}
 	public render() {
 		const maybeToken = this.state.token || readLocalRaw("token")
-		const api = new API((token: string) => this.setToken(token), maybeToken);
-		api.setOnAll(data => this.setState((st => ({ ...st, userId: data.userId, shoppingCartId: data.cartId }))))
-		api.setOnError(data => console.error(data))
-
+		const api = new API( (token :string)=>this.setToken(token),maybeToken);
+		api.setOnAll(data=>this.setState((st=>({...st,refreshToken:data.refreshToken, userId:data.userId,shoppingCartId:data.cartId}))))
+		api.setOnError(data=>console.error(data))
 		const APIS = {
 			setHeader: (header: string) => console.log(header),
 			req: api,
@@ -52,7 +52,7 @@ class App extends React.Component<{}, appState>{
 		return (
 			<Router>
 				<div>
-					<Header />
+					<Header APIS={APIS}/>
 					<div className="container-fluid background">
 						<Routes APIS={APIS} />
 					</div>

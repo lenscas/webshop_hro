@@ -1,13 +1,14 @@
 import * as React from "react";
 import BasicComponent from "../types/basicComponent";
 import { getCart, getTotals, cartItem } from "../services/Cart";
-import { Link } from "react-router-dom";
+import { Link, match } from "react-router-dom";
 import LoadSymbol from "src/components/loadSymbol";
-import { Table } from 'reactstrap';
+import { Table, Alert } from 'reactstrap';
 import { quantMod } from "src/components/addToCart";
 import { props } from "src/types/BasicProps";
 import { readLocalRaw, storeLocal } from "src/services/localStorage";
 import { API, APIReturn } from "src/services/basics";
+import { addDeckToCart } from "src/services/Decks";
 // import { storeLocal } from "src/services/localStorage";
 
 // storeLocal("cart",
@@ -18,15 +19,32 @@ import { API, APIReturn } from "src/services/basics";
 //     {id: "4",name : "Marrow-Gnawer", price: "", priceNum : 40, quantity : 99, priceTotal : "", priceTotalNum : 0}
 // ]
 //  )
+type CartProps = props & {match? : match<{ deckId: string; }>}
+type CartState = {
+    erroredCards : string[],
+    didLoad : boolean
+}
 
-export default class Cart extends BasicComponent<props, { modif: number }>{
+export default class Cart extends BasicComponent<CartProps,CartState>{
 
     constructor(propsy) {
         super(propsy);
         this.modOnClick = this.modOnClick.bind(this)
         this.renderCart = this.renderCart.bind(this)
+        this.state = {erroredCards:[],didLoad:false}
     }
-
+    async componentDidMount(){
+        if(this.props.match){
+            const erroredCards = await addDeckToCart(this.props.APIS.req,this.props.match.params.deckId)
+            if(erroredCards && erroredCards.length > 0 ){
+                this.easySetState({erroredCards,didLoad:true})
+            } else {
+                this.easySetState({didLoad:true})
+            }
+            
+            //this.forceUpdate()
+        }
+    }
     modOnClick(cartThing: cartItem, mod: number, update: (params: {}) => Promise<void>) {
         return async () => quantMod(cartThing, mod, this.props.APIS.req, update)
     }
@@ -46,12 +64,9 @@ export default class Cart extends BasicComponent<props, { modif: number }>{
                     update({})
                 }
             })).run()
-
-
     }
-
-
     renderCart(cart: cartItem[], update: (params: {}) => Promise<void>) {
+        console.log(cart)
         if (!cart) {
             return <></>
         }
@@ -109,12 +124,22 @@ export default class Cart extends BasicComponent<props, { modif: number }>{
             )
         }
     }
+    renderWarnings(){
+        return this.state.erroredCards.map(v=>(
+            <Alert color="warning">{v} is out of stock.</Alert>
+        ))
+    }
     render() {
         const fetch = async () => await getCart(this.props.APIS.req)
-        return <LoadSymbol<{}, cartItem[]>
-            toRender={this.renderCart}
-            params={{}}
-            getData={fetch}
-        />
+        return (
+            <>
+                {this.renderWarnings()}
+                <LoadSymbol<{didLoad :boolean}, cartItem[]>
+                    toRender={this.renderCart}
+                    params={{didLoad :this.state.didLoad}}
+                    getData={fetch}
+                />
+            </>
+        )
     }
 }
