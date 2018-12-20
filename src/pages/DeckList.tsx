@@ -95,13 +95,13 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 	renderCards(cards : Array<cardInDeck | undefined>,extraId:string){
 		return cards.map( (card,key)=>{
 			if(!card){
-				return <td key={extraId+key} colSpan={2}/>
+				return <td key={extraId+key+Math.random()}/>
 			}
 			const onHover = ()=><img className="onHoverImage" src={card.image}/>
-			const name = ()=>card.name
+			const name = ()=><span key={extraId+"name"+key}>{card.name}</span>
 			return(
 				<>
-					<td key={extraId+card.name+"name"}>
+					<td key={extraId+card.name+"name"+key}>
 						<OnHoverNearMouse
 							onHover={onHover}
 							alwaysShow={name}
@@ -113,8 +113,8 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		})
 	}
 	renderColumns(sortedCards : Array<Array<cardInDeck|undefined>>) {
-		return sortedCards.map(item=>{
-			const key = item.map(card=>card && card.name.split(" ").join("")).join("")
+		return sortedCards.map( (item,key2)=>{
+			const key = item.map(card=>card && card.name.split(" ").join("")+key2).join("")
 			return <tr key={key}>
 				{this.renderCards(item,key)}
 			</tr>

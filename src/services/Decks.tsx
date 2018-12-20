@@ -51,6 +51,7 @@ export interface ICardResponce {
 	toughness:  null;
 	price:      number;
 	typeLine:   string;
+	color:      color[];
 	mana:       IManaResponce[];
 }
 
@@ -75,7 +76,7 @@ export const getDeckList = async (api: API, id:string): Promise<deckList | undef
 				image : t.data.fullImage
 			},
 			cards : t.data.cards.map(v=>({
-				colors : {},
+				colors : v.color,
 				name : v.name,
 				image : v.image,
 				typeLine : v.typeLine,
