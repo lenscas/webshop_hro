@@ -1,5 +1,5 @@
 import { API, APIReturn, BaseAPIReturn } from "./basics";
-import { readLocal, readLocalRaw } from "./localStorage";
+import { readLocal, readLocalRaw, RemoveLocalAll } from "./localStorage";
 import { cartItem, getShoppingCartFromServer } from "./Cart";
 
 export type RegisterUser = {
@@ -14,7 +14,7 @@ type registerRes = {
 	message: string
 }
 export type afterLogin ={
-	user : {userId:string, shoppingCartId : number}
+	user : {userId:string, shoppingCartId : number, role: string}
 	token : string
 	refreshToken:string
 	id : string
@@ -33,10 +33,10 @@ type shoppingCartItem = {
 const dealWithToken = (api:API,token? : afterLogin) => {
 	if(token){
 		if(api.onAll){
-			const asBase : BaseAPIReturn = {refreshToken:token.refreshToken, userId:token.user.userId, cartId:token.user.shoppingCartId}
+			const asBase : BaseAPIReturn = {refreshToken:token.refreshToken, userId:token.user.userId, cartId:token.user.shoppingCartId, role: token.user.role}
 			api.onAll(asBase)
 		}
-		api.setToken(token.token)
+		api.setToken(token.token, token.refreshToken)
 
 
 		const items = readLocal<cartItem[]>("cart");
@@ -94,6 +94,7 @@ export const login = async (creds: credentials, api: API): Promise<boolean> => {
 	).run<afterLogin>())
 }
 export const logOut = async (api: API) : Promise<void> => {
+	RemoveLocalAll()
 	await (
 		api.buildRequest("path","auth/logout")
 		.buildRequest("method","POST")

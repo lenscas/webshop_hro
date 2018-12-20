@@ -9,7 +9,7 @@ import {
 	Nav,
 	NavItem,
 	NavLink,
-	 } from 'reactstrap';
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { NameSearch } from './nameSearch';
 import BasicPage from 'src/types/basicComponent';
@@ -17,86 +17,97 @@ import { props } from 'src/types/BasicProps';
 import { logOut } from 'src/services/users';
 
 
-export default class Header extends BasicPage<props,{isOpen:boolean}> {
+export default class Header extends BasicPage<props, { isOpen: boolean }> {
 	constructor(propsi) {
 		super(propsi);
 
 		this.toggle = this.toggle.bind(this);
 		this.state = {
-		  isOpen: false
+			isOpen: false
 		};
 		this.logOut = this.logOut.bind(this)
-	  }
-	  toggle() {
+	}
+	toggle() {
 		this.setState({
-		  isOpen: !this.state.isOpen
+			isOpen: !this.state.isOpen
 		});
-	  }
-	logOut(){
+	}
+	logOut() {
 		this.props.APIS.setUserId();
 		return logOut(this.props.APIS.req);
 	}
-	renderLoggedInLinks(){
-		if(this.props.APIS.userId){
-			return (
-			<NavItem>
-			<NavLink tag={Link} to="/decks">Decks</NavLink>
-			</NavItem>
-			)}
-			return <></>
+	renderLoggedInLinks() {
+		if (this.props.APIS.userId) {
+			if (this.props.APIS.role === "Admin") {
+				return (
+					<NavItem>
+						<NavLink tag={Link} to="/admin">Admin</NavLink>
+					</NavItem>
+				)
+			} else if (this.props.APIS.role === "User") {
+				return (
+					<NavItem>
+						<NavLink tag={Link} to="/decks">Decks</NavLink>
+					</NavItem>
+				)
+			}
+		}
+		return<></>
+
 	}
-	renderLoggedOutLinks(){
-		if(!this.props.APIS.userId){
+	renderLoggedOutLinks() {
+		if (!this.props.APIS.userId) {
 			return (
 				<>
-				<NavItem>
-				<NavLink tag={Link} to="/register">Register</NavLink>
-			</NavItem>
+					<NavItem>
+						<NavLink tag={Link} to="/register">Register</NavLink>
+					</NavItem>
+					<NavItem>
+						<NavLink tag={Link} to="/login">Login</NavLink>
+					</NavItem>
+				</>
+			)
+		}
+		return <>
 			<NavItem>
-				<NavLink tag={Link} to="/login">Login</NavLink>
+				<NavLink onClick={this.logOut} tag={Link} to="/">Logout</NavLink>
 			</NavItem>
-			</>
-			)}
-			return <>			
-			<NavItem>
-			<NavLink onClick={this.logOut} tag={Link} to="/">Logout</NavLink>
-		</NavItem>
 		</>
-			
+
 	}
 	render() {
-		return(
+		return (
 			<div>
-			  <Navbar color="light" light={true} expand="md">
-				<NavbarBrand href="/">reactstrap</NavbarBrand>
-				<NavbarToggler onClick={this.toggle} />
-				<Collapse isOpen={this.state.isOpen} navbar={true}>
-				  <Nav className="ml-auto" navbar={true}>
-					<NavItem>
-					  <NavLink tag={Link} to="/" href="/">Home</NavLink>
-					</NavItem>
-					<NavItem>
-					  <NavLink tag={Link} to="/products">Cards</NavLink>
-					</NavItem>
-					{this.renderLoggedInLinks()}
-					<NavItem>
-					  <NavLink tag={Link} to="/contact">Contact us</NavLink>
-					</NavItem>
-					{this.renderLoggedOutLinks()}
-					<NavItem>
-						<NameSearch/>
-					</NavItem>
-					<NavItem>
-						<NavLink tag={Link} to="/cart">
-							<img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png"/>
-						</NavLink>
-					</NavItem>
+				<Navbar color="light" light={true} expand="md">
+					<NavbarBrand href="/">reactstrap</NavbarBrand>
+					<NavbarToggler onClick={this.toggle} />
+					<Collapse isOpen={this.state.isOpen} navbar={true}>
+						<Nav className="ml-auto" navbar={true}>
+							<NavItem>
+								<NavLink tag={Link} to="/" href="/">Home</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink tag={Link} to="/products">Cards</NavLink>
+							</NavItem>
+							{this.renderLoggedInLinks()}
+							<NavItem>
+								<NavLink tag={Link} to="/contact">Contact us</NavLink>
+							</NavItem>
+							{this.renderLoggedOutLinks()}
+							<NavItem>
+								<NameSearch />
+							</NavItem>
+							<NavItem>
+								<NavLink tag={Link} to="/cart">
+									<img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png" />
+								</NavLink>
+							</NavItem>
 
-				  </Nav>
-				</Collapse>
-			  </Navbar>
+						</Nav>
+					</Collapse>
+				</Navbar>
 			</div>
-		  );
+		);
 
 		// (
 		// 	<nav className="navbar navbar-expand-lg navbar-light bg-dark text-white header">
