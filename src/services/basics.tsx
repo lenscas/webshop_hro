@@ -3,6 +3,7 @@ export type BaseAPIReturn = {
 	cartId? : number
 	userId? : string
 	success? : boolean
+	refreshToken? : string
 }
 
 export type APIReturn<T> = BaseAPIReturn & {
@@ -14,10 +15,12 @@ type APIError = BaseAPIReturn & {
 export class API {
 	public setToken : (token : string)=>void
 	public onAll? : (data : BaseAPIReturn)=>void
+	public refreshToken? : string
 	private path?   : string
 	private config? : any
 	private token? : string
 	private converter : any
+	
 	constructor(setToken : (token : string)=>void, token?:string){
 		this.resetBuilder();
 		this.setToken = setToken

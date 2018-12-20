@@ -87,20 +87,4 @@ export default class ContactPage extends BasicPage<props,feedbackState> {
                 </div>
         )     
         }
-
-            /*<div className="container">
-                <form action="action_page.php">
-                    <label>First Name</label>
-                    <input type="text" id="fname" name="firstname" placeholder="First name"/>
-                    <label>Last Name</label>
-                    <input type="text" id="fname" name="firstname" placeholder="Last name"/>
-
-                    <label>Subject</label>
-                    <textarea id="subject" name="subject" placeholder="What is the problem?"/>
-
-                    <input type="submit" value="Submit"/>
-                </form>
-            </div>*/
-        //)
-   // }
 }
