@@ -1,7 +1,7 @@
 import * as React from "react";
 import LoadSymbol from "src/components/loadSymbol";
 import BasicPage from "../types/basicComponent";
-import { deckList, getDeckList, cardInDeck } from "src/services/Decks";
+import { deckList, getDeckList, cardInDeck, deleteCard } from "src/services/Decks";
 import Row from "reactstrap/lib/Row";
 import Col from "reactstrap/lib/Col";
 import Table from "reactstrap/lib/Table";
@@ -13,13 +13,14 @@ import { match} from "react-router";
 import { retTrue } from "src/funcs/lambdas";
 import Label from "reactstrap/lib/Label";
 import Input from "reactstrap/lib/Input";
-import { FormGroup} from "reactstrap";
+import { FormGroup, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import { Link } from "react-router-dom";
 
 
 type LoadParams = {
 	userId : string
 	deckId : string
+	deletedCards : number
 }
 
 type sortedByColor = {[s : string]:cardInDeck[]}
@@ -32,13 +33,17 @@ type DeckListProps = props & {match : match<{id:string}>}
 type DeckListState = {
 	sortOn :sortOptions
 	filterLands : boolean
+	selectedCard? : string
+	deletedCards : number
 }
 export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 	constructor(propsy){
 		super(propsy)
 		this.renderCards = this.renderCards.bind(this)
 		this.renderList = this.renderList.bind(this)
-		this.state = {sortOn : "color",filterLands:true}
+		this.toggle = this.toggle.bind(this)
+		this.deleteCard = this.deleteCard.bind(this)
+		this.state = {sortOn : "color",filterLands:true,deletedCards:0}
 	}
 	sortByColor(cards:cardInDeck[]) : sortedByColor {
 		const sortedList : sortedByColor = {}
@@ -89,6 +94,7 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 			</FormGroup>
 		)
 	}
+
 	renderBuyButton(){
 		return <Link to={"/cart/"+this.props.match.params.id} className="btn btn-success">Buy</Link>
 	}
@@ -98,10 +104,11 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 				return <td key={extraId+key+Math.random()}/>
 			}
 			const onHover = ()=><img className="onHoverImage" src={card.image}/>
+			const onClick = ()=>this.easySetState({selectedCard:card.id})
 			const name = ()=><span key={extraId+"name"+key}>{card.name}</span>
 			return(
 				<>
-					<td key={extraId+card.name+"name"+key}>
+					<td onClick={onClick} key={extraId+card.name+"name"+key}>
 						<OnHoverNearMouse
 							onHover={onHover}
 							alwaysShow={name}
@@ -202,9 +209,10 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 					</Col>
 					<Col xs={1}/>
 					<Col>
-						<h1>Hier is nog plaats voor andere dingen</h1>
-						{this.renderBuyButton()}
-						{this.renderSortButton()}
+						<div className="btn-group">
+							{this.renderBuyButton()}
+							{this.renderSortButton()}
+						</div>
 						{this.renderFilterButton()}
 					</Col>
 				</Row>
@@ -223,6 +231,15 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 			</>
 		)
 	}
+	toggle(){
+		this.setState((st)=>({...st,selectedCard:undefined}))
+	}
+	async deleteCard(){
+		if(this.state.selectedCard){
+			await deleteCard(this.props.APIS.req,this.props.match.params.id,this.state.selectedCard)
+			this.easySetState({deletedCards: this.state.deletedCards + 1},this.toggle)
+		}
+	}
 	render(){
 		if(!this.props.APIS.userId){
 			this.props.APIS.setUserId("1");
@@ -230,11 +247,27 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		}
 		const getData = (params : LoadParams)=>getDeckList(this.props.APIS.req,params.deckId)
 		return (
-			<LoadSymbol<LoadParams,deckList | undefined>
-				toRender = {this.renderList}
-				params = {{userId : this.props.APIS.userId, deckId:this.props.match.params.id}}
-				getData ={getData}
-			/>
+			<>
+				<LoadSymbol<LoadParams,deckList | undefined>
+					toRender = {this.renderList}
+					params = {{
+						deletedCards:this.state.deletedCards, 
+						userId : this.props.APIS.userId, 
+						deckId:this.props.match.params.id
+					}}
+					getData ={getData}
+				/>
+				<Modal isOpen={!!this.state.selectedCard} toggle={this.toggle}>
+					<ModalHeader toggle={this.toggle}/>
+					<ModalBody>
+						What do you want to do?
+					</ModalBody>
+					<ModalFooter>
+						<Button color="danger" onClick={this.deleteCard}>Delete</Button>
+						<Link to={"/product/"+this.state.selectedCard} className="btn btn-primary" >View</Link>{' '}
+					</ModalFooter>
+				</Modal>
+			</>
 		)
 	}
 

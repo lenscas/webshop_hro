@@ -2,6 +2,7 @@ import { API, APIReturn } from "./basics";
 import { searchCommander, searchResult } from "./search";
 
 export type cardInDeck = {
+	id : string
 	colors: color[] | Colorless;
 	name: string
 	image: string
@@ -80,6 +81,7 @@ export const getDeckList = async (api: API, id:string): Promise<deckList | undef
 				name : v.name,
 				image : v.image,
 				typeLine : v.typeLine,
+				id : v.id,
 				cmc : v.mana.reduce<number>( (cur,m)=>{
 					const asSymbol = m.strSymbol.replace("{","").replace("}","")
 					if(Number(asSymbol)){
@@ -122,7 +124,7 @@ export const createDeck = async(api:API,deck:insertDeck)=>{
 }
 export const addCardToDeck = async (api : API, deckId : number ,printId : string)=>{
 	const res = await(
-		api.buildRequest("path","api/decks/addCard")
+		api.buildRequest("path","api/decks/"+deckId+"/cards")
 		.buildRequest("method","POST")
 		.buildRequest("body",{
 			printId ,deckId
@@ -132,8 +134,14 @@ export const addCardToDeck = async (api : API, deckId : number ,printId : string
 }
 export const addDeckToCart = async (api: API, deckId : string)=>{
 	return await (
-		api.buildRequest("path","api/decks/"+deckId)
+		api.buildRequest("path","api/decks/"+deckId+"/shopping-cart")
 		.buildRequest("method","POST")
 		.buildRequest("converter",(t:any)=>t.data)
 	).run<string[]>()
+}
+export const deleteCard = async (api : API, deckId: string, cardId : string) => {
+	return await (
+		api.buildRequest("path","api/decks/"+deckId + "/cards/"+cardId)
+		.buildRequest("method","DELETE")
+	).run()
 }
