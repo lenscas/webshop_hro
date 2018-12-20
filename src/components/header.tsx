@@ -11,22 +11,59 @@ import {
 	NavLink,
 	 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { NameSearch } from './nameSearch';
+import BasicPage from 'src/types/basicComponent';
+import { props } from 'src/types/BasicProps';
+import { logOut } from 'src/services/users';
 
-export default class Header extends React.Component<{},{isOpen:boolean}> {
-	constructor(props) {
-		super(props);
+
+export default class Header extends BasicPage<props,{isOpen:boolean}> {
+	constructor(propsi) {
+		super(propsi);
 
 		this.toggle = this.toggle.bind(this);
 		this.state = {
 		  isOpen: false
 		};
+		this.logOut = this.logOut.bind(this)
 	  }
 	  toggle() {
 		this.setState({
 		  isOpen: !this.state.isOpen
 		});
 	  }
-
+	logOut(){
+		this.props.APIS.setUserId();
+		return logOut(this.props.APIS.req);
+	}
+	renderLoggedInLinks(){
+		if(this.props.APIS.userId){
+			return (
+			<NavItem>
+			<NavLink tag={Link} to="/decks">Decks</NavLink>
+			</NavItem>
+			)}
+			return <></>
+	}
+	renderLoggedOutLinks(){
+		if(!this.props.APIS.userId){
+			return (
+				<>
+				<NavItem>
+				<NavLink tag={Link} to="/register">Register</NavLink>
+			</NavItem>
+			<NavItem>
+				<NavLink tag={Link} to="/login">Login</NavLink>
+			</NavItem>
+			</>
+			)}
+			return <>			
+			<NavItem>
+			<NavLink onClick={this.logOut} tag={Link} to="/">Logout</NavLink>
+		</NavItem>
+		</>
+			
+	}
 	render() {
 		return(
 			<div>
@@ -41,23 +78,13 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 					<NavItem>
 					  <NavLink tag={Link} to="/products">Cards</NavLink>
 					</NavItem>
-					<NavItem>
-					  <NavLink tag={Link} to="/">Boosters</NavLink>
-					</NavItem>
-					<NavItem>
-					  <NavLink tag={Link} to="/decks">Decks</NavLink>
-					</NavItem>
+					{this.renderLoggedInLinks()}
 					<NavItem>
 					  <NavLink tag={Link} to="/contact">Contact us</NavLink>
 					</NavItem>
+					{this.renderLoggedOutLinks()}
 					<NavItem>
-					  <NavLink tag={Link} to="/register">Register</NavLink>
-					</NavItem>
-					<NavItem>
-					  <NavLink tag={Link} to="/login">Login</NavLink>
-					</NavItem>
-					<NavItem>
-						<form className="search"><input type="text" placeholder="Search"/></form>
+						<NameSearch/>
 					</NavItem>
 					<NavItem>
 						<NavLink tag={Link} to="/cart">

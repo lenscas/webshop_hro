@@ -209,7 +209,7 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		}
 		const getData = (params : LoadParams)=>getDeckList(this.props.APIS.req,params.deckId)
 		return (
-			<LoadSymbol<LoadParams,deckList>
+			<LoadSymbol<LoadParams,deckList | undefined>
 				toRender = {this.renderList}
 				params = {{userId : this.props.APIS.userId, deckId:this.props.match.params.id}}
 				getData ={getData}

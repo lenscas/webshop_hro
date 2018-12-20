@@ -30,10 +30,10 @@ export default class PageButtons extends BasicComponent<PageButtonProps> {
 		return (
 			<div className="row">
 				<div className="col-6 mt-2 mb-2">
-					<Button onClick={this.goBack} color="default">{"<"}</Button>
+					<Button onClick={this.goBack} color="dark">{"<"}</Button>
 				</div>
 				<div className="col-6 col-6 mt-2 mb-2">
-					<Button onClick={this.goForward} className="float-right" color="default">></Button>
+					<Button onClick={this.goForward} className="float-right" color="dark">></Button>
 				</div>
 			</div>
 		)
