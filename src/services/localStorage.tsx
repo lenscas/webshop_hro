@@ -20,3 +20,11 @@ export function readLocal<ReturnType>(key:string): ReturnType | undefined // Rea
   return
 }
 
+export function RemoveLocal(key: string) {
+  localStorage.removeItem(key);
+}
+
+export function RemoveLocalAll() {
+  localStorage.clear()
+}
+
