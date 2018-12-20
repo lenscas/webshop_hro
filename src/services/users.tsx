@@ -14,6 +14,7 @@ type registerRes = {
 export type afterLogin ={
 	user : {userId:string, shoppingCartId : number}
 	token : string
+	refreshToken:string
 	id : string
 }
 export type credentials = {
@@ -23,7 +24,7 @@ export type credentials = {
 const dealWithToken = (api:API,token? : afterLogin) => {
 	if(token){
 		if(api.onAll){
-			const asBase : BaseAPIReturn = {userId:token.user.userId, cartId:token.user.shoppingCartId}
+			const asBase : BaseAPIReturn = {refreshToken:token.refreshToken, userId:token.user.userId, cartId:token.user.shoppingCartId}
 			api.onAll(asBase)
 		}
 		api.setToken(token.token)
@@ -54,4 +55,11 @@ export const login = async (creds : credentials, api: API) : Promise<boolean> =>
 		.buildRequest("body",creds)
 		.buildRequest("converter",(t:APIReturn<afterLogin>)=>t.data)
 	).run<afterLogin>())
+}
+export const logOut = async (api: API) : Promise<void> => {
+	await (
+		api.buildRequest("path","auth/logout")
+		.buildRequest("method","POST")
+		.buildRequest("body", JSON.stringify({"refreshToken":api.refreshToken}))
+	).run()
 }
