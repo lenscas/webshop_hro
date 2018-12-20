@@ -23,7 +23,7 @@ export const getCart = async (api: API) => {
     }
     cartList = readLocal<cartItem[]>("cart") || undefined
 
-    let i: any
+    let i: number
 
     if (cartList !== undefined) {
         for (i = cartList.length - 1; i >= 0; i--) {

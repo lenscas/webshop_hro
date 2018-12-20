@@ -36,6 +36,10 @@ export default class Routes extends BasicPage {
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
+	renderCart = (props : RouteComponentProps<{deckId:string}>) => <Cart
+		APIS={this.props.APIS}
+		match={props.match}
+	/>
 	public render(){
 		return (
 			<>
@@ -47,6 +51,7 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/search/:name/:pageNum" render={this.searchListPage}/>
 					<Route exact={true} path="/products/:pageNum" render={this.cardListPage}/>
 					<Route exact={true} path="/cart"><Cart APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/cart/:deckId" render={this.renderCart}/>
 					<Route exact={true} path="/login"><Login APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/contact"><ContactPage APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/product/:id" render={this.cardPage} />
