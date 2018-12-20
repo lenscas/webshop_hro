@@ -4,6 +4,7 @@ import { props } from "src/types/BasicProps";
 import CardList from "src/components/ProductList";
 import { getList } from "src/services/product";
 import * as React from "react";
+import { readLocal, storeLocal } from "src/services/localStorage";
 type ProductListProps = props &  {match? :match<{pageNum:string}>}
 type ProductListState = {pageNum : string}
 export default class ProductList extends BasicPage<ProductListProps,ProductListState> {
@@ -11,6 +12,9 @@ export default class ProductList extends BasicPage<ProductListProps,ProductListS
 		super(propsy)
 		this.setUrl = this.setUrl.bind(this)
 		this.state={pageNum:(this.props.match !== undefined && this.props.match.params.pageNum) || "1"}
+		if(readLocal("cart") === undefined) {
+            storeLocal("cart", []);
+        }
 	}
 	setUrl(pageNum : string){
 		this.easySetState({pageNum})

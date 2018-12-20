@@ -8,7 +8,7 @@ import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import { API } from "./services/basics";
 import { props } from './types/BasicProps';
-import {storeLocalRaw, readLocalRaw} from "./services/localStorage";
+import { storeLocalRaw, readLocalRaw } from "./services/localStorage";
 
 
 type appState = {
@@ -20,19 +20,20 @@ type appState = {
 }
 
 class App extends React.Component<{}, appState>{
-	constructor(propsy : props){
+	constructor(propsy: props) {
 		super(propsy)
-		this.state = {alerts:[]}
+		this.state = { alerts: [] }
 	}
 	public clearAlerts() {
 		this.setState(st => ({ ...st, alerts: [] }))
 	}
-	public setToken(token :string){
-		this.setState(st=>({...st,token}))
-		storeLocalRaw("token",token)
+
+	public setToken(token: string) {
+		this.setState(st => ({ ...st, token }))
+		storeLocalRaw("token", token)
 		const shoppingCartId = this.state.shoppingCartId
-		if (shoppingCartId !== undefined){
-		storeLocalRaw("shoppingCartId", shoppingCartId.toString())
+		if (shoppingCartId !== undefined) {
+			storeLocalRaw("shoppingCartId", shoppingCartId.toString())
 		}
 	}
 	public render() {
