@@ -1,5 +1,4 @@
 import { API, APIReturn, BaseAPIReturn } from "./basics";
-import { fourOfAKind } from "src/pages/ProductList";
 
 export type RegisterUser = {
 	username: string
@@ -16,8 +15,6 @@ export type Address = {
 	zipCode: string
 	id: number
 }
-
-export type fourAddresses = fourOfAKind<Address>
 
 export type UserData = {
 	id: number
@@ -75,6 +72,23 @@ export const login = async (creds : credentials, api: API) : Promise<boolean> =>
 		.buildRequest("body",creds)
 		.buildRequest("converter",(t:APIReturn<afterLogin>)=>t.data)
 	).run<afterLogin>())
+}
+
+export const updateUser = async (user : RegisterUser, api: API) => {
+	const res = await (
+		api.buildRequest("path","api/user")
+		.buildRequest("method", "PUT")
+		.buildRequest("body",user)
+		.buildRequest("converter",(t:APIReturn<string>)=>({success: t.success, message: t.data}))
+	).run<registerRes>()
+	if(res === undefined){
+		return res
+	}
+	if(res.success){
+		return true//login({email: user.email,password: user.password}, api)
+	} else {
+		return {success : false, message:res.message}
+	}
 }
 
 export const getUserData = async (api: API) => {

@@ -10,12 +10,9 @@ import ContactPage from "src/pages/ContactPage";
 import Cart from "src/pages/Cart"
 import Decks from "src/pages/decks";
 import DeckList from "src/pages/DeckList";
-<<<<<<< HEAD
 import UserPage from "src/pages/UserPage";
-=======
 import NewDeck from "src/pages/newDeck";
 import SearchList from "src/pages/SearchList";
->>>>>>> sprint_4
 
 
 export default class Routes extends BasicPage {
@@ -56,12 +53,9 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/product/:id" render={this.cardPage} />
 					<Route exact={true} path="/decks"><Decks APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/decks/:id" render={this.deckListPage}/>
-<<<<<<< HEAD
 					<Route exact={true} path="/user"><UserPage APIS={this.props.APIS}/></Route>
-=======
 					<Route exact={true} path="/deck/new"><NewDeck APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/deck/new/:cardId" render={this.newDeckPage}/>
->>>>>>> sprint_4
 				</Switch>
 			</>
 		)

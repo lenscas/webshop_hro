@@ -1,17 +1,21 @@
 import * as React from "react";
-import BasicComponent from "../types/basicComponent";
+// import BasicComponent from "../types/basicComponent";
 import LoadSymbol from "src/components/loadSymbol";
 //import { Table } from 'reactstrap';
 import { props } from "src/types/BasicProps";
-import { getUserData, UserData, Address } from "src/services/users";
-import FormGroup from "reactstrap/lib/FormGroup";
-import Input from "reactstrap/lib/Input";
-import Label from "reactstrap/lib/Label";
+import { getUserData, UserData, Address, updateUser, RegisterUser } from "src/services/users";
+// import FormGroup from "reactstrap/lib/FormGroup";
+// import Input from "reactstrap/lib/Input";
+// import Label from "reactstrap/lib/Label";
 import Button from "reactstrap/lib/Button";
-import Form from "reactstrap/lib/Form";
+import Form, {InputField, FormData} from "../components/form";
 import { storeLocal, readLocal, removeLocal } from "src/services/localStorage";
+import BasicPage from "../types/basicComponent";
+import Card from "reactstrap/lib/Card";
+import CardBody from "reactstrap/lib/CardBody";
+import { retTrue } from "src/funcs/lambdas";
 
-export default class UserPage extends BasicComponent<props, {render : string, page : number, selectingDefaultAddress : boolean}>{
+export default class UserPage extends BasicPage<props, {success? : boolean | {success: boolean, message}, render : string, page : number, selectingDefaultAddress : boolean}>{
     
     tabClasses : {[key:string] : string} = {Details : "nav-link active", Edit : "nav-link"}
 
@@ -22,6 +26,17 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
         this.state = { render : "Details", page : 0, selectingDefaultAddress : false}
         this.renderUserData = this.renderUserData.bind(this)
         this.renderAddresses = this.renderAddresses.bind(this)
+    }
+
+    async onSubmitChangeDetails(data : FormData<RegisterUser>){
+        const res = await updateUser(data.values, this.props.APIS.req);
+        if(res === false || res===true){
+            this.easySetState({success:res})
+        } else if(res === undefined){
+            this.easySetState({success: false})
+        } else {
+            this.easySetState({success:res})
+        }
     }
 
     renderAddresses(addresses : Address[], rowLength : number, pageLength : number, width : string, short : boolean){
@@ -293,44 +308,102 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
         }
         if(id === "Edit"){
             let changeDetailsButtonShow = "hidden"
-            let addAddressButtonShow = "hidden"
-            let changePasswordButtonShow = "hidden"
+            //let addAddressButtonShow = "hidden"
+            //let changePasswordButtonShow = "hidden"
 
             if (this.editClasses.changeDetails === "hidden"){
                 changeDetailsButtonShow = "visible"
             }
-            if (this.editClasses.addAddress === "hidden"){
-                addAddressButtonShow = "visible"
+            // if (this.editClasses.addAddress === "hidden"){
+            //     addAddressButtonShow = "visible"
+            // }
+            // if (this.editClasses.changePassword === "hidden"){
+            //     changePasswordButtonShow = "visible"
+            // }
+
+            let warnings = <></>
+            let changeDetailsForm = <></>
+            if(this.state.success !== undefined){
+                if(this.state.success ===false){
+                    warnings = (
+                        <Card color="warning">
+                            <CardBody>
+                                Something wend wrong, please try again later.
+                            </CardBody>
+                        </Card>
+                    )
+                } else if (this.state.success !== true  && this.state.success.success === false){
+                    warnings = (
+                        <Card color="warning">
+                            <CardBody>
+                                {this.state.success.message}
+                            </CardBody>
+                        </Card>
+                    )
+                } else if (this.state.success){
+                    warnings = (
+                        <Card color="success">
+                            <CardBody>
+                                Your details have been successfully updated.
+                            </CardBody>
+                        </Card>
+                    )
+                }
             }
-            if (this.editClasses.changePassword === "hidden"){
-                changePasswordButtonShow = "visible"
-            }
+            if(this.state.success !== true){
+                const changeDetailsFields : InputField[]= [
+                    {
+                        type:"text",
+                        validator:retTrue,
+                        name : "username",
+                        label : "Username",
+                        placeholder: userData.name,
+                        id : "username",
+                    },
+                    {
+                        validator:retTrue,
+                        name : "email",
+                        label : "E-mail",
+                        placeholder: userData.email,
+                        id : "e-mail",
+                        type: "email"
+                    },
+                    {
+                        type:"text",
+                        validator:retTrue,
+                        name : "approach",
+                        label : "Title",
+                        placeholder: userData.approach,
+                        id : "honorific"
+                    },
+                    {
+                        name : "Submit",
+                        placeholder: "Submit",
+                        id : "submit",
+                        type : "button"
+                    }
+                ]
+                const onSubmitChangeDetails =(data :FormData<RegisterUser> )=>this.onSubmitChangeDetails(data)
+            changeDetailsForm = <>
+                {warnings}
+                <Form<RegisterUser> onSubmit={onSubmitChangeDetails} inputs={changeDetailsFields}/>
+            </>
+        }else {
+            changeDetailsForm = warnings
+        }
+            
 
             return(
+                
                 <div>
+                    
                     <h5>Change Details</h5>
                     <Button className = {changeDetailsButtonShow} onClick = {this.setEditOnClick("changeDetails")}>Edit</Button>
-                    <Form>
-                        <FormGroup className = {this.editClasses.changeDetails}>
-                            <Label for="email">Name</Label>
-                            <Input type="email" name="email" id="email" placeholder={userData.email} />
-                        </FormGroup>
-                        <FormGroup className = {this.editClasses.changeDetails}>
-                            <Label for="approach">Approach</Label>
-                            <Input name="approach" id="approach" placeholder = {userData.approach} />
-                        </FormGroup>
-                        <FormGroup className = {this.editClasses.changeDetails}>
-                            <Label for="name">Name</Label>
-                            <Input name="name" id="name" placeholder = {userData.name} />
-                        </FormGroup>
-                        <FormGroup className = {this.editClasses.changeDetails}>
-                            <Label for="password">Password</Label>
-                            <Input type="password" name="password" id="password" placeholder = "Please input your password" />
-                        </FormGroup>
+                    <div className = {this.editClasses.changeDetails}>
+                        {changeDetailsForm}
+                    </div>
 
-                        <Button className = {this.editClasses.changeDetails}>Submit</Button>
-                    </Form>
-                    <br/>
+                    {/* <br/>
                     <h5>Add Address</h5>
                     <Button className = {addAddressButtonShow} onClick = {this.setEditOnClick("addAddress")}>Edit</Button>
                     <Form>
@@ -374,7 +447,7 @@ export default class UserPage extends BasicComponent<props, {render : string, pa
 
                         <Button className = {this.editClasses.changePassword}>Submit</Button>
                     </Form>
-                    <br/>
+                    <br/> */}
 
                     <h5>Remove All Addresses</h5>
                     <Button>Remove</Button>
