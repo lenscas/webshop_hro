@@ -23,6 +23,13 @@ export type credentials = {
 	email: string,
 	password: string
 }
+
+type shoppingCartItem = {
+	shoppingcardId: number,
+	PrintId: string
+	quantity: number
+}
+
 const dealWithToken = (api:API,token? : afterLogin) => {
 	if(token){
 		if(api.onAll){
@@ -33,18 +40,28 @@ const dealWithToken = (api:API,token? : afterLogin) => {
 
 
 		const items = readLocal<cartItem[]>("cart");
-		console.log(readLocalRaw("token"));
-		if (items !== undefined && items.length > 0) {
-			UpdateShoppingCart(api, items)
+		const products: shoppingCartItem[] = [];
+		if(items !== undefined) {
+			items.forEach(element => {
+				const shoppingCartId = Number(readLocalRaw("shoppingCartId"));
+				if(shoppingCartId !== undefined) {
+					products.push({
+						shoppingcardId: shoppingCartId,
+						PrintId : element.id,
+						quantity : element.quantity
+					})
+				}
+				
+			});
+			UpdateShoppingCart(api, products)
 		}
-
 
 		return true
 	}
 	return false
 }
 
-const UpdateShoppingCart = (api: API, items: cartItem[]) => {
+const UpdateShoppingCart = (api: API, items: shoppingCartItem[]) => {
 	api.buildRequest("path", "api/shoppingCart/range")
 		.buildRequest("method", "POST")
 		.buildRequest("body", items)
