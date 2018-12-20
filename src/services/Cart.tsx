@@ -11,9 +11,8 @@ export type cartItem = {
     priceTotal: string;
     priceTotalNum: number;
 }
-export const getCart = async (api: API) => {
 
-    let cartList: cartItem[] | undefined = []
+export const getShoppingCartFromServer = async (api: API) => {
     if (readLocalRaw("token") !== undefined) {
         const cart: cartItem[] | undefined = await api.doRequest<cartItem[]>("api/shoppingcart/", (t: any) => t)
         if (cart !== undefined) {
@@ -21,6 +20,12 @@ export const getCart = async (api: API) => {
         }
 
     }
+}
+
+export const getCart = async (api: API) => {
+
+    let cartList: cartItem[] | undefined = []
+    getShoppingCartFromServer(api)
     cartList = readLocal<cartItem[]>("cart") || undefined
 
     let i: any

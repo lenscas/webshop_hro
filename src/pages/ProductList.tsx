@@ -10,6 +10,7 @@ import { props } from "src/types/BasicProps";
 import Price from "src/components/Price";
 import { quantMod } from "src/components/addToCart";
 import { cartItem } from "src/services/Cart";
+import { storeLocal, readLocal } from "src/services/localStorage";
 
 type fourOfAKind<T> = [T,T?,T?,T?]
 type fourProducts = fourOfAKind<productList>
@@ -27,6 +28,14 @@ type splittedCard = {
     }
 type ProductListProps = props &  {match? :match<{pageNum:string}>}
 export default class ProductList extends BasicPage<ProductListProps> {
+
+    constructor(propsi) {
+        super(propsi)
+        if(readLocal("cart") === undefined) {
+            storeLocal("cart", []);
+        }
+    }
+
     modOnClick(cart: cartItem, mod: number){
         const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.priceNum, quantity : 1, priceTotal : "", priceTotalNum : 0}
         return ()=>quantMod(cartThing, mod, this.props.APIS.req)
