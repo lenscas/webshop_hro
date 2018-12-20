@@ -1,5 +1,5 @@
-import { API } from "./basics";
-import { product } from "./product";
+import { API, APIReturn } from "./basics";
+import { searchCommander, searchResult } from "./search";
 
 export type cardInDeck = {
 	colors: color[] | Colorless;
@@ -20,7 +20,10 @@ export enum color {
 export type Colorless = {}
 
 export type deckList = {
-	commander: product,
+	commander: {
+		name : string,
+		image : string
+	},
 	cards: cardInDeck[]
 }
 export type decks = {
@@ -28,7 +31,7 @@ export type decks = {
 	image : string
 	fullImage : string
 	id : number
-}
+}/*
 const testDecks : {[s: number] : deckList} = {
 	1 : {
 		commander: {
@@ -90,13 +93,69 @@ const testDecks : {[s: number] : deckList} = {
 		},cards:[{"name":"Djinn of Wishes","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/c18\/87.jpg?1535503108","cmc":5,"colors":["U"]},{"name":"Soliton","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/som\/204.jpg?1517813031","cmc":5,"colors":{}},{"name":"Mysteries of the Deep","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/wwk\/33.jpg?1530592258","cmc":5,"colors":["U"]},{"name":"Doom Blade","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/e02\/18.jpg?1524753700","cmc":2,"colors":["B"]},{"name":"Treasure Cruise","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/cm2\/53.jpg?1534111088","cmc":8,"colors":["U"]},{"name":"Psychic Intrusion","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ths\/200.jpg?1517813031","cmc":5,"colors":["B","U"]},{"name":"Altar of the Brood","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ktk\/216.jpg?1517813031","cmc":1,"colors":{}},{"name":"Belbe's Armor","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/nem\/126.jpg?1517813031","cmc":3,"colors":{}},{"name":"Mana Leak","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ima\/66.jpg?1530591948","cmc":2,"colors":["U"]},{"name":"Thassa's Devourer","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/jou\/53.jpg?1517813031","cmc":5,"colors":["U"]},{"name":"Crab Umbra","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/roe\/58.jpg?1530592229","cmc":1,"colors":["U"]},{"name":"Mindeye Drake","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/gtc\/43.jpg?1517813031","cmc":5,"colors":["U"]},{"name":"Jace's Ingenuity","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/m15\/63.jpg?1517813031","cmc":5,"colors":["U"]},{"name":"Echo Mage","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/c13\/43.jpg?1517813031","cmc":3,"colors":["U"]},{"name":"Mistvein Borderpost","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/arc\/90.jpg?1517813031","cmc":3,"colors":["B","U"]},{"name":"Summoner's Bane","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ddm\/31.jpg?1517813031","cmc":4,"colors":["U"]},{"name":"Belltower Sphinx","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/m12\/46.jpg?1517813031","cmc":5,"colors":["U"]},{"name":"Springleaf Drum","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/bng\/162.jpg?1517813031","cmc":1,"colors":{}},{"name":"Dimir Signet","image":"https:\/\/img.scryfall.com\/cards\/normal\/front\/f\/5\/f56861a7-b664-468f-bad7-838c02530827.jpg?1541002783","cmc":2,"colors":{}},{"name":"Mnemonic Wall","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ima\/67.jpg?1530591953","cmc":5,"colors":["U"]},{"name":"Triton Tactics","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ddt\/23.jpg?1517813031","cmc":1,"colors":["U"]},{"name":"Siren of the Silent Song","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/bng\/155.jpg?1517813031","cmc":3,"colors":["B","U"]},{"name":"Dimir Cluestone","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/dgm\/138.jpg?1517813031","cmc":3,"colors":{}},{"name":"Tideforce Elemental","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/wwk\/41.jpg?1530592306","cmc":3,"colors":["U"]},{"name":"Siren Song Lyre","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/bng\/161.jpg?1517813031","cmc":2,"colors":{}},{"name":"Chancellor of the Spires","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/nph\/31.jpg?1517813031","cmc":7,"colors":["U"]},{"name":"Bonehoard","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/cma\/211.jpg?1519870684","cmc":4,"colors":{}},{"name":"Terramorphic Expanse","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/c18\/286.jpg?1535505932","cmc":0,"colors":{}},{"name":"Thornbite Staff","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/mor\/145.jpg?1517813031","cmc":2,"colors":{}},{"name":"Skywise Teachings","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ima\/73.jpg?1530591988","cmc":4,"colors":["U"]},{"name":"Leaden Myr","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/som\/170.jpg?1517813031","cmc":2,"colors":{}},{"name":"Fated Return","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/bng\/69.jpg?1517813031","cmc":7,"colors":["B"]},{"name":"Deathbringer Regent","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/c17\/110.jpg?1517813031","cmc":7,"colors":["B"]},{"name":"Refocus","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/frf\/47.jpg?1517813031","cmc":2,"colors":["U"]},{"name":"Dismal Backwater","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/c18\/244.jpg?1535505335","cmc":0,"colors":{}},{"name":"Power Sink","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/vma\/88.jpg?1517813031","cmc":1,"colors":["U"]},{"name":"Nirkana Revenant","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/bbd\/150.jpg?1536717962","cmc":6,"colors":["B"]},{"name":"Dinrova Horror","image":"https:\/\/img.scryfall.com\/cards\/normal\/front\/c\/0\/c0018de2-0646-48fe-8112-11952867c3bb.jpg?1541002745","cmc":6,"colors":["B","U"]},{"name":"Extinguish All Hope","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/jou\/68.jpg?1517813031","cmc":6,"colors":["B"]},{"name":"Drownyard Explorers","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/soi\/56.jpg?1517813031","cmc":4,"colors":["U"]},{"name":"Remove Soul","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/me3\/47.jpg?1517813031","cmc":2,"colors":["U"]},{"name":"Disciple of Deceit","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/jou\/148.jpg?1517813031","cmc":2,"colors":["B","U"]},{"name":"Spin into Myth","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/arc\/8.jpg?1517813031","cmc":5,"colors":["U"]},{"name":"Kalitas, Bloodchief of Ghet","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/zen\/99.jpg?1517813031","cmc":7,"colors":["B"]},{"name":"Clever Impersonator","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ktk\/34.jpg?1517813031","cmc":4,"colors":["U"]},{"name":"Daze","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ema\/44.jpg?1519048101","cmc":2,"colors":["U"]},{"name":"Psychic Barrier","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/nph\/43.jpg?1517813031","cmc":2,"colors":["U"]},{"name":"Witches' Eye","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ths\/222.jpg?1517813031","cmc":1,"colors":{}},{"name":"Revelsong Horn","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/shm\/261.jpg?1517813031","cmc":2,"colors":{}},{"name":"Horseshoe Crab","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/a25\/61.jpg?1521725540","cmc":3,"colors":["U"]},{"name":"Selhoff Occultist","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/isd\/73.jpg?1517813031","cmc":3,"colors":["U"]},{"name":"Miscalculation","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ulg\/36.jpg?1517813031","cmc":2,"colors":["U"]},{"name":"Nighthowler","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/c15\/129.jpg?1519044894","cmc":3,"colors":["B"]},{"name":"Clone","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/m14\/47.jpg?1517813031","cmc":4,"colors":["U"]},{"name":"Kheru Spellsnatcher","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ktk\/45.jpg?1517813031","cmc":4,"colors":["U"]},{"name":"Ponder","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/c18\/96.jpg?1535503251","cmc":1,"colors":["U"]},{"name":"Psychic Strike","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/gtc\/189.jpg?1517813031","cmc":3,"colors":["B","U"]},{"name":"Countermand","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/jou\/33.jpg?1517813031","cmc":4,"colors":["U"]},{"name":"Sea Scryer","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/mir\/90.jpg?1517813031","cmc":2,"colors":["U"]},{"name":"Jace's Erasure","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/m12\/60.jpg?1517813031","cmc":2,"colors":["U"]},{"name":"Ashiok, Nightmare Weaver","image":"https:\/\/img.scryfall.com\/cards\/normal\/en\/ths\/188.jpg?1517813031","cmc":3,"colors":["B","U"]},{"name":"Island","image":"https:\/\/img.scryfall.com\/cards\/normal\/front\/2\/3\/23300152-6da8-4444-b368-1fb00e74a4b2.jpg?1541002792","cmc":0,"colors":{}},{"name":"Swamp","image":"https:\/\/img.scryfall.com\/cards\/normal\/front\/5\/5\/55fce17b-f57f-4863-bf74-71e45bec4040.jpg?1541002797","cmc":0,"colors":{}}]
 	}
 }
-// tslint:disable-next-line:variable-name
-export const getDeckList = async (_api: API, id:string): Promise<deckList> => {
-
-	return testDecks[Number(id)]
+*/
+export interface IDeckListResponce {
+	id:        number;
+	name:      string;
+	image:     string;
+	fullImage: string;
+	cards:     ICardResponce[];
 }
-// tslint:disable-next-line:variable-name
-export const getDecks = async (_api : API): Promise<decks[]> => {
+
+export interface ICardResponce {
+	id:         string;
+	name:       string;
+	image:      string;
+	flavorText: null | string;
+	oracleText: string;
+	loyalty:    null;
+	power:      null;
+	toughness:  null;
+	price:      number;
+	typeLine:   string;
+	mana:       IManaResponce[];
+}
+
+export interface IManaResponce {
+	id:          number;
+	strSymbol:   string;
+	picturePath: null;
+}
+
+export type insertDeck = {
+	deck_name : string
+	commander_name_1 : string
+	commander_name_2? : string
+
+}
+export const getDeckList = async (api: API, id:string): Promise<deckList | undefined> => {
+	return await api.doRequest<IDeckListResponce,deckList>(
+		"api/decks/"+id,
+		(t:APIReturn<IDeckListResponce>)=>({
+			commander : {
+				name : t.data.name,
+				image : t.data.fullImage
+			},
+			cards : t.data.cards.map(v=>({
+				colors : {},
+				name : v.name,
+				image : v.image,
+				cmc : v.mana.reduce<number>( (cur,m)=>{
+					const asSymbol = m.strSymbol.replace("{","").replace("}","")
+					if(Number(asSymbol)){
+						return cur + Number(asSymbol)
+					}
+					return cur + 1
+				},0)
+			}))
+
+		})
+	)
+	
+}
+export const getDecks = async (api : API): Promise<decks[]> => {
+	return (await api.doRequest<decks[]>("api/decks",(t:any)=>t.data) || [])
+	/*
 	return [
 		{
 			name : "Mindless automation",
@@ -122,8 +181,42 @@ export const getDecks = async (_api : API): Promise<decks[]> => {
 			fullImage : "https://img.scryfall.com/cards/normal/en/bng/152.jpg?1517813031",
 			id : 4
 		}
-	]
+	]*/
 }
-export const createDeck = async()=>{
-	return "1"
+// Generated by https://quicktype.io
+
+
+export const createDeck = async(api:API,deck:insertDeck)=>{
+	const [mainCommander] = await searchCommander(deck.commander_name_1)//[0]
+	let secondCommander : searchResult | undefined
+	if(deck.commander_name_2){
+		[secondCommander] = await searchCommander(deck.commander_name_2)[0]
+	}
+	if(!mainCommander){
+		return false
+	}
+	if( (!secondCommander) && deck.commander_name_2){
+		return false
+	}
+	const res = await (
+		api.buildRequest("path","api/decks")
+		.buildRequest("method","POST")
+		.buildRequest("body",{
+			Name : deck.deck_name,
+			Commander : mainCommander.id,
+			SecondaryCommander : secondCommander && secondCommander.id 
+		})
+		.buildRequest("converter",(t:any)=>t.data.deckId)
+	).run<number>()
+	return res
+}
+export const addCardToDeck = async (api : API, deckId : number ,printId : string)=>{
+	const res = await(
+		api.buildRequest("path","api/decks/addCard")
+		.buildRequest("method","POST")
+		.buildRequest("body",{
+			printId ,deckId
+		}).buildRequest("converter",(t:any)=>t.success)
+	).run<boolean>()
+	return res
 }
