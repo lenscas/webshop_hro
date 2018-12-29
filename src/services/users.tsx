@@ -65,7 +65,7 @@ const UpdateShoppingCart = (api: API, items: shoppingCartItem[]) => {
 	api.buildRequest("path", "api/shoppingCart/range")
 		.buildRequest("method", "POST")
 		.buildRequest("body", items)
-		.buildRequest("converter", (t: APIReturn<cartItem[]>) => (console.log("success"), getShoppingCartFromServer(api)))
+		.buildRequest("converter", (t: APIReturn<cartItem[]>) => (getShoppingCartFromServer(api)))
 		.run()
 }
 

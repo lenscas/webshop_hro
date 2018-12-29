@@ -25,7 +25,7 @@ export const getShoppingCartFromServer = async (api: API) => {
 export const getCart = async (api: API) => {
 
     let cartList: cartItem[] | undefined = []
-    getShoppingCartFromServer(api)
+    await getShoppingCartFromServer(api)
     cartList = readLocal<cartItem[]>("cart") || undefined
 
     let i: number

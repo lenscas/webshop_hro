@@ -3,46 +3,45 @@ import BasicComponent from "../types/basicComponent";
 import { getCart, getTotals, cartItem } from "../services/Cart";
 import { Link, match } from "react-router-dom";
 import LoadSymbol from "src/components/loadSymbol";
-import { Table, Alert } from 'reactstrap';
+import { Table, Alert, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { quantMod } from "src/components/addToCart";
 import { props } from "src/types/BasicProps";
-import { readLocalRaw, storeLocal } from "src/services/localStorage";
+import { readLocalRaw } from "src/services/localStorage";
 import { API, APIReturn } from "src/services/basics";
 import { addDeckToCart } from "src/services/Decks";
-// import { storeLocal } from "src/services/localStorage";
+import "../style/shoppingCart.css"
 
-// storeLocal("cart",
-//  [
-//      {id: "1", name : "Black Lotus",price: "", priceNum : 3000000.00, quantity : 6, priceTotal : "", priceTotalNum : 0},
-//     {id: "2",name : "Blaze", price: "", priceNum : 4.00, quantity : 1, priceTotal : "", priceTotalNum : 0},
-//     {id: "3",name : "Thran Turbine", price: "", priceNum : 300, quantity : 3, priceTotal : "", priceTotalNum : 0},
-//     {id: "4",name : "Marrow-Gnawer", price: "", priceNum : 40, quantity : 99, priceTotal : "", priceTotalNum : 0}
-// ]
-//  )
-type CartProps = props & {match? : match<{ deckId: string; }>}
+type CartProps = props & { match?: match<{ deckId: string; }> }
 type CartState = {
-    erroredCards : string[],
-    didLoad : boolean
+    erroredCards: string[],
+    didLoad: boolean,
+    card?: string,
+    cardName?: string
+    deletedCards: number
 }
 
-export default class Cart extends BasicComponent<CartProps,CartState>{
+export default class Cart extends BasicComponent<CartProps, CartState>{
 
     constructor(propsy) {
         super(propsy);
         this.modOnClick = this.modOnClick.bind(this)
         this.renderCart = this.renderCart.bind(this)
-        this.state = {erroredCards:[],didLoad:false}
+        this.toggle = this.toggle.bind(this)
+        this.state = { erroredCards: [], didLoad: false, deletedCards: 0 }
     }
-    async componentDidMount(){
-        if(this.props.match){
-            const erroredCards = await addDeckToCart(this.props.APIS.req,this.props.match.params.deckId)
-            if(erroredCards && erroredCards.length > 0 ){
-                this.easySetState({erroredCards,didLoad:true})
+
+    toggle() {
+        this.setState((st) => ({ ...st, card: undefined }))
+    }
+
+    async componentDidMount() {
+        if (this.props.match) {
+            const erroredCards = await addDeckToCart(this.props.APIS.req, this.props.match.params.deckId)
+            if (erroredCards && erroredCards.length > 0) {
+                this.easySetState({ erroredCards, didLoad: true })
             } else {
-                this.easySetState({didLoad:true})
+                this.easySetState({ didLoad: true })
             }
-            
-            //this.forceUpdate()
         }
     }
     modOnClick(cartThing: cartItem, mod: number, update: (params: {}) => Promise<void>) {
@@ -55,25 +54,54 @@ export default class Cart extends BasicComponent<CartProps,CartState>{
 
     async order(api: API, update?: (params: {}) => Promise<void>) {
         const shoppingCartId = readLocalRaw("shoppingCartId")
-        await (api.buildRequest("path", "api/order")
-            .buildRequest("method", "POST")
-            .buildRequest("body", { shoppingcardId: shoppingCartId })
-            .buildRequest("converter", (t: APIReturn<{ data: string, success: boolean }>) => {
-                storeLocal("cart", [])
-                if (update !== undefined) {
-                    update({})
-                }
-            })).run()
+        if (readLocalRaw("token")) {
+            await (api.buildRequest("path", "api/order/stock")
+                .buildRequest("method", "POST")
+                .buildRequest("body", { shoppingcardId: shoppingCartId })
+                .buildRequest("converter", (t: APIReturn<{ data: string | string[], success: boolean }>) => {
+                    if (t.success === false && t.data instanceof Array) {
+                        this.easySetState({ erroredCards: t.data })
+                    } else if (t.success === false && typeof t.data === "string") {
+                        this.easySetState({ erroredCards: [t.data] })
+                    } else {
+                        //link to next page
+                    }
+
+                    if (update !== undefined) {
+                        update({})
+                    }
+                })).run()
+        } else {
+            //user order when not loged in
+            console.log("user is not logedin")
+        }
+
     }
+
+
+
+    async removeCard(api: API) {
+        await (api.buildRequest("path", "api/shoppingCart")
+            .buildRequest("method", "DELETE")
+            .buildRequest("body", { printId: this.state.card })
+            .buildRequest("converter", (t: APIReturn<{ data: string | string[], success: boolean }>) => {
+                console.log(t.data)
+            })).run()
+        this.easySetState({ deletedCards: this.state.deletedCards + 1 }, this.toggle)
+
+    }
+
     renderCart(cart: cartItem[], update: (params: {}) => Promise<void>) {
-        console.log(cart)
         if (!cart) {
             return <></>
         }
+        console.log(cart)
         const totals = getTotals(cart)
         const body = cart.map((item: cartItem) => {
 
-            return <tr key={item.id}>
+            const onClick = () => this.easySetState({ card: item.id, cardName: item.name })
+
+            return <tr key={item.id} className="align">
                 <td>{item.name}</td>
                 <td>{item.price}</td>
                 <td key={item.quantity}>
@@ -84,6 +112,9 @@ export default class Cart extends BasicComponent<CartProps,CartState>{
                     <button onClick={this.modOnClick(item, 1, update)}>+</button>
                 </td>
                 <td>{item.priceTotal}</td>
+                <td>
+                    <i className="far fa-trash-alt mouse" onClick={onClick} />
+                </td>
             </tr>
         }
         )
@@ -92,20 +123,22 @@ export default class Cart extends BasicComponent<CartProps,CartState>{
             <div>
                 <Table>
                     <thead>
-                        <tr>
+                        <tr className="align">
                             <th>Name</th>
                             <th>Price</th>
                             <th>Amount</th>
                             <th>Total Price</th>
+                            <th>Remove</th>
                         </tr>
                     </thead>
                     <tbody>
                         {body}
-                        <tr>
+                        <tr className="align">
                             <th />
                             <th />
                             <th>Total: {totals[0]}</th>
                             <th>Total: € {totals[1]}</th>
+                            <th />
                         </tr>
                     </tbody>
                 </Table>
@@ -124,21 +157,33 @@ export default class Cart extends BasicComponent<CartProps,CartState>{
             )
         }
     }
-    renderWarnings(){
-        return this.state.erroredCards.map(v=>(
-            <Alert color="warning">{v} is out of stock.</Alert>
+    renderWarnings() {
+        return this.state.erroredCards.map(v => (
+            <Alert color="warning">{v}</Alert>
         ))
     }
     render() {
+        console.log("render")
         const fetch = async () => await getCart(this.props.APIS.req)
+
+        const click = () => this.removeCard(this.props.APIS.req)
         return (
             <>
                 {this.renderWarnings()}
-                <LoadSymbol<{didLoad :boolean}, cartItem[]>
+                <LoadSymbol<{ didLoad: boolean, deletedCards: number }, cartItem[]>
                     toRender={this.renderCart}
-                    params={{didLoad :this.state.didLoad}}
+                    params={{ didLoad: this.state.didLoad, deletedCards: this.state.deletedCards }}
                     getData={fetch}
                 />
+                <Modal isOpen={!!this.state.card} toggle={this.toggle}>
+                    <ModalHeader toggle={this.toggle} />
+                    <ModalBody>
+                        are you sure you want to remove {this.state.cardName} from your shopping cart?
+					</ModalBody>
+                    <ModalFooter>
+                        <Button color="danger" onClick={click}>Delete</Button>
+                    </ModalFooter>
+                </Modal>
             </>
         )
     }
