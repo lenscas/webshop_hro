@@ -10,13 +10,14 @@ import { readLocalRaw } from "src/services/localStorage";
 import { API, APIReturn } from "src/services/basics";
 import { addDeckToCart } from "src/services/Decks";
 import "../style/shoppingCart.css"
+import { nothing } from "src/funcs/lambdas";
 
 type CartProps = props & { match?: match<{ deckId: string; }> }
 type CartState = {
     erroredCards: string[],
     didLoad: boolean,
     card?: string,
-    cardName?: string
+    cardName?: string,
     deletedCards: number
 }
 
@@ -84,9 +85,7 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
         await (api.buildRequest("path", "api/shoppingCart")
             .buildRequest("method", "DELETE")
             .buildRequest("body", { printId: this.state.card })
-            .buildRequest("converter", (t: APIReturn<{ data: string | string[], success: boolean }>) => {
-                console.log(t.data)
-            })).run()
+            .buildRequest("converter", (t: APIReturn<{ data: string | string[], success: boolean }>) => nothing)).run()
         this.easySetState({ deletedCards: this.state.deletedCards + 1 }, this.toggle)
 
     }
@@ -95,21 +94,24 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
         if (!cart) {
             return <></>
         }
-        console.log(cart)
         const totals = getTotals(cart)
         const body = cart.map((item: cartItem) => {
 
             const onClick = () => this.easySetState({ card: item.id, cardName: item.name })
+            const handleOnChange = (event) => {
+                if(event.target.value.length === 0 || event.target.value === 0) {
+                    event.target.value = 1
+                }
+                quantMod(item,event.target.value,this.props.APIS.req,update)
+              }
 
             return <tr key={item.id} className="align">
                 <td>{item.name}</td>
                 <td>{item.price}</td>
                 <td key={item.quantity}>
-                    <button onClick={this.modOnClick(item, -1, update)}>-</button>
-
-                    {item.quantity}
-
-                    <button onClick={this.modOnClick(item, 1, update)}>+</button>
+                        <input type='button' value='-' className='qtyminus' onClick={this.modOnClick(item, item.quantity + -1, update)} />
+                        <input type='text' name='quantity' value={item.quantity} className='qty' onChange={handleOnChange} />
+                        <input type='button' value='+' className='qtyplus' onClick={this.modOnClick(item, item.quantity + 1, update)} />
                 </td>
                 <td>{item.priceTotal}</td>
                 <td>
@@ -163,7 +165,6 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
         ))
     }
     render() {
-        console.log("render")
         const fetch = async () => await getCart(this.props.APIS.req)
 
         const click = () => this.removeCard(this.props.APIS.req)

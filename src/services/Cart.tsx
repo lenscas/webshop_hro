@@ -67,8 +67,6 @@ export const getTotals = (cart: cartItem[]) => {
         totalItems += cart[i].quantity;
         totalPrice += cart[i].priceTotalNum;
     }
-    console.log(totalItems)
-    console.log(totalPrice)
     totalItemsStr = sepNum(totalItems.toString())
     totalPriceStr = sepNum(totalPrice.toString())
 

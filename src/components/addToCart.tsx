@@ -20,7 +20,7 @@ export async function quantMod(cartThing: cartItem, modifier: number, api: API, 
     if (cart !== undefined) {
         item = cart.find(x => x.id === cartThing.id)
         if (item !== undefined) {
-            item.quantity += modifier
+            item.quantity = modifier
 
         } else {
             item = { id: cartThing.id, name: cartThing.name, price: cartThing.price, priceNum: cartThing.priceNum, quantity: cartThing.quantity, priceTotal: cartThing.priceTotal, priceTotalNum: cartThing.priceTotalNum };
