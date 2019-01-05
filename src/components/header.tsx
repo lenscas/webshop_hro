@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import { Link } from 'react-router-dom';
 
 import {
 	Collapse,
@@ -31,33 +30,33 @@ export default class Header extends React.Component<{},{isOpen:boolean}> {
 	render() {
 		return(
 			<div>
-			  <Navbar color="light" light={true} expand="md">
-				<NavbarBrand href="/">reactstrap</NavbarBrand>
+			  <Navbar light={true} expand="md" className = "header">
+				<NavbarBrand href="/"><img src="http://www.tabletopgameshop.co.uk/media/com_easysocial/photos/42/51/mtg-logo-700x560_thumbnail.png" style = {{height:"16vh"}}/></NavbarBrand>
 				<NavbarToggler onClick={this.toggle} />
 				<Collapse isOpen={this.state.isOpen} navbar={true}>
 				  <Nav className="ml-auto" navbar={true}>
 					<NavItem>
-					  <NavLink tag={Link} to="/" href="/">Home</NavLink>
+					  <NavLink tag={Link} to="/" href="/" className="moveDown">Home</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink tag={Link} to="/products">Cards</NavLink>
+					  <NavLink tag={Link} to="/products" className="moveDown">Cards</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink tag={Link} to="/">Boosters</NavLink>
+					  <NavLink tag={Link} to="/" className="moveDown">Boosters</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink tag={Link} to="/decks">Decks</NavLink>
+					  <NavLink tag={Link} to="/decks" className="moveDown">Decks</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink tag={Link} to="/contact">Contact us</NavLink>
+					  <NavLink tag={Link} to="/contact" className="moveDown">Contact us</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink tag={Link} to="/register">Register</NavLink>
+					  <NavLink tag={Link} to="/register" className="moveDown">Register</NavLink>
 					</NavItem>
 					<NavItem>
-					  <NavLink tag={Link} to="/login">Login</NavLink>
+					  <NavLink tag={Link} to="/login" className="moveDown">Login</NavLink>
 					</NavItem>
-					<NavItem>
+					<NavItem className="moveDown">
 						<NameSearch/>
 					</NavItem>
 					<NavItem>
