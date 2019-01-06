@@ -13,6 +13,7 @@ import DeckList from "src/pages/DeckList";
 import UserPage from "src/pages/UserPage";
 import NewDeck from "src/pages/newDeck";
 import SearchList from "src/pages/SearchList";
+import Admin from "src/pages/Admin";
 
 
 export default class Routes extends BasicPage {
@@ -61,6 +62,7 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/user"><UserPage APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/deck/new"><NewDeck APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/deck/new/:cardId" render={this.newDeckPage}/>
+					<Route exact={true} path="/admin"><Admin APIS={this.props.APIS}/></Route>
 				</Switch>
 			</>
 		)

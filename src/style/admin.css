@@ -1,0 +1,16 @@
+.hangfire {
+    width: 100%;
+    height: 100%;
+}
+
+.tabs {
+    height: 50px;
+}
+
+.con {
+    height: calc(100vh - 77px - 50px - 5px);
+    padding: 1vh;
+}
+.mainAdmin {
+    padding: 5px;
+}
