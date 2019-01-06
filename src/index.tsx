@@ -55,7 +55,6 @@ class App extends React.Component<{}, appState>{
 			storeLocalRaw("userId", userId.toString())
 		}
 		const role = this.state.role;
-		console.log(role)
 		if(role !== undefined) {
 			storeLocalRaw("role", role)
 		}

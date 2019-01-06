@@ -25,7 +25,7 @@ export const getShoppingCartFromServer = async (api: API) => {
 export const getCart = async (api: API) => {
 
     let cartList: cartItem[] | undefined = []
-    getShoppingCartFromServer(api)
+    await getShoppingCartFromServer(api)
     cartList = readLocal<cartItem[]>("cart") || undefined
 
     let i: number
@@ -67,8 +67,6 @@ export const getTotals = (cart: cartItem[]) => {
         totalItems += cart[i].quantity;
         totalPrice += cart[i].priceTotalNum;
     }
-    console.log(totalItems)
-    console.log(totalPrice)
     totalItemsStr = sepNum(totalItems.toString())
     totalPriceStr = sepNum(totalPrice.toString())
 
