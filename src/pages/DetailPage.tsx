@@ -57,9 +57,9 @@ export default class Products extends BasicComponent<ProductProps,productState> 
     renderAbilities(card:product){
         return <TextWithSymbols text={card.oracleText} />
     }
-    renderDropDOwn(deckList : decks[], printId : cardId){
+    renderDropDown(deckList : decks[], printId : cardId){
         return <div className="btn-group">
-            <Link to={"/deck/new/"+printId} className="btn btn-secondary">New Deck</Link>
+            <Link to={"/deck/new/"+printId} className="btn btn-success">New Deck</Link>
             <SuperDropDown
                 caret={true}
                 items={
@@ -120,7 +120,7 @@ export default class Products extends BasicComponent<ProductProps,productState> 
                                 <button onClick={this.modOnClick(card, 1)} className="btn btn-success float-right" id="buttonCart">Add to cart</button>
                             </Col>
                             <Col>
-                                {this.renderDropDOwn(deckList,card.id)}
+                                {this.renderDropDown(deckList,card.id)}
                             </Col>
                         </Row>
                     </Col>

@@ -4,12 +4,15 @@ import BasicPage from "../types/smallComponent";
 import { productList, cardId} from "../services/product";
 import DataTable, { renderable } from "./DataTable";
 import { Link, match } from "react-router-dom";
-import { addAsync } from "../funcs/lambdas";
+import { addAsync} from "../funcs/lambdas";
 import Button from "reactstrap/lib/Button";
 import Price from "src/components/Price";
 import { quantMod } from "src/components/addToCart";
 import { cartItem } from "src/services/Cart";
 import { API } from "src/services/basics";
+import { decks, addCardToDeck, getDecks} from "src/services/Decks";
+import SuperDropDown, { dropDownItems } from "./SuperDropDown";
+
 
 type fourOfAKind<T> = [T,T?,T?,T?]
 type fourProducts = fourOfAKind<productList>
@@ -32,7 +35,15 @@ type ProductListProps = {
     urlHandler : (param :string)=>void
     pageNum: number
 }
-export default class CardList extends BasicPage<ProductListProps> {
+type CardListState = {
+    deckList : decks[]
+}
+export default class CardList extends BasicPage<ProductListProps,CardListState> {
+    constructor(propsy){
+        super(propsy)
+        this.makeLink = this.makeLink.bind(this)
+        this.state = {deckList : []};
+    }
     modOnClick(cart: cartItem, mod: number){
         const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.priceNum, quantity : 1, priceTotal : "", priceTotalNum : 0}
         return ()=>quantMod(cartThing, mod, this.props.req)
@@ -82,19 +93,48 @@ export default class CardList extends BasicPage<ProductListProps> {
                 key: p.id + "price",
                 element: (
                     <div className="row pt-2">
-                            <div className="col-8">
+                            <div className="col-6">
                                 <span id="pPrice"><Price price={p.price}/></span>
                             </div>
-                            <div className="col-4">
-                                <Button onClick={this.modOnClick({
-                                    id: p.id,
-                                    name: p.name,
-                                    price: "",
-                                    priceNum: p.price,
-                                    quantity: 0,
-                                    priceTotal: "",
-                                    priceTotalNum: 1
-                                }, 1)} className="btn-md float-right" id="addCart"color="success">Add to cart</Button>{' '}
+                            <div className="col-6">
+                                <div className="btn-group">
+                                    <Button 
+                                        onClick={
+                                            this.modOnClick(
+                                                {
+                                                    id: p.id,
+                                                    name: p.name,
+                                                    price: "",
+                                                    priceNum: p.price,
+                                                    quantity: 0,
+                                                    priceTotal: "",
+                                                    priceTotalNum: 1
+                                                }, 
+                                                1
+                                            )
+                                        } 
+                                        id=""color="success"
+                                            >Add to cart
+                                    </Button>
+                                    <SuperDropDown
+                                        caret={true}
+                                        items={
+                                            this.state.deckList.map<dropDownItems>(
+                                                v=>({
+                                                    text : v.name,
+                                                    onClick : async ()=>{
+                                                        if(await addCardToDeck(this.props.req, v.id,p.id)){
+                                                            //this.easySetState({modal:true,pushedButton:"deck"})
+                                                        }
+                                                    }
+                                                })
+                                            )
+                                        }
+                                        text= ""
+                                    />
+                                    
+                                </div>
+
                             </div>
                         </div>
                 )
@@ -102,10 +142,15 @@ export default class CardList extends BasicPage<ProductListProps> {
         }
         return {key,element:<></>}
     }
+    async componentDidMount(){ // added
+        this.easySetState({deckList : await getDecks(this.props.req)});
+    
+    }
+    
 
     render(){
         const render = (p : splittedCard[])=>this.makeRenderable(p)
-        const combined =  addAsync<productList[],splittedCard[][]>(
+        const combined = addAsync<productList[],splittedCard[][]>(
             this.props.fetch,
             (prodList:productList[] )=>{
                 prodList.reverse()
@@ -144,13 +189,18 @@ export default class CardList extends BasicPage<ProductListProps> {
                 return secondSplit;
             }
         )
+        if(this.state.deckList.length === 0){
+            return <></>
+        }
         return (
+
             <div id="cardList" className="row">
                 <div className="col-2" style={{"border":"solid black 1px"}}>
                     <h2>Filters</h2>
                 </div>
                 <div className="col-10">
                     <DataTable<splittedCard[]>
+                        
                         fetch={combined}
                         render={render}
                         pageNumber= {this.props.pageNum}
