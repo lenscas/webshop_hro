@@ -16,6 +16,7 @@ export type Address = {
 	city: string
 	zipCode: string
 	id: number
+	main: boolean
 }
 
 export type UserData = {
@@ -150,14 +151,37 @@ export const getUserData = async (api: API) => {
 	const user = await api.doRequest<Partial<UserData>>("api/user/", (t: any) => t.data)
 
 	const addresses : Address[] | undefined = await api.doRequest<Address[]>("api/address/", (t: any) => t.data)
-	if (user !== undefined && addresses !== undefined){
+	if (user !== undefined){
+
+		let add: Address[]
+
+		if(addresses === undefined) {
+			add = []
+		} else {
+			add = addresses
+		}
 
 		const userData = 
 		{ id : user.id, name : user.name, email : user.email, role : user.role, approach : user.approach,
-		addresses }
+			addresses : add }
 		return userData as UserData
 	}
 	else{
 		return undefined
 	}
 };
+
+export const setDefaultAddress = async (api: API, address: Address) => {
+
+	const res = await (
+		api.buildRequest("path","api/address/default")
+		.buildRequest("method", "PUT")
+		.buildRequest("body",address)
+		.buildRequest("converter",(t:APIReturn<boolean>)=>({success : t.success}))
+	).run<{success: boolean}>()
+
+	if(res) {
+		return res.success
+	}
+	return false
+}
