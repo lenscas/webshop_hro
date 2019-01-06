@@ -14,9 +14,9 @@ export default class Home extends React.Component {
         return (
             <Link to="/products" key={name} className={"col accordionItem "+ name}>
                 <div>
-                    <a>
+                    <span>
                         <h2 className="TitleCard">{name}</h2>
-                    </a>
+                    </span>
                 </div>
             </Link>
         )

@@ -10,8 +10,9 @@ import Price from "src/components/Price";
 import { quantMod } from "src/components/addToCart";
 import { cartItem } from "src/services/Cart";
 import { API } from "src/services/basics";
-import { decks, addCardToDeck, getDecks} from "src/services/Decks";
+import { decks, addCardToDeck} from "src/services/Decks";
 import SuperDropDown, { dropDownItems } from "./SuperDropDown";
+// import { readLocalRaw } from "src/services/localStorage";
 
 
 type fourOfAKind<T> = [T,T?,T?,T?]
@@ -116,9 +117,13 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                                         id=""color="success"
                                             >Add to cart
                                     </Button>
+                                    
+                                    {
+                                    
                                     <SuperDropDown
                                         caret={true}
                                         items={
+                                            
                                             this.state.deckList.map<dropDownItems>(
                                                 v=>({
                                                     text : v.name,
@@ -131,7 +136,7 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                                             )
                                         }
                                         text= ""
-                                    />
+                                    /> }
                                     
                                 </div>
 
@@ -143,8 +148,9 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
         return {key,element:<></>}
     }
     async componentDidMount(){ // added
-        this.easySetState({deckList : await getDecks(this.props.req)});
-    
+        // if(readLocalRaw("userId")) {
+        //     this.easySetState({deckList : await getDecks(this.props.req)});
+        // }  
     }
     
 
@@ -189,9 +195,6 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                 return secondSplit;
             }
         )
-        if(this.state.deckList.length === 0){
-            return <></>
-        }
         return (
 
             <div id="cardList" className="row">

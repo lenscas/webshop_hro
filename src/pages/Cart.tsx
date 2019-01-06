@@ -161,7 +161,7 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
     }
     renderWarnings() {
         return this.state.erroredCards.map(v => (
-            <Alert color="warning">{v}</Alert>
+            <Alert key={v} color="warning">{v}</Alert>
         ))
     }
     render() {

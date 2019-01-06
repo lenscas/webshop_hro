@@ -22,6 +22,7 @@
 	background-position: center center;
 	transition: all 500ms ease-in-out;
 	text-align: center;
+	text-decoration: none;
   }
   
   .accordion .accordionContainer .accordionItem div {
@@ -30,7 +31,7 @@
 	width: 100%;
   }
   
-  .accordion .accordionContainer .accordionItem div a {
+  .accordion .accordionContainer .accordionItem div span {
 	display: block;
 	height: 450px;
 	width: 100%;
@@ -49,7 +50,7 @@
 	*/
   }
   
-  .accordion .accordionContainer .accordionItem div a * {
+  .accordion .accordionContainer .accordionItem div span * {
 	opacity: 1;
 	/*margin: 80px;*/
 	/*margin-left: 10px;*/
@@ -65,7 +66,7 @@
 	  transition: all 400ms ease-in-out;
 	  
   }
-  .accordion .accordionContainer .accordionItem div a h2 {
+  .accordion .accordionContainer .accordionItem div span h2 {
 	font-family: "magic";
 	text-overflow: clip;
 	font-size: 32px;
@@ -109,15 +110,15 @@
   .accordion .accordionContainer:hover .accordionItem { width: 10%; }
   .accordion .accordionContainer:hover .accordionItem:hover { width: 30%; }
   
-  .accordion .accordionContainer:hover .accordionItem:hover a { background: rgba(0, 0, 0, 0.4); }
+  .accordion .accordionContainer:hover .accordionItem:hover span { background: rgba(0, 0, 0, 0.4); }
   
-  .accordion .accordionContainer:hover .accordionItem:hover a * {
+  .accordion .accordionContainer:hover .accordionItem:hover span * {
 	opacity: 1;
 	-webkit-transform: translateX(0);
 	transform: translateX(0);
   }
 
-  .accordion .accordionContainer .accordionItem div a * {
+  .accordion .accordionContainer .accordionItem div span * {
     opacity: 1;
     -webkit-transform: translateX(0);
     transform: translateX(0);
