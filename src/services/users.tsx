@@ -50,6 +50,9 @@ type shoppingCartItem = {
 
 const dealWithToken = (api:API,token? : afterLogin) => {
 	if(token){
+		if(typeof token === 'string') {
+			return false
+		}
 		if(api.onAll){
 			const asBase : BaseAPIReturn = {refreshToken:token.refreshToken, userId:token.user.userId, cartId:token.user.shoppingCartId, role: token.user.role}
 			api.onAll(asBase)
@@ -103,13 +106,18 @@ export const register = async (user: RegisterUser, api: API) => {
 		return { success: false, message: res.message }
 	}
 }
-export const login = async (creds: credentials, api: API): Promise<boolean> => {
-	return dealWithToken(api, await (
+export const login = async (creds: credentials, api: API): Promise<boolean | registerRes> => {
+	const res = await dealWithToken(api, await (
 		api.buildRequest("path", "auth/login")
 			.buildRequest("method", "POST")
 			.buildRequest("body", creds)
-			.buildRequest("converter", (t: APIReturn<afterLogin>) => t.data)
+			.buildRequest("converter", (t: APIReturn<afterLogin> | APIReturn<string>) => t.data)
 	).run<afterLogin>())
+	if (res) {
+		return res
+	} else {
+		return {success : false, message: "Combination of email and password is not a known combination of email and password is not known in our system."}
+	}
 }
 export const logOut = async (api: API) : Promise<void> => {
 	removeLocalAll()
@@ -141,67 +149,7 @@ export const getUserData = async (api: API) => {
 	
 	const user = await api.doRequest<Partial<UserData>>("api/user/", (t: any) => t.data)
 
-	// const user = {id: 1,
-	// 	name: "Bruijn",
-	// 	email: "beerbruijn@grizzly.nl",
-	// 	role:"user",
-	// 	approach: "Beer"
-
-	// }
-
 	const addresses : Address[] | undefined = await api.doRequest<Address[]>("api/address/", (t: any) => t.data)
-
-	// const addresses : Address[] | undefined = [
-	// 		{
-	// 			street: "Honingplein",
-	// 			number: 255,
-	// 			city: "Lekkerdam",
-	// 			zipCode: "1999OR",
-	// 			id: 1
-	// 		},
-	// 		{
-	// 			street: "Bimbamblv",
-	// 			number: 3453,
-	// 			city: "Gabberen",
-	// 			zipCode: "4574HW",
-	// 			id: 2
-	// 		},
-	// 		{
-	// 			street: "Bazelweg",
-	// 			number: 4,
-	// 			city: "Appeldrecht",
-	// 			zipCode: "3930AH",
-	// 			id: 3
-	// 		},
-	// 		{
-	// 			street: "Juiststraat",
-	// 			number: 1,
-	// 			city: "Enige a/d IJssel",
-	// 			zipCode: "4321AB",
-	// 			id: 4
-	// 		},
-	// 		{
-	// 			street: "Honingplein",
-	// 			number: 255,
-	// 			city: "Lekkerdam",
-	// 			zipCode: "1999OR",
-	// 			id: 5
-	// 		},
-	// 		{
-	// 			street: "Honingplein",
-	// 			number: 255,
-	// 			city: "Lekkerdam",
-	// 			zipCode: "1999OR",
-	// 			id: 6
-	// 		},
-	// 		{
-	// 			street: "Honingplein",
-	// 			number: 255,
-	// 			city: "Lekkerdam",
-	// 			zipCode: "1999OR",
-	// 			id: 7
-	// 		}
-	//  	]
 	if (user !== undefined && addresses !== undefined){
 
 		const userData = 
