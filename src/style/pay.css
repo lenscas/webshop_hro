@@ -1,0 +1,23 @@
+.payment{
+    padding: 35vh;
+}
+.pay{
+    padding: 15px;
+    text-align: center;
+}
+.adres{
+    padding: 15px;
+    text-align: center;
+}
+.buttonPay{
+    padding: 15px;
+    text-align: center;
+}
+td, tr, th{
+    border: 1px groove white;
+    text-align: left;
+}
+.logoPay{
+    width: 56%;
+    padding-left: 18px;
+}
