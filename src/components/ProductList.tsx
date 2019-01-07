@@ -10,8 +10,13 @@ import Price from "src/components/Price";
 import { quantMod } from "src/components/addToCart";
 import { cartItem } from "src/services/Cart";
 import { API } from "src/services/basics";
-import { decks, addCardToDeck} from "src/services/Decks";
+import { decks, addCardToDeck, getDecks} from "src/services/Decks";
 import SuperDropDown, { dropDownItems } from "./SuperDropDown";
+import { readLocalRaw } from "src/services/localStorage";
+import Modal from "reactstrap/lib/Modal";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalFooter from "reactstrap/lib/ModalFooter";
 // import { readLocalRaw } from "src/services/localStorage";
 
 
@@ -37,17 +42,31 @@ type ProductListProps = {
     pageNum: number
 }
 type CardListState = {
-    deckList : decks[]
+    deckList : decks[] | undefined
+    modal : boolean,
+    pushedButton : "deck" | "buy"
+    card : string
 }
 export default class CardList extends BasicPage<ProductListProps,CardListState> {
     constructor(propsy){
         super(propsy)
         this.makeLink = this.makeLink.bind(this)
-        this.state = {deckList : []};
+        this.state = {deckList:undefined,modal: false, pushedButton:"buy",card:""};
+        this.toggle = this.toggle.bind(this)
     }
     modOnClick(cart: cartItem, mod: number){
         const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.priceNum, quantity : 1, priceTotal : "", priceTotalNum : 0}
-        return ()=>quantMod(cartThing, mod, this.props.req)
+        return ()=>
+            quantMod(
+                cartThing,
+                mod,
+                this.props.req,
+                async ()=>this.easySetState({
+                    card: cart.name,
+                    modal:true,
+                    pushedButton:"buy"
+                })
+            )
     }
     makeTriplets(products : productList[]){
         const newList : fourProducts[] = []
@@ -119,17 +138,21 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                                     </Button>
                                     
                                     {
-                                    
+                                    this.state.deckList &&
+                                    this.state.deckList.length > 0 &&
                                     <SuperDropDown
                                         caret={true}
                                         items={
-                                            
                                             this.state.deckList.map<dropDownItems>(
                                                 v=>({
                                                     text : v.name,
                                                     onClick : async ()=>{
                                                         if(await addCardToDeck(this.props.req, v.id,p.id)){
-                                                            //this.easySetState({modal:true,pushedButton:"deck"})
+                                                            this.easySetState({
+                                                                modal:true,
+                                                                pushedButton:"deck",
+                                                                card:p.name
+                                                            })
                                                         }
                                                     }
                                                 })
@@ -137,9 +160,7 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                                         }
                                         text= ""
                                     /> }
-                                    
                                 </div>
-
                             </div>
                         </div>
                 )
@@ -148,13 +169,24 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
         return {key,element:<></>}
     }
     async componentDidMount(){ // added
-        // if(readLocalRaw("userId")) {
-        //     this.easySetState({deckList : await getDecks(this.props.req)});
-        // }  
+        if(readLocalRaw("userId")) {
+            this.easySetState(
+                {
+                    deckList : await getDecks(this.props.req)
+                }
+            );
+        }
     }
-    
+    async toggle(){
+        this.easySetState({modal : !this.state.modal})
+    }
 
     render(){
+        console.log(this.state.deckList)
+        if(readLocalRaw("userId") && !this.state.deckList){
+            
+            return <></>
+        }
         const render = (p : splittedCard[])=>this.makeRenderable(p)
         const combined = addAsync<productList[],splittedCard[][]>(
             this.props.fetch,
@@ -189,6 +221,7 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                         putIntoSplit(firstSplit)
                         firstSplit=[]
                     }
+
                 });
                 putIntoSplit(firstSplit)
                 secondSplit.reverse();
@@ -213,6 +246,21 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                         equalWidth={true}
                         borderLess={true}
                     />
+                </div>
+                <div>
+                    <Modal isOpen={this.state.modal} toggle={this.toggle}>
+                        <ModalHeader toggle={this.toggle}>Product added to cart</ModalHeader>
+                        <ModalBody>
+                            {this.state.pushedButton === "buy" ?
+                                "You have added the product : " + this.state.card + " to your shopping cart."
+                                :
+                                "You have added the product : " + this.state.card + " to your deck."
+                            }
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="success" onClick={this.toggle}>Magical!</Button>{' '}
+                        </ModalFooter>
+                    </Modal>
                 </div>
         </div>)
 
