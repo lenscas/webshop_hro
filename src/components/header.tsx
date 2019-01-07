@@ -80,6 +80,9 @@ export default class Header extends BasicPage<props, { isOpen: boolean }> {
 		}
 		return <>
 			<NavItem>
+			<NavLink tag={Link} to="/user" className="moveDown">User</NavLink>
+			</NavItem>
+			<NavItem>
 				<NavLink onClick={this.logOut} tag={Link} to="/" className="moveDown">Logout</NavLink>
 			</NavItem>
 		</>

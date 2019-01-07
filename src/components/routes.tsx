@@ -14,6 +14,7 @@ import UserPage from "src/pages/UserPage";
 import NewDeck from "src/pages/newDeck";
 import SearchList from "src/pages/SearchList";
 import Admin from "src/pages/Admin";
+import Pay from "src/pages/Pay";
 
 
 export default class Routes extends BasicPage {
@@ -53,6 +54,7 @@ export default class Routes extends BasicPage {
 					<Route exact={true} path="/search/:name/:pageNum" render={this.searchListPage}/>
 					<Route exact={true} path="/products/:pageNum" render={this.cardListPage}/>
 					<Route exact={true} path="/cart"><Cart APIS={this.props.APIS}/></Route>
+					<Route exact={true} path="/cart/pay"><Pay APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/cart/:deckId" render={this.renderCart}/>
 					<Route exact={true} path="/login"><Login APIS={this.props.APIS}/></Route>
 					<Route exact={true} path="/contact"><ContactPage APIS={this.props.APIS}/></Route>
