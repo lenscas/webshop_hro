@@ -96,7 +96,7 @@ export default class Header extends BasicPage<props, { isOpen: boolean }> {
 		return (
 			<div>
 				<Navbar light={true} expand="md" className="header">
-					<NavbarBrand href="/"><img src="https://i.imgur.com/EsGo1dr.png" style={{ height: "5.4vh" }} /></NavbarBrand>
+					<NavbarBrand href="/"><img src="/MagicLogo.png" style={{ height: "5.4vh" }} /></NavbarBrand>
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar={true}>
 						<Nav className="ml-auto" navbar={true}>
