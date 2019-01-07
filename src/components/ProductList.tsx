@@ -17,6 +17,7 @@ import Modal from "reactstrap/lib/Modal";
 import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalBody from "reactstrap/lib/ModalBody";
 import ModalFooter from "reactstrap/lib/ModalFooter";
+//import price from "src/components/Price";
 // import { readLocalRaw } from "src/services/localStorage";
 
 
@@ -89,6 +90,54 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
             return {key,element:<></>}
         })
     }
+    // tslint:disable-next-line:member-ordering
+    renderPrice = (priceToRender:number)=>{
+        if (!isNaN(priceToRender)){
+        return(
+        <div className="col-6">
+            <span id="pPrice"><Price price={priceToRender}/></span>
+        </div>)
+        }
+        else{
+            return(
+                <div className="col-6">
+                    <span id="pPrice">N/A</span>
+                </div>
+            )
+        }
+    }
+
+    renderAddToCart = (product:splittedCard)=>{
+        if (("price" in product) && !isNaN(product.price)){
+            return(
+                <Button 
+                onClick={
+                    this.modOnClick(
+                        {
+                            id: product.id,
+                            name: product.name,
+                            price: "",
+                            priceNum: product.price,
+                            quantity: 0,
+                            priceTotal: "",
+                            priceTotalNum: 1
+                        }, 
+                        1
+                    )
+                } 
+                id=""color="success"
+                    >Add to cart
+            </Button>)
+        }
+        else{
+            return(
+                <Button
+                id=""color="disabled"
+                    >Add to cart
+            </Button>)
+        }
+    }
+    
     makeLink(p :splittedCard,key:number) : renderable{
         if("title" in p){
             return {
@@ -113,30 +162,10 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                 key: p.id + "price",
                 element: (
                     <div className="row pt-2">
-                            <div className="col-6">
-                                <span id="pPrice"><Price price={p.price}/></span>
-                            </div>
+                            {this.renderPrice(p.price)}
                             <div className="col-6">
                                 <div className="btn-group">
-                                    <Button 
-                                        onClick={
-                                            this.modOnClick(
-                                                {
-                                                    id: p.id,
-                                                    name: p.name,
-                                                    price: "",
-                                                    priceNum: p.price,
-                                                    quantity: 0,
-                                                    priceTotal: "",
-                                                    priceTotalNum: 1
-                                                }, 
-                                                1
-                                            )
-                                        } 
-                                        id=""color="success"
-                                            >Add to cart
-                                    </Button>
-                                    
+                                    {this.renderAddToCart(p)}
                                     {
                                     this.state.deckList &&
                                     this.state.deckList.length > 0 &&

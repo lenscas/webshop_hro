@@ -85,6 +85,12 @@ export default class Products extends BasicComponent<ProductProps,productState> 
         }
         
         const deckList = data[1]
+        let priceShow = <h3>Price: <Price price={card.price}/></h3>
+        let addCartButton = <button onClick={this.modOnClick(card, 1)} className="btn btn-success float-right" id="buttonCart">Add to cart</button>
+        if (card.price === 0){
+            priceShow = <h3/>
+            addCartButton = <button className="btn btn-disabled float-right" id="buttonCart">Add to cart</button>
+        }
         return (
             <>
                 <div>
@@ -114,10 +120,10 @@ export default class Products extends BasicComponent<ProductProps,productState> 
                         {this.renderLowerStats(card)}
                         <Row>
                             <Col>
-                                <h3>Price: <Price price={card.price}/></h3>
+                                {priceShow}
                             </Col>
                             <Col>
-                                <button onClick={this.modOnClick(card, 1)} className="btn btn-success float-right" id="buttonCart">Add to cart</button>
+                                {addCartButton}
                             </Col>
                             <Col>
                                 {this.renderDropDown(deckList,card.id)}
