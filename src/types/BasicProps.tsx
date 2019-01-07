@@ -8,6 +8,7 @@ export type props = {
 		role?: string
 		setUserId : (newUserId? : string)=>void;
 		clearAlerts :()=>void;
+		setBackground :(color: string)=>void
 	}
 
 }

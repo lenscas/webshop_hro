@@ -1,6 +1,8 @@
 import * as React from "react";
 import "../style/accordion.css"
-import { Link } from "react-router-dom";
+import BasicPage from "src/types/basicComponent";
+import { props } from "src/types/BasicProps";
+import { RouteComponentProps } from "react-router";
 const colors = [
     "white",
     "blue",
@@ -9,19 +11,22 @@ const colors = [
     "green",
     "colorless"
 ]
-export default class Home extends React.Component {
+type test = RouteComponentProps & props
+export default class Home extends BasicPage<test> {
     renderCardSelector(name : string){
+        const onClick=()=>(void this.props.history.push("/search/color:"+name) )|| this.props.APIS.setBackground(name)
         return (
-            <Link to="/products" key={name} className={"col accordionItem "+ name}>
+            <span onClick={onClick} key={name} className={"col accordionItem "+ name}>
                 <div>
                     <span>
                         <h2 className="TitleCard">{name}</h2>
                     </span>
                 </div>
-            </Link>
+            </span>
         )
     }
     render() {
+        const a = (v:string)=>this.renderCardSelector(v)
         return (
            <>
                 <div className="row justify-content-center">
@@ -33,7 +38,7 @@ export default class Home extends React.Component {
                     <div className="col">
                         <div className="accordion">
                             <div className="accordionContainer">
-                                {colors.map(this.renderCardSelector)}
+                                {colors.map(a)}
                             </div>
                         </div>
                     </div>

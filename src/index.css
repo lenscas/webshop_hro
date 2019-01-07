@@ -13,10 +13,7 @@ body {
 body, html {
   height: 100%;
 }
-.background {
-  /* The image used */
-  /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
-  background-image: url("/backgroundImg2.png");
+.background{
   background-repeat: repeat-y;
 
   /* Full height */
@@ -27,6 +24,41 @@ body, html {
   background-position: center;
   /*background-repeat: no-repeat;*/
   background-size: cover;
+}
+.background-normal {
+  /* The image used */
+  /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
+  background-image: url("/NorMagic.jpg");
+}
+.background-black {
+  /* The image used */
+  /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
+  background-image: url("/BlackMagic.jpg");
+}
+.background-white {
+  /* The image used */
+  /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
+  background-image: url("/WhiteMagic.jpg");
+}
+.background-green {
+  /* The image used */
+  /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
+  background-image: url("/GreenMagic.jpg");
+}
+.background-blue {
+  /* The image used */
+  /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
+  background-image: url("/BlueMagic.jpg");
+}
+.background-red {
+  /* The image used */
+  /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
+  background-image: url("/RedMagic.jpg");
+}
+.background-colorless {
+  /* The image used */
+  /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
+  background-image: url("/ColorlessMagic.jpg");
 }
 .header {
   height: 6vh;
@@ -49,11 +81,11 @@ body, html {
 	display: none;
 }
 .card-page{
-  position: relative;
-  top: 20vh;
+  padding-bottom : 200
 }
 .magic-font{
   font-family: "magic";
+
 }
 .banner{
   position: absolute;
@@ -147,4 +179,7 @@ color: orange;
 
 .TitleCard :hover{
 	text-decoration: none !important;
+}
+.bgTrans {
+  background-color: rgba(255,255,255,0.35)
 }

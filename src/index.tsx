@@ -18,12 +18,13 @@ type appState = {
 	alerts: string[]
 	token?: string
 	refreshToken?: string
+	color: string
 }
 
 class App extends React.Component<{}, appState>{
 	constructor(propsy: props) {
 		super(propsy)
-		this.state = { alerts: [] }
+		this.state = { alerts: [] , color: "normal"}
 	}
 
 	componentDidMount() {
@@ -72,12 +73,13 @@ class App extends React.Component<{}, appState>{
 			role: this.state.role,
 			setUserId: (newUserId?: string) => this.setState((st) => ({ ...st, userId: newUserId })),
 			clearAlerts: () => this.clearAlerts(),
+			setBackground: (color: string) => (this.setState((st) => ({ ...st, color })))
 		}
 		return (
 			<Router>
 				<div>
 					<Header APIS={APIS} />
-					<div className="container-fluid background">
+					<div className={"container-fluid background background-"+this.state.color}>
 						<Routes APIS={APIS} />
 					</div>
 				</div>

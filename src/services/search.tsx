@@ -34,6 +34,9 @@ export const searchCommander = async (name:string):Promise<searchResult[]>=>{
 }
 
 export const searchName = (name : string)=>{
+	if (name.startsWith("color:")){
+		return searchColor(name.slice(6))
+	}
 	return async (pageNR : number ) => productListConvert(await searchAdvanced("name:" + name,pageNR))
 }
 
