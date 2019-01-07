@@ -7,6 +7,7 @@ export type productList = {
     name:   string;
     price:  number;
     image: string;
+    stock: number;
 }
 export interface IManaResponce {
 	id:          number;

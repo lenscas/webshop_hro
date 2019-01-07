@@ -4,10 +4,11 @@ import BasicPage from "src/types/basicComponent";
 
 import { apiUrl } from 'src/config';
 import "../style/admin.css";
+import Stock from "./Stock";
 
 export default class Admin extends BasicPage<props, { render: string }> {
 
-    tabClasses: { [key: string]: string } = { Hangfire: "nav-link active", Edit: "nav-link" }
+    tabClasses: { [key: string]: string } = { Hangfire: "nav-link active", Edit: "nav-link",Stock: "nav-link" }
 
     constructor(propsy) {
         super(propsy);
@@ -48,6 +49,9 @@ export default class Admin extends BasicPage<props, { render: string }> {
                         <li className="nav-item">
                             <button className={this.tabClasses.Edit} onClick={this.setTabOnClick("Edit")} >Edit</button>
                         </li>
+                        <li className="nav-item">
+                            <button className={this.tabClasses.Stock} onClick={this.setTabOnClick("Stock")} >stock</button>
+                        </li>
                     </ul>
                 </div>
 
@@ -64,6 +68,8 @@ export default class Admin extends BasicPage<props, { render: string }> {
                 return this.renderHangfire()
             case "Edit":
                 return <p>Edit</p>
+            case "Stock":
+                return <Stock APIS={this.props.APIS}/>
             default:
                 return <p>No page</p>
         }
