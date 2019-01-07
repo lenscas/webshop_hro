@@ -10,8 +10,9 @@ import Price from "src/components/Price";
 import { quantMod } from "src/components/addToCart";
 import { cartItem } from "src/services/Cart";
 import { API } from "src/services/basics";
-import { decks, addCardToDeck} from "src/services/Decks";
+import { decks, addCardToDeck, getDecks} from "src/services/Decks";
 import SuperDropDown, { dropDownItems } from "./SuperDropDown";
+import { readLocalRaw } from "src/services/localStorage";
 // import { readLocalRaw } from "src/services/localStorage";
 
 
@@ -37,7 +38,7 @@ type ProductListProps = {
     pageNum: number
 }
 type CardListState = {
-    deckList : decks[]
+    deckList : decks[] | undefined
 }
 export default class CardList extends BasicPage<ProductListProps,CardListState> {
     constructor(propsy){
@@ -119,11 +120,11 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                                     </Button>
                                     
                                     {
-                                    
+                                    this.state.deckList &&
+                                    this.state.deckList.length > 0 &&
                                     <SuperDropDown
                                         caret={true}
                                         items={
-                                            
                                             this.state.deckList.map<dropDownItems>(
                                                 v=>({
                                                     text : v.name,
@@ -137,9 +138,7 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                                         }
                                         text= ""
                                     /> }
-                                    
                                 </div>
-
                             </div>
                         </div>
                 )
@@ -148,13 +147,20 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
         return {key,element:<></>}
     }
     async componentDidMount(){ // added
-        // if(readLocalRaw("userId")) {
-        //     this.easySetState({deckList : await getDecks(this.props.req)});
-        // }  
+        if(readLocalRaw("userId")) {
+            this.easySetState(
+                {
+                    deckList : await getDecks(this.props.req)
+                }
+            );
+        }
     }
     
 
     render(){
+        if(readLocalRaw("userId") && !this.state.deckList){
+            return <></>
+        }
         const render = (p : splittedCard[])=>this.makeRenderable(p)
         const combined = addAsync<productList[],splittedCard[][]>(
             this.props.fetch,
@@ -189,6 +195,7 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                         putIntoSplit(firstSplit)
                         firstSplit=[]
                     }
+
                 });
                 putIntoSplit(firstSplit)
                 secondSplit.reverse();
