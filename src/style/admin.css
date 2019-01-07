@@ -20,3 +20,7 @@ table, th, td {
 th{
     padding: 10px;
 }
+
+.align {
+    text-align: center;
+}
