@@ -1,27 +1,30 @@
 import * as React from "react";
 import { props } from "src/types/BasicProps";
-import BasicPage from "src/types/basicComponent";
-
 import { apiUrl } from 'src/config';
 import "../style/admin.css";
 import { APIReturn } from "src/services/basics";
 import { RegisterUserAsAdmin } from "src/services/users";
 import Form, {InputField, FormData} from "../components/form";
 import { retTrue } from "src/funcs/lambdas";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import BasicComponent from "src/types/smallComponent";
 
 type registerState = {
     success? : boolean | {success: boolean, message}
 }
+type accountState = {modal: boolean}
 
-export default class Admin extends BasicPage<props, { render: string } & registerState> {
+export default class Admin extends BasicComponent<props, { render: string } & registerState & accountState> {
 
     tabClasses: { [key: string]: string } = { Hangfire: "nav-link active", Edit: "nav-link", Create: "nav-link", Delete: "nav-link"  }
-
+    
     constructor(propsy) {
         super(propsy);
         this.state = {
-            render: "Hangfire"
-        }
+            render: "Hangfire",
+            modal: false
+        };
+        this.AccountMade = this.AccountMade.bind(this);
     }
     async onSubmit(data : FormData<RegisterUserAsAdmin>){
         await (
@@ -30,6 +33,12 @@ export default class Admin extends BasicPage<props, { render: string } & registe
            .buildRequest("body",data.values)
            .buildRequest("converter",(t:APIReturn<boolean>)=>({success : t.success}))
        ).run<{success: boolean}>()
+       this.AccountMade();
+    }
+    async AccountMade() {
+        this.easySetState({
+          modal: !this.state.modal,
+        });
     }
 
     renderHangfire() {
@@ -92,6 +101,7 @@ export default class Admin extends BasicPage<props, { render: string } & registe
                     placeholder: "Admin or User",
                     id : "role"
                 },
+                
                 {
                     name : "Submit",
                     placeholder: "Submit",
@@ -99,8 +109,20 @@ export default class Admin extends BasicPage<props, { render: string } & registe
                     type : "button"
                 }
             ]
+            
             const onSubmit =(data :FormData<RegisterUserAsAdmin> )=>this.onSubmit(data)
             return <>
+      <div>
+        <Modal isOpen={this.state.modal} toggle={this.AccountMade}>
+          <ModalHeader toggle={this.AccountMade}>Account made</ModalHeader>
+          <ModalBody>
+            Account is made.
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.AccountMade}>OK</Button>
+          </ModalFooter>
+        </Modal>
+      </div>
                 <Form<RegisterUserAsAdmin> onSubmit={onSubmit} inputs={fields}/>
             </>
         }return "Oops, something went wrong, try again later"
