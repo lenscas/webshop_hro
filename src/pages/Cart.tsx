@@ -1,7 +1,7 @@
 import * as React from "react";
 import BasicComponent from "../types/basicComponent";
 import { getCart, getTotals, cartItem } from "../services/Cart";
-import { Link, match } from "react-router-dom";
+import { Link, match, Redirect } from "react-router-dom";
 import LoadSymbol from "src/components/loadSymbol";
 import { Table, Alert, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { quantMod } from "src/components/addToCart";
@@ -18,7 +18,8 @@ type CartState = {
     didLoad: boolean,
     card?: string,
     cardName?: string,
-    deletedCards: number
+    deletedCards: number,
+    redirect: boolean
 }
 
 export default class Cart extends BasicComponent<CartProps, CartState>{
@@ -28,7 +29,7 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
         this.modOnClick = this.modOnClick.bind(this)
         this.renderCart = this.renderCart.bind(this)
         this.toggle = this.toggle.bind(this)
-        this.state = { erroredCards: [], didLoad: false, deletedCards: 0 }
+        this.state = { erroredCards: [], didLoad: false, deletedCards: 0, redirect: false }
     }
 
     toggle() {
@@ -62,15 +63,20 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
                 .buildRequest("converter", (t: APIReturn<{ data: string | string[], success: boolean }>) => {
                     if (t.success === false && t.data instanceof Array) {
                         this.easySetState({ erroredCards: t.data })
+                        
                     } else if (t.success === false && typeof t.data === "string") {
                         this.easySetState({ erroredCards: [t.data] })
+                        
                     } else {
                         //link to next page
+                        this.setState({...this.state, redirect: true})
+                        
                     }
-
+                    
                     if (update !== undefined) {
                         update({})
                     }
+
                 })).run()
         } else {
             //user order when not loged in
@@ -93,6 +99,9 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
     renderCart(cart: cartItem[], update: (params: {}) => Promise<void>) {
         if (!cart) {
             return <></>
+        }
+        if(this.state.redirect) {
+            return <Redirect to="/cart/pay" />
         }
         const totals = getTotals(cart)
         const body = cart.map((item: cartItem) => {

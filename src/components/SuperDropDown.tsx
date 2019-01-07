@@ -8,7 +8,6 @@ export type dropDownItems = {
 	onClick : ()=>void
 	disabled?: boolean
 	header?: boolean
-	
 } | {
 	divider : true
 }

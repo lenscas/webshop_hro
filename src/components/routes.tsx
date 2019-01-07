@@ -15,63 +15,65 @@ import NewDeck from "src/pages/newDeck";
 import SearchList from "src/pages/SearchList";
 import Admin from "src/pages/Admin";
 import { StaticContext } from "react-router";
+import Pay from "src/pages/Pay";
 
 
 export default class Routes extends BasicPage {
-	cardPage = (props :RouteComponentProps<{id:string}>) => <Products
+	cardPage = (props: RouteComponentProps<{ id: string }>) => <Products
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
-	cardListPage = (props : RouteComponentProps<{pageNum:string}>) => <ProductList
+	cardListPage = (props: RouteComponentProps<{ pageNum: string }>) => <ProductList
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
-	searchListPage = (props : RouteComponentProps<{pageNum:string,name:string}>)=><SearchList
+	searchListPage = (props: RouteComponentProps<{ pageNum: string, name: string }>) => <SearchList
 		APIS={this.props.APIS}
 		match={props.match}
 
 	/>
-	deckListPage = (props :RouteComponentProps<{id:string}>) =><DeckList
+	deckListPage = (props: RouteComponentProps<{ id: string }>) => <DeckList
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
-	newDeckPage = (props: RouteComponentProps<{cardId:string}>) => <NewDeck
+	newDeckPage = (props: RouteComponentProps<{ cardId: string }>) => <NewDeck
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
-	renderCart = (props : RouteComponentProps<{deckId:string}>) => <Cart
+	renderCart = (props: RouteComponentProps<{ deckId: string }>) => <Cart
 		APIS={this.props.APIS}
 		match={props.match}
 	/>
-	renderHome = (props :RouteComponentProps<any, StaticContext, any>) =><Home 
-		match={props.match} 
-		history={props.history} 
+	renderHome = (props: RouteComponentProps<any, StaticContext, any>) => <Home
+		match={props.match}
+		history={props.history}
 		location={props.location}
 		APIS={this.props.APIS}
 	/>
 
-	public render(){
+	public render() {
 		return (
 			<div className="bgTrans row">
 				<div className="col">
 					<Switch>
-						<Route exact={true} path="/" render={this.renderHome}/>
-						<Route exact={true} path="/register"><Register APIS={this.props.APIS}/></Route>
-						<Route exact={true} path="/products"><ProductList APIS={this.props.APIS}/></Route>
-						<Route exact={true} path="/search/:name" render={this.searchListPage}/>
-						<Route exact={true} path="/search/:name/:pageNum" render={this.searchListPage}/>
-						<Route exact={true} path="/products/:pageNum" render={this.cardListPage}/>
-						<Route exact={true} path="/cart"><Cart APIS={this.props.APIS}/></Route>
-						<Route exact={true} path="/cart/:deckId" render={this.renderCart}/>
-						<Route exact={true} path="/login"><Login APIS={this.props.APIS}/></Route>
-						<Route exact={true} path="/contact"><ContactPage APIS={this.props.APIS}/></Route>
+						<Route exact={true} path="/" render={this.renderHome} />
+						<Route exact={true} path="/register"><Register APIS={this.props.APIS} /></Route>
+						<Route exact={true} path="/products"><ProductList APIS={this.props.APIS} /></Route>
+						<Route exact={true} path="/search/:name" render={this.searchListPage} />
+						<Route exact={true} path="/search/:name/:pageNum" render={this.searchListPage} />
+						<Route exact={true} path="/products/:pageNum" render={this.cardListPage} />
+						<Route exact={true} path="/cart"><Cart APIS={this.props.APIS} /></Route>
+						<Route exact={true} path="/cart/pay"><Pay APIS={this.props.APIS} /></Route>
+						<Route exact={true} path="/cart/:deckId" render={this.renderCart} />
+						<Route exact={true} path="/login"><Login APIS={this.props.APIS} /></Route>
+						<Route exact={true} path="/contact"><ContactPage APIS={this.props.APIS} /></Route>
 						<Route exact={true} path="/product/:id" render={this.cardPage} />
-						<Route exact={true} path="/decks"><Decks APIS={this.props.APIS}/></Route>
-						<Route exact={true} path="/decks/:id" render={this.deckListPage}/>
-						<Route exact={true} path="/user"><UserPage APIS={this.props.APIS}/></Route>
-						<Route exact={true} path="/deck/new"><NewDeck APIS={this.props.APIS}/></Route>
-						<Route exact={true} path="/deck/new/:cardId" render={this.newDeckPage}/>
-						<Route exact={true} path="/admin"><Admin APIS={this.props.APIS}/></Route>
+						<Route exact={true} path="/decks"><Decks APIS={this.props.APIS} /></Route>
+						<Route exact={true} path="/decks/:id" render={this.deckListPage} />
+						<Route exact={true} path="/user"><UserPage APIS={this.props.APIS} /></Route>
+						<Route exact={true} path="/deck/new"><NewDeck APIS={this.props.APIS} /></Route>
+						<Route exact={true} path="/deck/new/:cardId" render={this.newDeckPage} />
+						<Route exact={true} path="/admin"><Admin APIS={this.props.APIS} /></Route>
 					</Switch>
 				</div>
 			</div>
