@@ -1,22 +1,25 @@
 import * as React from "react";
 import { props } from "src/types/BasicProps";
 import BasicPage from "src/types/basicComponent";
-
 import { apiUrl } from 'src/config';
 import "../style/admin.css";
 import Stock from "./Stock";
+import { AdminUserCreate } from "src/components/adminUserCreate";
+import { AdminUserDeleteEdit } from "src/components/adminUserDeleteEdit";
 
-export default class Admin extends BasicPage<props, { render: string }> {
+export default class Admin extends BasicPage<props, { render: string}> {
 
-    tabClasses: { [key: string]: string } = { Hangfire: "nav-link active", Edit: "nav-link",Stock: "nav-link" }
+    // tabClasses: { [key: string]: string } = { Hangfire: "nav-link active", Edit: "nav-link",Stock: "nav-link" }
+    tabClasses: { [key: string]: string } = { Hangfire: "nav-link active", Edit: "nav-link", Create: "nav-link", Delete: "nav-link", Stock: "nav-link" }
 
     constructor(propsy) {
         super(propsy);
+
         this.state = {
-            render: "Hangfire"
+            render: "Hangfire",
         }
     }
-
+    
     renderHangfire() {
         return (
             <div className="con">
@@ -36,7 +39,7 @@ export default class Admin extends BasicPage<props, { render: string }> {
         this.easySetState({ render: id })
     }
 
-    render () {
+    render() {
 
         return (
             <div className="mainAdmin">
@@ -47,7 +50,10 @@ export default class Admin extends BasicPage<props, { render: string }> {
                         </li>
 
                         <li className="nav-item">
-                            <button className={this.tabClasses.Edit} onClick={this.setTabOnClick("Edit")} >Edit</button>
+                            <button className={this.tabClasses.Create} onClick={this.setTabOnClick("Create")} >Create user</button>
+                        </li>
+                        <li className="nav-item">
+                            <button className={this.tabClasses.Delete} onClick={this.setTabOnClick("Delete")} >Edit / Delete user</button>
                         </li>
                         <li className="nav-item">
                             <button className={this.tabClasses.Stock} onClick={this.setTabOnClick("Stock")} >stock</button>
@@ -63,6 +69,8 @@ export default class Admin extends BasicPage<props, { render: string }> {
     }
 
     renderScreen = () => {
+
+
         switch (this.state.render) {
             case "Hangfire":
                 return this.renderHangfire()
@@ -70,6 +78,10 @@ export default class Admin extends BasicPage<props, { render: string }> {
                 return <p>Edit</p>
             case "Stock":
                 return <Stock APIS={this.props.APIS}/>
+            case "Create":
+                return <AdminUserCreate APIS={this.props.APIS}/>
+            case "Delete":
+                return <AdminUserDeleteEdit APIS={this.props.APIS}/>
             default:
                 return <p>No page</p>
         }

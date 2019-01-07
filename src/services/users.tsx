@@ -9,6 +9,14 @@ export type RegisterUser = {
 	repeatPassword: string
 	approach: string
 }
+export type RegisterUserAsAdmin = {
+	name: string
+	email: string
+	password: string
+	repeatPassword: string
+	approach: string
+	role: string
+}
 
 export type Address = {
 	street: string
