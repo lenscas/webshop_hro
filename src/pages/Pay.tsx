@@ -11,6 +11,7 @@ import Modal from "reactstrap/lib/Modal";
 import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalBody from "reactstrap/lib/ModalBody";
 import ModalFooter from "reactstrap/lib/ModalFooter";
+import "../style/pay.css";
 
 type PayState = {
     payMethods: string[],
@@ -25,7 +26,7 @@ export default class Pay extends BasicPage<props, PayState> {
     constructor(propsy) {
         super(propsy)
         this.state = {
-            payMethods: ["Ideal", "PayPal", "creditcard", "gift card"],
+            payMethods: ["Ideal", "Mastercard", "Visa" , "American Express", "PayPal","gift card"],
             method: "pay",
             addresses: undefined,
             orderd: false,
@@ -88,8 +89,12 @@ export default class Pay extends BasicPage<props, PayState> {
             return <Redirect to="/" />
         }
         return (
-            <div>
-                <div>
+            <table>
+
+            <div className="payment">
+            <tr>
+            <td>
+                <div className="pay">
                     <SuperDropDown
                         caret={true}
                         items={this.state.payMethods.map<dropDownItems>(
@@ -103,13 +108,18 @@ export default class Pay extends BasicPage<props, PayState> {
                         }
                         text={this.state.method}
                     />
-                </div>
-                <div>
+                    <img  className="logoPay" src="http://www.stopmsnow.nl/wp-content/uploads/2016/11/Mollie-betalingen-1.jpg"/>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td>
+                <div className="adres">
                     <SuperDropDown
                         caret={true}
                         items={this.state.addresses.map<dropDownItems>(
                             v => ({
-                                text: v.street + v.number,
+                                text: v.street + " " + v.number,
                                 onClick: async () => {
                                     this.setState({ ...this.state, addres: v })
                                 }
@@ -119,7 +129,11 @@ export default class Pay extends BasicPage<props, PayState> {
                         text={this.state.addres ? this.state.addres.street + " " +this.state.addres.number : "Choose address"}
                     />
                 </div>
-
+                </td>
+                </tr>
+                <tr>
+                <td>
+                <div className="buttonPay">
                 <Button color="primary" onClick={this.toggle}>Order</Button>
                 <Modal isOpen={this.state.open} toggle={this.toggle}>
                     <ModalHeader toggle={this.toggle} />
@@ -130,7 +144,11 @@ export default class Pay extends BasicPage<props, PayState> {
                         <Button color="danger" onClick={this.close}>Order</Button>
                     </ModalFooter>
                 </Modal>
+                </div>
+                </td>
+                </tr>
             </div>
+            </table>
         )
     }
 }
