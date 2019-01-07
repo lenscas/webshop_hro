@@ -11,7 +11,7 @@ export type renderable = {
 }
 type TableProps<T> = {
 	fetch : (pageNR : number) => Promise<T[]>
-	render : (line : T)=>renderable[]
+	render : (line : T, forceUpdate:()=>void)=>renderable[]
 	pageNumber: number
 	setUrlHandler : (param: string)=>void
 	head? : string[]
@@ -25,22 +25,26 @@ type TableProps<T> = {
 export type getDataParams = {
 	pageNum : number
 }
+export type dataState<T> = {
+	newPageNumber:number
+}
 
-export default class DataTable<T> extends BasicComponent<TableProps<T>> {
+export default class DataTable<T> extends BasicComponent<TableProps<T>,dataState<T>> {
 	constructor(propsy : TableProps<T>){
 		super(propsy)
 		this.state = {newPageNumber:this.props.pageNumber}
 		this.renderTable = this.renderTable.bind(this)
 		this.getData = this.getData.bind(this)
 		this.setPageNumberState = this.setPageNumberState.bind(this)
+		this.processRender = this.processRender.bind(this)
 	}
-	async getData(params : getDataParams){
-		const results = await this.props.fetch(params.pageNum)
-
-		const lines = results.map(
-			line=>this.props.render(line)
+	getData(params : getDataParams){
+		return this.props.fetch(params.pageNum)
+	}
+	processRender(data : T[],update:(data : getDataParams)=>Promise<void>){
+		return this.renderTable(
+			data.map((v)=>this.props.render(v,()=>update({pageNum:this.props.pageNumber})))
 		)
-		return lines
 	}
 	renderHead(){
 		if(this.props.head){
@@ -120,9 +124,9 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>> {
 		)
 	}
 	render(){
-		return <LoadSymbol<getDataParams,renderable[][]> 
+		return <LoadSymbol<getDataParams,T[]> 
 			params={{pageNum:this.props.pageNumber}}
-			toRender={this.renderTable}
+			toRender={this.processRender}
 			getData={this.getData}
 		/>
 	}

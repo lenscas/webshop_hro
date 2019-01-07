@@ -101,7 +101,8 @@ const productListConvert = (rawRes : scryRes):productList[]=>{
 			id:v.id,
 			name:v.name,
 			price:v.eur*100,
-			image: imageUri.normal
+			image: imageUri.normal,
+			stock : 0
 		}
 	})
 }
