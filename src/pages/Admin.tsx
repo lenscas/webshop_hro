@@ -24,11 +24,10 @@ export default class Admin extends BasicPage<props, { render: string } & registe
         }
     }
     async onSubmit(data : FormData<RegisterUserAsAdmin>){
-        console.log(data)
         await (
-           this.props.APIS.req.buildRequest("path",`api/admin/users/`)
+           this.props.APIS.req.buildRequest("path",`api/admin/users`)
            .buildRequest("method", "POST")
-           .buildRequest("body",{user: data.values})
+           .buildRequest("body",data.values)
            .buildRequest("converter",(t:APIReturn<boolean>)=>({success : t.success}))
        ).run<{success: boolean}>()
     }
@@ -91,7 +90,7 @@ export default class Admin extends BasicPage<props, { render: string } & registe
                     name : "role",
                     label : "Role",
                     placeholder: "Admin or User",
-                    id : "honorific"
+                    id : "role"
                 },
                 {
                     name : "Submit",
