@@ -104,7 +104,7 @@ export default class DataTable<T> extends BasicComponent<TableProps<T>,dataState
 		return (
 			<>
 				{buttons}
-				<Table striped={this.striped()} responsive={true} hover={this.hover()} borderless={this.props.borderLess !== undefined && this.props.borderLess} >
+				<Table striped={this.striped()} hover={this.hover()} borderless={this.props.borderLess !== undefined && this.props.borderLess} >
 					<thead>
 						<tr>
 							{this.renderHead()}
