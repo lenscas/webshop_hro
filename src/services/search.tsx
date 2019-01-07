@@ -23,6 +23,8 @@ type scryRes = {
 	}>
 }
 const buffer: {[key: string] : scryRes } = {}
+const remainder: {[key: string] : scryRes } = {}
+
 export const searchCommander = async (name:string):Promise<searchResult[]>=>{
 	if(name.length <= 3){
 		return []
@@ -34,7 +36,12 @@ export const searchCommander = async (name:string):Promise<searchResult[]>=>{
 export const searchName = (name : string)=>{
 	return async (pageNR : number ) => productListConvert(await searchAdvanced("name:" + name,pageNR))
 }
-export const searchAdvanced = async (params : string, pageNR : number = 1):Promise<scryRes>=>{
+
+export const searchColor = (color : string)=>{
+	return async (pageNR: number ) => productListConvert(await searchAdvanced("color:" +color,pageNR))
+}
+
+export const searchAdvanced = async (params : string , pageNR : number = 1):Promise<scryRes>=>{
 	if(params+pageNR in buffer){
 		return buffer[params+pageNR]
 	}
@@ -42,10 +49,36 @@ export const searchAdvanced = async (params : string, pageNR : number = 1):Promi
 	const url = new URL(searchUrl)
 	url.searchParams.append("order","cmc")
 	url.searchParams.append("q",params)
-	url.searchParams.append("page",pageNR.toString())
+	const scryFallPageNR = pageNR/8
+	if(!((scryFallPageNR-1)%8 === 0)){
+		url.searchParams.append("page",(scryFallPageNR + 1).toString())
+	}
+	else{
+		url.searchParams.append("page",(scryFallPageNR).toString())
+	}
+
+	console.log(url)
+	
 	const res = await fetch(url.toString())
 	const asJson = await res.json() as scryRes
-	buffer[params+pageNR] = asJson// asJson.data.map(v=>({id:v.id,name:v.name}))
+	if(remainder[params+pageNR]){
+		asJson.data.reverse().concat(remainder[params+pageNR].data.reverse()).reverse()
+	}
+
+	const maxPages = Math.floor((asJson.data.length /20))
+	for(let i=0;i<=maxPages;i++){
+		const copy =JSON.parse(JSON.stringify(asJson));
+		const list = asJson.data.slice((i)*20,(i+1)*20)
+		console.log(list)
+		if(list.length !== 20){
+			remainder[params+pageNR] = copy;
+			remainder[params+pageNR].data = list;
+		} else {
+			buffer[params+(pageNR+i)] = copy
+			buffer[params+(pageNR+i)].data = list
+		}
+	}
+	console.log(buffer)
 	return buffer[params+pageNR]//.filter((v,k)=>k<=10) || []
 }
 const commanderConvert = (rawRes : scryRes)=>{
