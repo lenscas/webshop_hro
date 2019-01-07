@@ -18,8 +18,7 @@ body, html {
 
   /* Full height */
  /* height: 100%;*/
-  min-height: 100vh;
-
+  min-height: 94vh;
   /* Center and scale the image nicely */
   background-position: center;
   /*background-repeat: no-repeat;*/
@@ -155,8 +154,9 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-dark.text-white.header {
 margin: auto;
 width: 5%;
 text-align: center;
-margin-top: 25%;
+/*margin-top: 25%;*/
 color: orange;
+height: 92vh;
 }
 #addDeck{
   height: calc(100% - 2.5rem);
@@ -181,5 +181,7 @@ color: orange;
 	text-decoration: none !important;
 }
 .bgTrans {
-  background-color: rgba(255,255,255,0.35)
+  background-color: rgba(255,255,255,0.35);
+  padding-top: 1vh;
+  padding-bottom: 1vh;
 }

@@ -43,8 +43,8 @@ export default class LoadSymbol<ParamT,ResT> extends BasicComponent<loadProps<Pa
 	}
 	render(){
 		if(!this.state.doneLoading){
-			return <div id="laadDiv">
-			<i className=" fas fa-spinner fa-spin fa-10x laden" />
+			return <div id="laadDiv" className="d-flex align-items-center">
+				<span className=" fas fa-spinner fa-spin fa-10x laden align-middle" />
 			</div>
 		}
 		const res = this.props.toRender(this.state.results,this.getData)
