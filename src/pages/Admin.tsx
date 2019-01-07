@@ -6,11 +6,11 @@ import { apiUrl } from 'src/config';
 import "../style/admin.css";
 import Button from "reactstrap/lib/Button";
 import { getCard } from "src/services/product";
+import Table from "reactstrap/lib/Table";
 
 
 
 export default class Admin extends BasicPage<props, { render: string }> {
-    
 
     tabClasses: { [key: string]: string } = { Hangfire: "nav-link active", Edit: "nav-link" , Users: "nav-link", Stock: "nav-link", Create: "nav-link", Delete: "nav-link"}
 
@@ -84,7 +84,38 @@ export default class Admin extends BasicPage<props, { render: string }> {
                         </ul>
                        </div>
             case "Stock":
-                return <p>Je krijgt meer producten</p>
+                return (<Table hover={true}>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Card ID</th>
+                            <th>Card Name</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>43</td>
+                            <td>Black Lotus</td>
+                            <td>36</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>9021</td>
+                            <td>Chandra, Bold Pyromancer</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>15238</td>
+                            <td>Mad Auntie</td>
+                            <td>3</td>
+                        </tr>
+                    </tbody>
+                </Table>
+            );
+        
             case "Create":
                return<div>
                         <div>

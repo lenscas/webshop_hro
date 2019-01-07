@@ -84,7 +84,7 @@ export class API {
 			config.headers = {}
 		}
 		config.mode = "cors"
-		config.credentials = "include"
+		//config.credentials = "include"
 		config.headers["Content-Type"] = "application/json"
 		if(this.token){
 			config.headers.Authorization = "Bearer " + this.token
