@@ -21,7 +21,9 @@ export class NameSearch extends BasicComponent<{},NameSearchProps>{
 	}
 	render(){
 		if(this.state && this.state.name){
-			return <Redirect to={"/search/"+this.state.name}/>
+			const name = this.state.name
+			this.easySetState({name: undefined})
+			return <Redirect to={"/search/"+name}/>
 		}
 		return (
 			<form className="search" onSubmit={this.onSubmit}>

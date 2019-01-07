@@ -72,7 +72,6 @@ export const searchAdvanced = async (params : string , pageNR : number = 1):Prom
 	for(let i=0;i<=maxPages;i++){
 		const copy =JSON.parse(JSON.stringify(asJson));
 		const list = asJson.data.slice((i)*20,(i+1)*20)
-		console.log(list)
 		if(list.length !== 20){
 			remainder[params+pageNR] = copy;
 			remainder[params+pageNR].data = list;
@@ -80,6 +79,10 @@ export const searchAdvanced = async (params : string , pageNR : number = 1):Prom
 			buffer[params+(pageNR+i)] = copy
 			buffer[params+(pageNR+i)].data = list
 		}
+	}
+
+	if (buffer[params+pageNR] === undefined){
+		buffer[params+pageNR] = remainder[params+pageNR]
 	}
 	console.log(buffer)
 	return buffer[params+pageNR]//.filter((v,k)=>k<=10) || []
