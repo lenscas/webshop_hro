@@ -2,12 +2,13 @@ import * as React from "react";
 import { props } from "src/types/BasicProps";
 import { apiUrl } from 'src/config';
 import "../style/admin.css";
-import { APIReturn } from "src/services/basics";
-import { RegisterUserAsAdmin } from "src/services/users";
-import Form, {InputField, FormData} from "../components/form";
-import { retTrue } from "src/funcs/lambdas";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+// import { APIReturn } from "src/services/basics";
+// import { RegisterUserAsAdmin } from "src/services/users";
+// import Form, {InputField, FormData} from "../components/form";
+// import { retTrue } from "src/funcs/lambdas";
+// import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import BasicComponent from "src/types/smallComponent";
+import { AdminUserCreate } from "src/components/adminUserCreate";
 
 type registerState = {
     success? : boolean | {success: boolean, message}
@@ -24,21 +25,7 @@ export default class Admin extends BasicComponent<props, { render: string } & re
             render: "Hangfire",
             modal: false
         };
-        this.AccountMade = this.AccountMade.bind(this);
-    }
-    async onSubmit(data : FormData<RegisterUserAsAdmin>){
-        await (
-           this.props.APIS.req.buildRequest("path",`api/admin/users`)
-           .buildRequest("method", "POST")
-           .buildRequest("body",data.values)
-           .buildRequest("converter",(t:APIReturn<boolean>)=>({success : t.success}))
-       ).run<{success: boolean}>()
-       this.AccountMade();
-    }
-    async AccountMade() {
-        this.easySetState({
-          modal: !this.state.modal,
-        });
+        // this.AccountMade = this.AccountMade.bind(this);
     }
 
     renderHangfire() {
@@ -49,85 +36,6 @@ export default class Admin extends BasicComponent<props, { render: string } & re
             </div>
         )
     }
-    renderCreate(){
-
-        if(this.state.success !== true){
-            const fields : InputField[]= [
-                {
-                    type:"text",
-                    validator:retTrue,
-                    name : "name",
-                    label : "Username",
-                    placeholder: "Username",
-                    id : "username",
-                },
-                {
-                    validator:retTrue,
-                    name : "email",
-                    label : "E-mail",
-                    placeholder: "name@example.com",
-                    id : "e-mail",
-                    type: "email"
-                },
-                {
-                    validator:retTrue,
-                    name : "password",
-                    label : "Password",
-                    placeholder: "Password",
-                    id : "password-checker",
-                    type: "password"
-                },
-                {
-                    validator:retTrue,
-                    name : "repeatPassword",
-                    label : "Repeat password",
-                    placeholder: "Repeat password",
-                    id : "password",
-                    type: "password"
-                },
-                {
-                    type:"text",
-                    validator:retTrue,
-                    name : "approach",
-                    label : "Approach",
-                    placeholder: "Mr. / Mrs.",
-                    id : "honorific"
-                },
-                {
-                    type:"text",
-                    validator:retTrue,
-                    name : "role",
-                    label : "Role",
-                    placeholder: "Admin or User",
-                    id : "role"
-                },
-                
-                {
-                    name : "Submit",
-                    placeholder: "Submit",
-                    id : "submit",
-                    type : "button"
-                }
-            ]
-            
-            const onSubmit =(data :FormData<RegisterUserAsAdmin> )=>this.onSubmit(data)
-            return <>
-      <div>
-        <Modal isOpen={this.state.modal} toggle={this.AccountMade}>
-          <ModalHeader toggle={this.AccountMade}>Account made</ModalHeader>
-          <ModalBody>
-            Account is made.
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.AccountMade}>OK</Button>
-          </ModalFooter>
-        </Modal>
-      </div>
-                <Form<RegisterUserAsAdmin> onSubmit={onSubmit} inputs={fields}/>
-            </>
-        }return "Oops, something went wrong, try again later"
-    }
-
     setTabOnClick(id: string) {
         return () => this.setTab(id)
     }
@@ -172,9 +80,9 @@ export default class Admin extends BasicComponent<props, { render: string } & re
             case "Hangfire":
                 return this.renderHangfire()
             case "Create":
-                return this.renderCreate()
+                return <AdminUserCreate APIS={this.props.APIS}/>
             case "Edit":
-                return this.renderCreate()
+                return <p>edit</p>
             default:
                 return <p>No page</p>
         }
