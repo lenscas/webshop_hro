@@ -5,7 +5,7 @@ import { decks, getDecks } from "src/services/Decks";
 import Row from "reactstrap/lib/Row";
 import Col from "reactstrap/lib/Col";
 import OnHoverNearMouse from "src/components/onHoverNearMouse";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import "../style/deckList.css"
 
 
@@ -98,6 +98,9 @@ export default class Decks extends BasicPage{
 		return getDecks(this.props.APIS.req)
 	}
 	render(){
+		if(!this.props.APIS.userId){
+			return <Redirect to="/"/>
+		}
 		return <LoadSymbol<loadParams, decks[]>
 			toRender = {this.renderList}
 			params = {{}}
