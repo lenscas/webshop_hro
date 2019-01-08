@@ -89,7 +89,7 @@ export default class Products extends BasicComponent<ProductProps,productState> 
         let addCartButton = <button onClick={this.modOnClick(card, 1)} className="btn btn-success float-right" id="buttonCart">Add to cart</button>
         if (card.price === 0){
             priceShow = <h3/>
-            addCartButton = <button className="btn btn-disabled float-right" id="buttonCart">Add to cart</button>
+            addCartButton = <button className="btn btn-success float-right" id="buttonCart" disabled={true}>Add to cart</button>
         }
         return (
             <>
