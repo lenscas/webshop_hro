@@ -48,12 +48,13 @@ type CardListState = {
     modal: boolean,
     pushedButton: "deck" | "buy"
     card: string,
+    filters: boolean
 }
 export default class CardList extends BasicPage<ProductListProps, CardListState> {
     constructor(propsy) {
         super(propsy)
         this.makeLink = this.makeLink.bind(this)
-        this.state = { deckList: undefined, modal: false, pushedButton: "buy", card: "" };
+        this.state = { deckList: undefined, modal: false, pushedButton: "buy", card: "", filters: true };
         this.toggle = this.toggle.bind(this)
     }
     modOnClick(cart: cartItem, mod: number) {
@@ -92,46 +93,46 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
         })
     }
     // tslint:disable-next-line:member-ordering
-    renderPrice = (priceToRender:number)=>{
-        if (!isNaN(priceToRender)){
-        return(
-            <span id="pPrice"><Price price={priceToRender}/></span>
-        )
+    renderPrice = (priceToRender: number) => {
+        if (!isNaN(priceToRender)) {
+            return (
+                <span id="pPrice"><Price price={priceToRender} /></span>
+            )
         }
-        else{
-            return(
+        else {
+            return (
                 <span id="pPrice">N/A</span>
             )
         }
     }
 
-    renderAddToCart = (product:splittedCard)=>{
-        if (("price" in product) && !isNaN(product.price)){
-            return(
-                <Button 
-                onClick={
-                    this.modOnClick(
-                        {
-                            id: product.id,
-                            name: product.name,
-                            price: "",
-                            priceNum: product.price,
-                            quantity: 0,
-                            priceTotal: "",
-                            priceTotalNum: 1
-                        }, 
-                        1
-                    )
-                } 
-                color="success"
-                    >To cart
+    renderAddToCart = (product: splittedCard) => {
+        if (("price" in product) && !isNaN(product.price)) {
+            return (
+                <Button
+                    onClick={
+                        this.modOnClick(
+                            {
+                                id: product.id,
+                                name: product.name,
+                                price: "",
+                                priceNum: product.price,
+                                quantity: 0,
+                                priceTotal: "",
+                                priceTotalNum: 1
+                            },
+                            1
+                        )
+                    }
+                    color="success"
+                >To cart
             </Button>)
         }
         else {
             return (
                 <Button
-                color="success" disabled={true}
-                    >To cart
+                    color="success" disabled={true}
+                >To cart
             </Button>)
         }
     }
@@ -167,28 +168,28 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
                             <div className="btn-group">
                                 {this.renderAddToCart(p)}
                                 {
-                                this.state.deckList &&
-                                this.state.deckList.length > 0 &&
-                                <SuperDropDown
-                                    caret={true}
-                                    items={
-                                        this.state.deckList.map<dropDownItems>(
-                                            v=>({
-                                                text : v.name,
-                                                onClick : async ()=>{
-                                                    if(await addCardToDeck(this.props.req, v.id,p.id)){
-                                                        this.easySetState({
-                                                            modal:true,
-                                                            pushedButton:"deck",
-                                                            card:p.name
-                                                        })
+                                    this.state.deckList &&
+                                    this.state.deckList.length > 0 &&
+                                    <SuperDropDown
+                                        caret={true}
+                                        items={
+                                            this.state.deckList.map<dropDownItems>(
+                                                v => ({
+                                                    text: v.name,
+                                                    onClick: async () => {
+                                                        if (await addCardToDeck(this.props.req, v.id, p.id)) {
+                                                            this.easySetState({
+                                                                modal: true,
+                                                                pushedButton: "deck",
+                                                                card: p.name
+                                                            })
+                                                        }
                                                     }
-                                                }
-                                            })
-                                        )
-                                    }
-                                    text= ""
-                                /> }
+                                                })
+                                            )
+                                        }
+                                        text=""
+                                    />}
                             </div>
                         </div>
                     </div>
@@ -212,6 +213,14 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
 
     render() {
         console.log(this.state.deckList)
+
+        const showFilters = () => {
+            this.setState({
+                ...this.state,
+                filters: !this.state.filters
+            })
+        }
+
         if (readLocalRaw("userId") && !this.state.deckList) {
 
             return <></>
@@ -260,10 +269,19 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
         return (
 
             <div id="cardList" className="row">
-                <div className="col-2" style={{padding:"0"}}>
-                   <Filters/>
-                </div>
-                <div className="col-10">
+            
+                {
+                    this.state.filters ?
+                        <div className="col-2" style={{ padding: "0" }}>
+                            <Filters showFilters={showFilters}/>
+                        </div>
+                    : <div>
+                        <Button color="primary" onClick={showFilters}>
+                            <i className="fas fa-angle-double-right"/>
+                        </Button>
+                    </div>
+                }
+                <div className="col">
                     <DataTable<splittedCard[]>
 
                         fetch={combined}

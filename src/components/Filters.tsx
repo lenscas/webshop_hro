@@ -12,7 +12,7 @@ import Button from "reactstrap/lib/Button";
 type filterState = {
     toSearch: undefined | string;
 }
-export default class Filters extends BasicComponent<{}, filterState>{
+export default class Filters extends BasicComponent<{showFilters: () => void}, filterState>{
     constructor(props) {
         super(props)
         this.setFilters = this.setFilters.bind(this)
@@ -68,7 +68,7 @@ export default class Filters extends BasicComponent<{}, filterState>{
                 <div className="card">
                     <div className="card-header bold filterHeader">
                         Filters
-                        <Button color="primary" size="md" className="moveFilterBar"> 
+                        <Button color="primary" size="md" className="moveFilterBar" onClick={this.props.showFilters}> 
                             <i className="fas fa-angle-double-left"/>
                         </Button>
                     </div>            
@@ -108,7 +108,7 @@ export default class Filters extends BasicComponent<{}, filterState>{
                                     <label className="form-check-label" htmlFor="colorB"><TextWithSymbols text="{B} Black" /></label>
                                 </div>
                                 <div className="form-check">
-                                    <input type="checkbox" className="form-check-input" name="colorR " id="colorR" />
+                                    <input type="checkbox" className="form-check-input" name="colorR" id="colorR" />
                                     <label className="form-check-label" htmlFor="colorR"><TextWithSymbols text="{R} Red" /></label>
                                 </div>
                                 <div className="form-check">
@@ -116,7 +116,7 @@ export default class Filters extends BasicComponent<{}, filterState>{
                                     <label className="form-check-label" htmlFor="colorG"><TextWithSymbols text="{G} Green" /></label>
                                 </div>
                                 <div className="form-check">
-                                    <input type="checkbox" className="form-check-input" name="colorC " id="colorC" />
+                                    <input type="checkbox" className="form-check-input" name="colorC" id="colorC" />
                                     <label className="form-check-label" htmlFor="colorC"><TextWithSymbols text="{C} Colorless" /></label>
                                 </div>
                             </FormGroup>
