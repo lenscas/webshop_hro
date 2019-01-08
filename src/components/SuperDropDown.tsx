@@ -42,7 +42,7 @@ export default class SuperDropDown extends BasicComponent<dropDownProps,dropdown
 			if("divider" in item){
 				return <DropdownItem divider={true}/>
 			} else {
-				return <DropdownItem 
+				return <DropdownItem className="handOnHover"
 					header={defaultTrue(item.header)}
 					disabled={defaultTrue(item.disabled)}
 					onClick={item.onClick}

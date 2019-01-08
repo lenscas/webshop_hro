@@ -19,23 +19,20 @@ type appState = {
 	token?: string
 	refreshToken?: string
 	color: string
+	ready: boolean
 }
 
 class App extends React.Component<{}, appState>{
 	constructor(propsy: props) {
 		super(propsy)
-		this.state = { alerts: [] , color: "normal"}
+		this.state = { alerts: [] , color: "normal", ready: false}
 	}
 
 	componentDidMount() {
 		const userId = readLocalRaw("userId")
-		if(userId !== undefined) {
-			this.setState({...this.state, userId})
-		}
 		const role = readLocalRaw("role")
-		if(role !== undefined) {
-			this.setState({...this.state, role})
-		}
+		
+		this.setState({...this.state, userId, role, ready:true})
 	}
 
 	public clearAlerts() {
@@ -61,6 +58,8 @@ class App extends React.Component<{}, appState>{
 		}
 	}
 	public render() {
+		if (!this.state.ready){return <></>}
+
 		const maybeToken = this.state.token || readLocalRaw("token")
 		const api = new API((token: string, refreshToken: string) => this.setToken(token, refreshToken), maybeToken);
 		api.setOnAll(data => this.setState((st => ({ ...st, refreshToken: data.refreshToken, userId: data.userId, shoppingCartId: data.cartId, role: data.role }))))

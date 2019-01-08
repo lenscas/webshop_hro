@@ -35,6 +35,7 @@ type DeckListState = {
 	filterLands : boolean
 	selectedCard? : string
 	deletedCards : number
+	searchTerm? : string
 }
 export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 	constructor(propsy){
@@ -79,7 +80,7 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 			onClick = ()=>this.easySetState({sortOn:"cost"})
 			text= "Cost"
 		}
-		return <Button color="success" onClick={onClick}>{text}</Button>
+		return <Button color="success" onClick={onClick} className="alignRight">{text}</Button>
 	}
 	renderFilterButton(){
 		let onClick = ()=>this.easySetState({filterLands:false})
@@ -139,6 +140,14 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 			"G":5
 		}
 		return colors.split("").map(v=>colorOrder[v]).sort()
+	}
+	onSubmit(e : any){
+		e.preventDefault()
+		const data = new FormData(e.target).get("find")
+		if(typeof data ==="string"){
+			this.easySetState({searchTerm: data})
+		}
+		
 	}
 	renderList(list : deckList){
 		let filter : (v:cardInDeck)=>boolean = retTrue
@@ -206,14 +215,28 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 					<Col xs={2}>
 						<h1>{list.commander.name}</h1>
 						<img className="img-fluid" src={list.commander.image}/>
-					</Col>
-					<Col xs={1}/>
-					<Col>
+						<Row className="justify-content-center">
+						<Col md="7">
 						<div className="btn-group">
 							{this.renderBuyButton()}
 							{this.renderSortButton()}
 						</div>
+						</Col>
+						</Row>
 						{this.renderFilterButton()}
+					</Col>
+					<Col xs={1}/>
+					<Col xs={7}>
+					
+					<Row className="justify-content-center" style = {{"marginTop" : "8em"}}>
+					<Col md="4">
+					<p>Type the name of a card you wish to add</p>
+					<form className="find" onSubmit={this.onSubmit}>
+						<input name="find" type="text" placeholder="Find"/>
+					</form>
+					</Col>
+					</Row>
+					
 					</Col>
 				</Row>
 				<Row>
