@@ -94,15 +94,12 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
     renderPrice = (priceToRender:number)=>{
         if (!isNaN(priceToRender)){
         return(
-        <div className="col-6">
             <span id="pPrice"><Price price={priceToRender}/></span>
-        </div>)
+        )
         }
         else{
             return(
-                <div className="col-6">
-                    <span id="pPrice">N/A</span>
-                </div>
+                <span id="pPrice">N/A</span>
             )
         }
     }
@@ -126,14 +123,14 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                     )
                 } 
                 color="success"
-                    >Add to cart
+                    >To cart
             </Button>)
         }
         else{
             return(
                 <Button
                 color="success" disabled={true}
-                    >Add to cart
+                    >To cart
             </Button>)
         }
     }
@@ -162,36 +159,38 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                 key: p.id + "price",
                 element: (
                     <div className="row pt-2">
+                        <div className="col">
                             {this.renderPrice(p.price)}
-                            <div className="col-6">
-                                <div className="btn-group">
-                                    {this.renderAddToCart(p)}
-                                    {
-                                    this.state.deckList &&
-                                    this.state.deckList.length > 0 &&
-                                    <SuperDropDown
-                                        caret={true}
-                                        items={
-                                            this.state.deckList.map<dropDownItems>(
-                                                v=>({
-                                                    text : v.name,
-                                                    onClick : async ()=>{
-                                                        if(await addCardToDeck(this.props.req, v.id,p.id)){
-                                                            this.easySetState({
-                                                                modal:true,
-                                                                pushedButton:"deck",
-                                                                card:p.name
-                                                            })
-                                                        }
+                        </div>
+                        <div className="col">
+                            <div className="btn-group">
+                                {this.renderAddToCart(p)}
+                                {
+                                this.state.deckList &&
+                                this.state.deckList.length > 0 &&
+                                <SuperDropDown
+                                    caret={true}
+                                    items={
+                                        this.state.deckList.map<dropDownItems>(
+                                            v=>({
+                                                text : v.name,
+                                                onClick : async ()=>{
+                                                    if(await addCardToDeck(this.props.req, v.id,p.id)){
+                                                        this.easySetState({
+                                                            modal:true,
+                                                            pushedButton:"deck",
+                                                            card:p.name
+                                                        })
                                                     }
-                                                })
-                                            )
-                                        }
-                                        text= ""
-                                    /> }
-                                </div>
+                                                }
+                                            })
+                                        )
+                                    }
+                                    text= ""
+                                /> }
                             </div>
                         </div>
+                    </div>
                 )
             }
         }
