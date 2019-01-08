@@ -429,52 +429,6 @@ export default class UserPage extends BasicPage<props, { success?: boolean | { s
                         {changeDetailsForm}
                     </div>
 
-                    {/* <br/>
-                    <h5>Add Address</h5>
-                    <Button className = {addAddressButtonShow} onClick = {this.setEditOnClick("addAddress")}>Edit</Button>
-                    <Form>
-                        <FormGroup className = {this.editClasses.addAddress}>
-                            <Label for="street">Street</Label>
-                            <Input name="street" id="street" placeholder = "e.g. Lelielaan" />
-                        </FormGroup>
-                        <FormGroup className = {this.editClasses.addAddress}>
-                            <Label for="number">Number</Label>
-                            <Input name="number" id="number" placeholder = "e.g. 135" />
-                        </FormGroup>
-                        <FormGroup className = {this.editClasses.addAddress}>
-                            <Label for="zipCode">Zip Code</Label>
-                            <Input name="zipCode" id="zipCode" placeholder = "e.g. 9753AB" />
-                        </FormGroup>
-                        <FormGroup className = {this.editClasses.addAddress}>
-                            <Label for="city">City</Label>
-                            <Input name="city" id="city" placeholder = "e.g. Zwammerdam" />
-                        </FormGroup>
-
-                        <Button className = {this.editClasses.addAddress}>Add</Button>
-                    </Form>
-                    <br/>
-                    <h5>Change Password</h5>
-                    <Button className = {changePasswordButtonShow} onClick = {this.setEditOnClick("changePassword")}>Edit</Button>
-                    <Form>
-                        <FormGroup className = {this.editClasses.changePassword}>
-                            <Label for="password">Password</Label>
-                            <Input type="password" name="newPassword" id="newPassword" placeholder = "Please input a strong password" />
-                        </FormGroup>
-
-                        <FormGroup className = {this.editClasses.changePassword}>
-                            <Label for="password">Password</Label>
-                            <Input type="password" name="repeatPassword" id="repeatPassword" placeholder = "Please repeat your password" />
-                        </FormGroup>
-
-                        <FormGroup className = {this.editClasses.changePassword}>
-                            <Label for="password">Password</Label>
-                            <Input type="password" name="password" id="password" placeholder = "Please input your current password" />
-                        </FormGroup>
-
-                        <Button className = {this.editClasses.changePassword}>Submit</Button>
-                    </Form>
-                    <br/> */}
-
                     <h5>Remove All Addresses</h5>
                     <Button>Remove</Button>
                 </div>

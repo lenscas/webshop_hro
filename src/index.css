@@ -67,6 +67,12 @@ body, html {
   font-size: 1.25em;
   font-family: "verdana";
 }
+
+.home {
+  font-size: 1.25em;
+  font-family: "verdana";
+}
+
 .transparentNav {
   border-width: 0px;
     -webkit-box-shadow: 0px 0px;

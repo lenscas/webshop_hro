@@ -12,6 +12,7 @@ import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalBody from "reactstrap/lib/ModalBody";
 import ModalFooter from "reactstrap/lib/ModalFooter";
 import "../style/pay.css";
+import AddAddress from "src/components/AddAddress";
 
 type PayState = {
     payMethods: string[],
@@ -19,7 +20,8 @@ type PayState = {
     addresses: Address[] | undefined
     addres?: Address,
     orderd: boolean,
-    open: boolean
+    open: boolean,
+    update: boolean
 }
 
 export default class Pay extends BasicPage<props, PayState> {
@@ -28,9 +30,10 @@ export default class Pay extends BasicPage<props, PayState> {
         this.state = {
             payMethods: ["Ideal", "Mastercard", "Visa", "American Express", "PayPal", "gift card"],
             method: "pay",
-            addresses: undefined,
+            addresses: [],
             orderd: false,
-            open: false
+            open: false,
+            update: false
         }
     }
 
@@ -39,11 +42,28 @@ export default class Pay extends BasicPage<props, PayState> {
         return addresses
     }
 
-    componentDidMount = async () => {
+    componentDidUpdate = async () => {
         this.setState({
             ...this.state,
             addresses: await this.getAddresses()
         })
+        if (this.state.addresses && this.state.addresses.length > 0 && typeof this.state.addresses !== 'string') {
+            this.state.addresses.map(v => {
+                if (v.main) {
+                    this.setState({
+                        ...this.state,
+                        addres: v
+                    })
+                }
+            })
+            if (!this.state.addres) {
+                this.setState({
+                    ...this.state,
+                    addres: this.state.addresses ? this.state.addresses[0] : undefined
+                })
+            }
+        }
+
     }
 
     toggle = () => {
@@ -79,6 +99,13 @@ export default class Pay extends BasicPage<props, PayState> {
 
     }
 
+    update = () => {
+        this.setState({
+            ...this.state,
+            update: !this.state.update
+        })
+    }
+
     render = () => {
         if (!this.state.addresses) {
             return <div>loading...</div>
@@ -112,19 +139,32 @@ export default class Pay extends BasicPage<props, PayState> {
                     <tr>
                         <td>
                             <div className="adres">
-                                <SuperDropDown
-                                    caret={true}
-                                    items={this.state.addresses.map<dropDownItems>(
-                                        v => ({
-                                            text: v.street + " " + v.number,
-                                            onClick: async () => {
-                                                this.setState({ ...this.state, addres: v })
-                                            }
-                                        })
-                                    )
+                                {this.state.addresses && this.state.addresses.length > 0 && typeof this.state.addresses !== 'string' ?
+                                    <SuperDropDown
+                                        caret={true}
+                                        items={this.state.addresses.map<dropDownItems>(
+                                            v => ({
+                                                text: v.street + " " + v.number,
+                                                onClick: async () => {
+                                                    this.setState({ ...this.state, addres: v })
+                                                }
+                                            })
+                                        )
+                                        }
+                                        text={this.state.addres ? this.state.addres.street + " " + this.state.addres.number : "Chooice address"}
+                                    />
+                                    : <AddAddress APIS={this.props.APIS} succes={this.update} />
+                                }
+                                <div>
+                                    {
+                                        this.state.addres ?
+                                            <>
+                                                <span>{this.state.addres.street} {this.state.addres.number}</span><br />
+                                                <span>{this.state.addres.zipCode} {this.state.addres.city}</span>
+                                            </>
+                                            : null
                                     }
-                                    text={this.state.addres ? this.state.addres.street + " " + this.state.addres.number : "Choose address"}
-                                />
+                                </div>
                             </div>
                         </td>
                     </tr>
