@@ -67,6 +67,12 @@ body, html {
   font-size: 1.25em;
   font-family: "verdana";
 }
+
+.home {
+  font-size: 1.25em;
+  font-family: "verdana";
+}
+
 .transparentNav {
   border-width: 0px;
     -webkit-box-shadow: 0px 0px;
@@ -181,7 +187,7 @@ height: 92vh;
 	text-decoration: none !important;
 }
 .bgTrans {
-  background-color: rgba(255,255,255,0.35);
+  background-color: rgba(255,255,255,0.55);
   padding-top: 1vh;
   padding-bottom: 1vh;
 }
@@ -192,4 +198,13 @@ height: 92vh;
 .container-fluid {
   padding-right: 0px !important;
   padding-left: 0px !important;
+}
+.bold{
+  font-weight: bold;
+}
+.filterHeader{
+  font-size: 24px;
+}
+.moveFilterBar{
+  float: right;
 }

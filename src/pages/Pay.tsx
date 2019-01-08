@@ -12,14 +12,18 @@ import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalBody from "reactstrap/lib/ModalBody";
 import ModalFooter from "reactstrap/lib/ModalFooter";
 import "../style/pay.css";
+import AddAddress from "src/components/AddAddress";
+import Input from "reactstrap/lib/Input";
 
 type PayState = {
     payMethods: string[],
     method: string,
     addresses: Address[] | undefined
     addres?: Address,
+    addresIndex?: number
     orderd: boolean,
-    open: boolean
+    open: boolean,
+    update: boolean
 }
 
 export default class Pay extends BasicPage<props, PayState> {
@@ -28,9 +32,10 @@ export default class Pay extends BasicPage<props, PayState> {
         this.state = {
             payMethods: ["Ideal", "Mastercard", "Visa", "American Express", "PayPal", "gift card"],
             method: "pay",
-            addresses: undefined,
+            addresses: [],
             orderd: false,
-            open: false
+            open: false,
+            update: false
         }
     }
 
@@ -44,7 +49,27 @@ export default class Pay extends BasicPage<props, PayState> {
             ...this.state,
             addresses: await this.getAddresses()
         })
+        if (this.state.addresses && this.state.addresses.length > 0 && typeof this.state.addresses !== 'string') {
+            this.state.addresses.map((v, y) => {
+                if (v.main) {
+                    this.setState({
+                        ...this.state,
+                        addres: v,
+                        addresIndex: y
+                    })
+                }
+            })
+            if (!this.state.addres) {
+                this.setState({
+                    ...this.state,
+                    addres: this.state.addresses ? this.state.addresses[0] : undefined,
+                    addresIndex: this.state.addresses ? 0 : undefined
+                })
+            }
+        }
+
     }
+
 
     toggle = () => {
         this.setState({
@@ -79,7 +104,25 @@ export default class Pay extends BasicPage<props, PayState> {
 
     }
 
+    update = async() => {
+        this.setState({
+            ...this.state,
+            update: !this.state.update,
+            addresses: await this.getAddresses()
+        })
+    }
+
     render = () => {
+
+        const setAddress = (e) => {
+            const index = e.target.options!.selectedIndex
+            this.setState({
+                ...this.state,
+                addres: this.state.addresses![index],
+                addresIndex: index
+            })
+        } 
+
         if (!this.state.addresses) {
             return <div>loading...</div>
         }
@@ -112,19 +155,26 @@ export default class Pay extends BasicPage<props, PayState> {
                     <tr>
                         <td>
                             <div className="adres">
-                                <SuperDropDown
-                                    caret={true}
-                                    items={this.state.addresses.map<dropDownItems>(
-                                        v => ({
-                                            text: v.street + " " + v.number,
-                                            onClick: async () => {
-                                                this.setState({ ...this.state, addres: v })
-                                            }
-                                        })
-                                    )
+                                {this.state.addresses && this.state.addresses.length > 0 && typeof this.state.addresses !== 'string' ?
+                                    <Input type="select" name="select" id="exampleSelect" onInput={setAddress} value={this.state.addres ? this.state.addres.street + " " +this.state.addres.number : ""}>
+                                        {
+                                            this.state.addresses.map((v, y) => {
+                                                return <option key={v.id}>{ v.street + " " + v.number }</option>
+                                            })
+                                        }
+                                    </Input>
+                                    : <AddAddress APIS={this.props.APIS} succes={this.update} />
+                                }
+                                <div>
+                                    {
+                                        this.state.addres ?
+                                            <>
+                                                <span>{this.state.addres.street} {this.state.addres.number}</span><br />
+                                                <span>{this.state.addres.zipCode} {this.state.addres.city}</span>
+                                            </>
+                                            : null
                                     }
-                                    text={this.state.addres ? this.state.addres.street + " " + this.state.addres.number : "Choose address"}
-                                />
+                                </div>
                             </div>
                         </td>
                     </tr>

@@ -29,6 +29,9 @@ export type InputField = BasicInputField & (
 	{
 		type: "textarea"
 		validator: formValidation<string>
+	} | {
+		type: "select"
+		options: string[]
 	}
 )
 
@@ -147,6 +150,17 @@ export default class Form<T> extends BasicComponent<FormProps<T>,FormState<T>> {
 					</Button>
 				)
 			break;
+			case "select":
+					inputElement = (
+						<Input type="select" name={input.name} id={input.id}>
+							{
+								input.options.map((v,y) => {
+									return <option key={y} >{v}</option>
+								})
+							}
+						</Input>
+					)
+			break
 			default:
 				const props : {
 					key: string,
@@ -219,6 +233,7 @@ export default class Form<T> extends BasicComponent<FormProps<T>,FormState<T>> {
 				return;
 			}
 			const values : Partial<T> = {}
+			console.log(this.state.values)
 			Object.keys(this.state.values).forEach(key => values[key] = this.state.values[key].value)
 			const formData : FormData<T> = {
 				values : values as T,
