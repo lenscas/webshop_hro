@@ -26,7 +26,7 @@ export default class Pay extends BasicPage<props, PayState> {
     constructor(propsy) {
         super(propsy)
         this.state = {
-            payMethods: ["Ideal", "Mastercard", "Visa" , "American Express", "PayPal","gift card"],
+            payMethods: ["Ideal", "Mastercard", "Visa", "American Express", "PayPal", "gift card"],
             method: "pay",
             addresses: undefined,
             orderd: false,
@@ -56,24 +56,22 @@ export default class Pay extends BasicPage<props, PayState> {
     order = async () => {
 
         const shoppingCardId = readLocal<number>("shoppingCartId")
-        if(shoppingCardId) {
+        if (shoppingCardId) {
             const res = await (
-                this.props.APIS.req.buildRequest("path","api/order")
-                .buildRequest("method", "POST")
-                .buildRequest("body",{shoppingCardId, PayMethod: this.state.method, Address: this.state.addres})
-                .buildRequest("converter",(t:APIReturn<boolean>)=>({success : t.success}))
-            ).run<{success: boolean}>()
-            console.log(res)
-            if(res && res.success) {
-                console.log('test');
+                this.props.APIS.req.buildRequest("path", "api/order")
+                    .buildRequest("method", "POST")
+                    .buildRequest("body", { shoppingCardId, PayMethod: this.state.method, Address: this.state.addres })
+                    .buildRequest("converter", (t: APIReturn<boolean>) => ({ success: t.success }))
+            ).run<{ success: boolean }>()
+            if (res && res.success) {
                 this.setState({
                     ...this.state,
                     orderd: true
                 })
-                
+
             }
         }
-        
+
     }
     close = () => {
         this.order();
@@ -85,69 +83,68 @@ export default class Pay extends BasicPage<props, PayState> {
         if (!this.state.addresses) {
             return <div>loading...</div>
         }
-        if(this.state.orderd) {
+        if (this.state.orderd) {
             return <Redirect to="/" />
         }
         return (
-            <table>
-
-            <div className="payment">
-            <tr>
-            <td>
-                <div className="pay">
-                    <SuperDropDown
-                        caret={true}
-                        items={this.state.payMethods.map<dropDownItems>(
-                            v => ({
-                                text: v,
-                                onClick: async () => {
-                                    this.setState({ ...this.state, method: v })
-                                }
-                            })
-                        )
-                        }
-                        text={this.state.method}
-                    />
-                    <img  className="logoPay" src="http://www.stopmsnow.nl/wp-content/uploads/2016/11/Mollie-betalingen-1.jpg"/>
-            </div>
-            </td>
-            </tr>
-            <tr>
-            <td>
-                <div className="adres">
-                    <SuperDropDown
-                        caret={true}
-                        items={this.state.addresses.map<dropDownItems>(
-                            v => ({
-                                text: v.street + " " + v.number,
-                                onClick: async () => {
-                                    this.setState({ ...this.state, addres: v })
-                                }
-                            })
-                        )
-                        }
-                        text={this.state.addres ? this.state.addres.street + " " +this.state.addres.number : "Choose address"}
-                    />
-                </div>
-                </td>
-                </tr>
-                <tr>
-                <td>
-                <div className="buttonPay">
-                <Button color="primary" onClick={this.toggle}>Order</Button>
-                <Modal isOpen={this.state.open} toggle={this.toggle}>
-                    <ModalHeader toggle={this.toggle} />
-                    <ModalBody>
-                        are you sure you want to Order?
-					</ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" onClick={this.close}>Order</Button>
-                    </ModalFooter>
-                </Modal>
-                </div>
-                </td>
-                </tr>
-            </div>
+            <table className="paymentTable">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div className="pay">
+                                <SuperDropDown
+                                    caret={true}
+                                    items={this.state.payMethods.map<dropDownItems>(
+                                        v => ({
+                                            text: v,
+                                            onClick: async () => {
+                                                this.setState({ ...this.state, method: v })
+                                            }
+                                        })
+                                    )
+                                    }
+                                    text={this.state.method}
+                                />
+                                <img className="logoPay" src="http://www.stopmsnow.nl/wp-content/uploads/2016/11/Mollie-betalingen-1.jpg" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div className="adres">
+                                <SuperDropDown
+                                    caret={true}
+                                    items={this.state.addresses.map<dropDownItems>(
+                                        v => ({
+                                            text: v.street + " " + v.number,
+                                            onClick: async () => {
+                                                this.setState({ ...this.state, addres: v })
+                                            }
+                                        })
+                                    )
+                                    }
+                                    text={this.state.addres ? this.state.addres.street + " " + this.state.addres.number : "Choose address"}
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div className="buttonPay">
+                                <Button color="primary" onClick={this.toggle}>Order</Button>
+                                <Modal isOpen={this.state.open} toggle={this.toggle}>
+                                    <ModalHeader toggle={this.toggle} />
+                                    <ModalBody>
+                                        are you sure you want to Order?
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button color="danger" onClick={this.close}>Order</Button>
+                                    </ModalFooter>
+                                </Modal>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         )
     }

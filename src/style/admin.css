@@ -14,9 +14,11 @@
 .mainAdmin {
     padding: 5px;
 }
+/*
 table, th, td {
     border: 1px solid black;
 }
+*/
 th{
     padding: 10px;
 }
