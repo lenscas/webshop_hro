@@ -11,5 +11,33 @@
     height: 25px;
     text-align: center;
 }
-input.qtyplus { width:25px; height:25px;}
-input.qtyminus { width:25px; height:25px;}
+input.qtyplus { 
+    width:25px; 
+    height:25px;
+    position: relative;
+    left: 10px;
+    top: 3px;
+}
+input.qtyminus { 
+    width:25px; 
+    height:25px;
+    position: relative;
+    right: 10px;
+    top: 3px;
+}
+.cartPage{
+    margin-top: 150px;
+}
+th.koppen {
+    font-family: "magic";
+    font-size: 20px;
+}
+#orderKnop{
+    float: right;
+    width: 11%;
+    position: relative;
+    right: 30px;
+}
+#cartBold{
+    font-weight: bolder;
+}

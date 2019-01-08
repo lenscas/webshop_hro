@@ -114,10 +114,10 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
                 quantMod(item,event.target.value,this.props.APIS.req,update)
               }
 
-            return <tr key={item.id} className="align">
+            return <tr key={item.id} id="cartBold" className="align">
                 <td>{item.name}</td>
                 <td>{item.price}</td>
-                <td key={item.quantity}>
+                <td key={item.quantity} className="plusMinus">
                         <input type='button' value='-' className='qtyminus' onClick={this.modOnClick(item, item.quantity + -1, update)} />
                         <input type='text' name='quantity' value={item.quantity} className='qty' onChange={handleOnChange} />
                         <input type='button' value='+' className='qtyplus' onClick={this.modOnClick(item, item.quantity + 1, update)} />
@@ -131,15 +131,15 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
         )
 
         return (
-            <div>
+            <div className="cartPage">
                 <Table>
                     <thead>
                         <tr className="align">
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Amount</th>
-                            <th>Total Price</th>
-                            <th>Remove</th>
+                            <th className="koppen">Name</th>
+                            <th className="koppen">Price</th>
+                            <th className="koppen">Amount</th>
+                            <th className="koppen">Total Price</th>
+                            <th className="koppen">Remove</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -153,7 +153,7 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
                         </tr>
                     </tbody>
                 </Table>
-                <button onClick={this.orderOnClick(this.props.APIS.req, update)}>Order</button>
+                <button id="orderKnop" className="btn btn-primary" onClick={this.orderOnClick(this.props.APIS.req, update)}>Proceed to checkout</button>
             </div>
         )
     }
