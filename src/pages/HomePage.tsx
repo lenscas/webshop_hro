@@ -16,7 +16,7 @@ export default class Home extends BasicPage<test> {
     renderCardSelector(name : string){
         const onClick=()=>(void this.props.history.push("/search/color:"+name) )|| this.props.APIS.setBackground(name)
         return (
-            <span onClick={onClick} key={name} className={"col accordionItem "+ name}>
+            <span onClick={onClick} key={name} className={"col handOnHover accordionItem "+ name}>
                 <div>
                     <span>
                         <h2 className="TitleCard">{name}</h2>

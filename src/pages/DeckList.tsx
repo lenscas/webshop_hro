@@ -109,7 +109,7 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 			const name = ()=><span key={extraId+"name"+key}>{card.name}</span>
 			return(
 				<>
-					<td onClick={onClick} key={extraId+card.name+"name"+key}>
+					<td onClick={onClick} key={extraId+card.name+"name"+key} className={"handOnHover"}>
 						<OnHoverNearMouse
 							onHover={onHover}
 							alwaysShow={name}

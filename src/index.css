@@ -185,3 +185,6 @@ height: 92vh;
   padding-top: 1vh;
   padding-bottom: 1vh;
 }
+.handOnHover{
+  cursor: pointer;
+}

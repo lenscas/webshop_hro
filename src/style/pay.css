@@ -13,10 +13,11 @@
     padding: 15px;
     text-align: center;
 }
-td, tr, th{
+table.paymentTable td, table.paymentTable tr, table.paymentTable th{
     border: 1px groove white;
     text-align: left;
 }
+
 .logoPay{
     width: 56%;
     padding-left: 18px;
