@@ -9,7 +9,7 @@ import { props } from "src/types/BasicProps";
 import Button from "reactstrap/lib/Button";
 import OnHoverNearMouse from "src/components/onHoverNearMouse";
 import "../style/deckList.css"
-import { match} from "react-router";
+import { match, Redirect} from "react-router";
 import { retTrue } from "src/funcs/lambdas";
 import Label from "reactstrap/lib/Label";
 import Input from "reactstrap/lib/Input";
@@ -242,8 +242,7 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 	}
 	render(){
 		if(!this.props.APIS.userId){
-			this.props.APIS.setUserId("1");
-			return null;
+			return <Redirect to="/" />
 		}
 		const getData = (params : LoadParams)=>getDeckList(this.props.APIS.req,params.deckId)
 		return (
