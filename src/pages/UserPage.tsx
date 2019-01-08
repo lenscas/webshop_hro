@@ -334,18 +334,10 @@ export default class UserPage extends BasicPage<props, { success?: boolean | { s
         }
         if (id === "Edit") {
             let changeDetailsButtonShow = "hidden"
-            //let addAddressButtonShow = "hidden"
-            //let changePasswordButtonShow = "hidden"
 
             if (this.editClasses.changeDetails === "hidden") {
                 changeDetailsButtonShow = "visible"
             }
-            // if (this.editClasses.addAddress === "hidden"){
-            //     addAddressButtonShow = "visible"
-            // }
-            // if (this.editClasses.changePassword === "hidden"){
-            //     changePasswordButtonShow = "visible"
-            // }
 
             let warnings = <></>
             let changeDetailsForm = <></>
