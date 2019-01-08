@@ -32,6 +32,20 @@ export default class Header extends BasicPage<props, { isOpen: boolean }> {
 		this.props.APIS.setUserId();
 		return logOut(this.props.APIS.req);
 	}
+	renderCheckAdmin() {
+		if (this.props.APIS.role !== "Admin" || !(this.props.APIS.userId)) {
+			return (
+				<NavItem>
+					<NavLink tag={Link} to="/cart">
+						<img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png" />
+					</NavLink>
+				</NavItem>
+			)
+		}
+		return (
+			<></>
+		)
+	}
 	renderLoggedInLinks() {
 		if (this.props.APIS.userId) {
 			if (this.props.APIS.role === "Admin") {
@@ -51,6 +65,9 @@ export default class Header extends BasicPage<props, { isOpen: boolean }> {
 						</NavItem>
 						<NavItem>
 							<NavLink tag={Link} to="/contact" className="moveDown">Contact us</NavLink>
+						</NavItem>
+						<NavItem>
+							<NavLink tag={Link} to="/user" className="moveDown">User</NavLink>
 						</NavItem>
 					</>
 				)
@@ -79,9 +96,7 @@ export default class Header extends BasicPage<props, { isOpen: boolean }> {
 			)
 		}
 		return <>
-			<NavItem>
-			<NavLink tag={Link} to="/user" className="moveDown">User</NavLink>
-			</NavItem>
+
 			<NavItem>
 				<NavLink onClick={this.logOut} tag={Link} to="/" className="moveDown">Logout</NavLink>
 			</NavItem>
@@ -111,11 +126,7 @@ export default class Header extends BasicPage<props, { isOpen: boolean }> {
 							<NavItem className="moveDown">
 								<NameSearch />
 							</NavItem>
-							<NavItem>
-								<NavLink tag={Link} to="/cart">
-									<img className="cart" src="https://www.supermarktscanner.nl/img/cart1.png" />
-								</NavLink>
-							</NavItem>
+							{this.renderCheckAdmin()}
 
 						</Nav>
 					</Collapse>
