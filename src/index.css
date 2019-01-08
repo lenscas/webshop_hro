@@ -194,6 +194,11 @@ height: 92vh;
 .handOnHover{
   cursor: pointer;
 }
+
+.container-fluid {
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+}
 .bold{
   font-weight: bold;
 }

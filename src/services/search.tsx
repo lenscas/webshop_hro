@@ -33,6 +33,13 @@ export const searchCommander = async (name:string):Promise<searchResult[]>=>{
 	return commanderConvert(rawRes)
 }
 
+export const searchForDeck = (name : string)=>{
+	if(name.length <= 3){
+		return async (pageNR : number ) => []
+	}
+	return async (pageNR : number ) => productListConvert(await searchAdvanced("name:" + name))
+}
+
 export const searchName = (name : string)=>{
 	if (name.startsWith("color:")){
 		return searchColor(name.slice(6))
@@ -65,20 +72,25 @@ export const searchAdvanced = async (params : string , pageNR : number = 1):Prom
 	
 	const res = await fetch(url.toString())
 	const asJson = await res.json() as scryRes
-	if(remainder[params+pageNR]){
+	if(remainder[params+pageNR] && asJson.data !== undefined){
 		asJson.data.reverse().concat(remainder[params+pageNR].data.reverse()).reverse()
 	}
-
-	const maxPages = Math.floor((asJson.data.length /20))
+	let maxPages : number = 0
+	if (asJson.data !== undefined){
+		maxPages = Math.floor((asJson.data.length /20))
+	}
 	for(let i=0;i<=maxPages;i++){
 		const copy =JSON.parse(JSON.stringify(asJson));
-		const list = asJson.data.slice((i)*20,(i+1)*20)
-		if(list.length !== 20){
+		const listContainer : scryRes = {data: []}
+		if (asJson.data !== undefined){
+		listContainer.data = asJson.data.slice((i)*20,(i+1)*20)
+		}
+		if(listContainer.data.length !== 20){
 			remainder[params+pageNR] = copy;
-			remainder[params+pageNR].data = list;
+			remainder[params+pageNR].data = listContainer.data;
 		} else {
 			buffer[params+(pageNR+i)] = copy
-			buffer[params+(pageNR+i)].data = list
+			buffer[params+(pageNR+i)].data = listContainer.data
 		}
 	}
 
