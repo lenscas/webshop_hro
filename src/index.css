@@ -188,3 +188,12 @@ height: 92vh;
 .handOnHover{
   cursor: pointer;
 }
+.bold{
+  font-weight: bold;
+}
+.filterHeader{
+  font-size: 24px;
+}
+.moveFilterBar{
+  float: right;
+}

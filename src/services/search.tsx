@@ -43,14 +43,15 @@ export const searchName = (name : string)=>{
 export const searchColor = (color : string)=>{
 	return async (pageNR: number ) => productListConvert(await searchAdvanced("color:" +color,pageNR))
 }
-
+export const searchAdvancedAsList = (params :string,) =>{
+	return async (pageNR : number ) => productListConvert(await searchAdvanced(params,pageNR))
+}
 export const searchAdvanced = async (params : string , pageNR : number = 1):Promise<scryRes>=>{
 	if(params+pageNR in buffer){
 		return buffer[params+pageNR]
 	}
 	
 	const url = new URL(searchUrl)
-	url.searchParams.append("order","cmc")
 	url.searchParams.append("q",params)
 	const scryFallPageNR = pageNR/8
 	if(!((scryFallPageNR-1)%8 === 0)){
