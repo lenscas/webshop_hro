@@ -125,14 +125,14 @@ export default class CardList extends BasicPage<ProductListProps,CardListState> 
                         1
                     )
                 } 
-                id=""color="success"
+                color="success"
                     >Add to cart
             </Button>)
         }
         else{
             return(
                 <Button
-                id=""color="disabled"
+                color="success" disabled={true}
                     >Add to cart
             </Button>)
         }
