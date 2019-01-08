@@ -33,6 +33,13 @@ export const searchCommander = async (name:string):Promise<searchResult[]>=>{
 	return commanderConvert(rawRes)
 }
 
+export const searchForDeck = (name : string)=>{
+	if(name.length <= 3){
+		return async (pageNR : number ) => []
+	}
+	return async (pageNR : number ) => productListConvert(await searchAdvanced("name:" + name))
+}
+
 export const searchName = (name : string)=>{
 	if (name.startsWith("color:")){
 		return searchColor(name.slice(6))
