@@ -1,7 +1,7 @@
 import * as React from "react";
 import LoadSymbol from "src/components/loadSymbol";
 import BasicPage from "../types/basicComponent";
-import { deckList, getDeckList, cardInDeck, deleteCard } from "src/services/Decks";
+import { deckList, getDeckList, cardInDeck, deleteCard, addCardToDeck } from "src/services/Decks";
 import Row from "reactstrap/lib/Row";
 import Col from "reactstrap/lib/Col";
 import Table from "reactstrap/lib/Table";
@@ -154,42 +154,24 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		}
 		
 	}
-	renderSearch(results: productList[]){
+	async addToDeck(id : string,update:(params : LoadParams)=>Promise<void>){
+		await addCardToDeck(this.props.APIS.req,Number(this.props.match.params.id),id)
+		update({
+			userId : this.props.APIS.userId || "",
+			deckId: this.props.match.params.id,
+			deletedCards : this.state.deletedCards
+		})
+	}
+	renderSearch(results: productList[], update :(params : LoadParams)=>Promise<void>){
 		return <table style={{"maxWidth": "100%", height:"100%"}}>
 			<tbody><tr>
 			{results.map( v=>{
-				return <td style={{height:"40vh"}} key={v.id}><img  src={v.image} style={{height:"100%",maxWidth:"auto"}} className="float-left"/></td>
+				const onClick = ()=>this.addToDeck(v.id,update)
+				return <td style={{height:"40vh"}} key={v.id}><img onClick={onClick} src={v.image} style={{height:"100%",maxWidth:"auto"}} className="float-left"/></td>
 			})}
 			</tr>
 			</tbody>
 			</table>
-		/*
-		let cards:JSX.Element = <div/>
-		
-		if (results.length<9){
-			let rowArray:JSX.Element[] = []
-			let row1:JSX.Element = <div/>
-			let row2:JSX.Element = <div/>
-
-			results.forEach(result => {
-				if (rowArray.length>3){
-					if (row1 === <div/>){
-						row1 = <div className="d-flex flex-row">{rowArray[0]}{rowArray[1]}{rowArray[2]}{rowArray[3]}</div>
-					}
-					else{
-						row2 = <div className="d-flex flex-row">{rowArray[0]}{rowArray[1]}{rowArray[2]}{rowArray[3]}</div>
-					}
-					rowArray = []
-				}
-				rowArray.push(
-					<div>{result.name}</div>
-				)
-			})
-			cards = <div>{row1}{row2}</div>
-		}
-		
-		return cards
-		*/
 	}
 	async getCardSearchItems(params : {val: string|undefined}){
 		if(params.val){
@@ -201,14 +183,15 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 			return []
 		}
 	}
-	searchLoadSymbol(){
+	searchLoadSymbol(update: (params : LoadParams)=>Promise<void>){
+		const render = (params : productList[])=>this.renderSearch(params,update)
 		return <LoadSymbol<{val : string | undefined} ,productList[] | undefined>
-			toRender = {this.renderSearch}
+			toRender = {render}
 			params = {{ val :this.state.searchTerm}}
 			getData ={this.getCardSearchItems}
 		/>
 	}
-	renderList(list : deckList){
+	renderList(list : deckList,update :(params: LoadParams)=>Promise<void>){
 		let filter : (v:cardInDeck)=>boolean = retTrue
 		if(this.state.filterLands){
 			filter = (v : cardInDeck)=>{
@@ -303,7 +286,7 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 					
 					<Row className="justify-content-center" style={{maxWidth:"100%", overflow:"auto",paddingRight:"0",marginRight:"0"}}>
 					<Col style={{height:"100%"}}>
-					{this.searchLoadSymbol()}
+					{this.searchLoadSymbol(update)}
 					</Col>
 					</Row>
 					
