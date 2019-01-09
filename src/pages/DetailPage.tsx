@@ -19,7 +19,7 @@ import { quantMod } from "src/components/addToCart";
 import { decks, getDecks, addCardToDeck } from "src/services/Decks";
 import { addDoubleAsync } from "src/funcs/lambdas";
 import { Link } from "react-router-dom";
-
+import "../style/detail.css"
 type ProductProps =  props &  {match :match<{id:string}>}
 type paramsForLoad = {cardId : cardId}
 type renderType = {0:product|undefined, 1: decks[]}// product | undefined

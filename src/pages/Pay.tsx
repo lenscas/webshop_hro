@@ -134,7 +134,35 @@ export default class Pay extends BasicPage<props, PayState> {
                 <tbody>
                     <tr>
                         <td>
+                            <div className="adres">
+                            <h2>select address : </h2>
+                                {this.state.addresses && this.state.addresses.length > 0 && typeof this.state.addresses !== 'string' ?
+                                    <Input type="select" name="select" id="exampleSelect" onInput={setAddress} value={this.state.addres ? this.state.addres.street + " " +this.state.addres.number : ""}>
+                                        {
+                                            this.state.addresses.map((v, y) => {
+                                                return <option key={v.id}>{ v.street + " " + v.number }</option>
+                                            })
+                                        }
+                                    </Input>
+                                    : <AddAddress APIS={this.props.APIS} succes={this.update} />
+                                }
+                                <div className="adresText">
+                                    {
+                                        this.state.addres ?
+                                            <>
+                                                <span>{this.state.addres.street} {this.state.addres.number}</span><br />
+                                                <span>{this.state.addres.zipCode} {this.state.addres.city}</span>
+                                            </>
+                                            : null
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <div className="pay">
+                            <h2>Payment Method : </h2>
                                 <SuperDropDown
                                     caret={true}
                                     items={this.state.payMethods.map<dropDownItems>(
@@ -148,34 +176,9 @@ export default class Pay extends BasicPage<props, PayState> {
                                     }
                                     text={this.state.method}
                                 />
-                                <img className="logoPay" src="http://www.stopmsnow.nl/wp-content/uploads/2016/11/Mollie-betalingen-1.jpg" />
+                                
                             </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div className="adres">
-                                {this.state.addresses && this.state.addresses.length > 0 && typeof this.state.addresses !== 'string' ?
-                                    <Input type="select" name="select" id="exampleSelect" onInput={setAddress} value={this.state.addres ? this.state.addres.street + " " +this.state.addres.number : ""}>
-                                        {
-                                            this.state.addresses.map((v, y) => {
-                                                return <option key={v.id}>{ v.street + " " + v.number }</option>
-                                            })
-                                        }
-                                    </Input>
-                                    : <AddAddress APIS={this.props.APIS} succes={this.update} />
-                                }
-                                <div>
-                                    {
-                                        this.state.addres ?
-                                            <>
-                                                <span>{this.state.addres.street} {this.state.addres.number}</span><br />
-                                                <span>{this.state.addres.zipCode} {this.state.addres.city}</span>
-                                            </>
-                                            : null
-                                    }
-                                </div>
-                            </div>
+                            <img className="logoPay" src="http://www.stopmsnow.nl/wp-content/uploads/2016/11/Mollie-betalingen-1.jpg" />
                         </td>
                     </tr>
                     <tr>

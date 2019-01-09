@@ -67,7 +67,11 @@ body, html {
   font-size: 1.25em;
   font-family: "verdana";
 }
-
+.payment{
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
 .home {
   font-size: 1.25em;
   font-family: "verdana";
