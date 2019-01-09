@@ -25,15 +25,7 @@ export class EditScreen extends BasicComponent<EditProps, { user: UserData }>{
         this.state = { user: this.props.user }
     }
 
-    // update = async () => {
-    //     await (
-    //         this.props.APIS.req.buildRequest("path", `api/admin/users/${this.state.user.id}`)
-    //             .buildRequest("method", "PUT")
-    //             .buildRequest("body", this.state.user)
-    //             .buildRequest("converter", (t: APIReturn<string>) => (t.data)
-    //             ).run<UserData[]>())
-    //     this.props.close(undefined, this.props.update)
-    // }
+
 
     update = () => {
         this.props.update(this.state.user, this.props.updateScreen)
@@ -97,7 +89,10 @@ export class EditScreen extends BasicComponent<EditProps, { user: UserData }>{
                         </div>
                         <div className="form-group">
                             <label htmlFor="approach">Approach</label>
-                            <Input type="text" className="form-control" id="approach" aria-describedby="approach" placeholder="Approach" value={this.state.user.approach} onChange={updateApproach} />
+                            <Input type="select" className="form-control" id="approach" aria-describedby="approach" placeholder="Approach" value={this.state.user.approach} onChange={updateApproach} >
+                                <option>Mr.</option>
+                                <option>Mrs.</option>
+                            </Input>
                         </div>
                         {
                             this.props.isAdmin ?

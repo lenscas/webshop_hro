@@ -121,7 +121,7 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
                     <div className="d-flex flex-row">
                         {defaultAddressView}
                         <div>
-                            <div className="card">
+                            <div className="card handOnHover" onClick={this.userEditModelOnClick(this.props.userdata)}>
                                 <div className="card-body">
                                     <div className="card-text float-left">
                                         <b>Your Details:</b>
@@ -130,7 +130,7 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
                                         <p>E-Mail: {this.props.userdata.email}</p>
                                     </div>
                                     <div className="d-flex flex-column float-right" style={{ "width": "4rem" }}>
-                                        <Button className="justify-content-start" style={{ "marginBottom": "2rem", "marginTop": "2rem" }} onClick={this.userEditModelOnClick(this.props.userdata)}>Edit</Button>
+                                        {/* <Button className="justify-content-start" style={{ "marginBottom": "2rem", "marginTop": "2rem" }} >Edit</Button> */}
 
                                     </div>
                                 </div>
