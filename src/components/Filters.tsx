@@ -81,8 +81,8 @@ export default class Filters extends BasicComponent<{}, filterState>{
         }    */
         console.log(left)
         return (
-            <div className={"col-md-"+container} style={{paddingLeft:"0"}}>
-            <div style ={{position:"relative", height:"93vh", left, top:"0"}}>
+            <div className={"col-md-"+container} style={{paddingLeft: "0"}}>
+            <div style ={{position:"relative", left, top:"0"}}>
                 <div className="card" style={{height:"94vh"}} >
                     <div className="card-header bold filterHeader">
                     <FormGroup>
@@ -96,18 +96,18 @@ export default class Filters extends BasicComponent<{}, filterState>{
                         </Col> */}
                         </FormGroup>
                     </div>            
-                    <div className="card-body" style ={{paddingBottom: "0", paddingLeft:"4vh",display: noDisplay}}>
+                    <div className="card-body" style ={{paddingBottom: "16px", paddingLeft:"4vh",display: noDisplay, maxHeight:"93vh", overflow:"auto"}}>
 
                         <Form onSubmit={this.setFilters}>
-                            <FormGroup row={true}>
+                            <FormGroup >
                                 <Label for="CardName" className="bold">Card Name</Label>
                                     <Input type="textarea" name="name" id="CardName" placeholder="Any words in the name, e.g 'Fire'" />
                             </FormGroup>
-                            <FormGroup row={true}>
+                            <FormGroup >
                                 <Label for="Text" className="bold">Text</Label>
                                     <Input type="textarea" name="oracle" id="Text" placeholder="Any text, e.g 'draw a card'" />
                             </FormGroup>
-                            <FormGroup row={true}>
+                            <FormGroup >
                                 <Label for="TypeLine" className="bold">Type Line</Label>
                                     <Input type="textarea" name="type" id="TypeLine" placeholder="Enter a type" />
                             </FormGroup>
@@ -166,8 +166,8 @@ export default class Filters extends BasicComponent<{}, filterState>{
                                 </div>
                             </FormGroup>
 
-                            <FormGroup check={true} row={true}>
-                                <Col sm={{ size: 11 }}>
+                            <FormGroup check={true} >
+                                <Col sm={{ size: 10 }}>
                                     <Button color="submit" block={true}>Filter</Button>
                                 </Col>
                             </FormGroup>
