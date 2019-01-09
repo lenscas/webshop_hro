@@ -155,10 +155,10 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		
 	}
 	renderSearch(results: productList[]){
-		return <table style={{"maxWidth": "100%"}}>
+		return <table style={{"maxWidth": "100%", height:"100%"}}>
 			<tbody><tr>
 			{results.map( v=>{
-				return <td key={v.id}><img  src={v.image} className=" float-left"/></td>
+				return <td style={{height:"40vh"}} key={v.id}><img  src={v.image} style={{height:"100%",maxWidth:"auto"}} className="float-left"/></td>
 			})}
 			</tr>
 			</tbody>
@@ -294,16 +294,15 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 					
 				</Row>
 
-				<Row>
+				<Row style={{height:"44vh"}} >
 					<Col xs={2}>
-						
 						<img className="img-fluid" src={list.commander.image} style={{marginLeft : "15px"}}/>
 					</Col>
 					<Col xs={1}/>
 					<Col xs={9} style={{paddingRight:"0"}}>
 					
 					<Row className="justify-content-center" style={{maxWidth:"100%", overflow:"auto",paddingRight:"0",marginRight:"0"}}>
-					<Col>
+					<Col style={{height:"100%"}}>
 					{this.searchLoadSymbol()}
 					</Col>
 					</Row>
