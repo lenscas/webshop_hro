@@ -15,7 +15,8 @@ import Label from "reactstrap/lib/Label";
 import Input from "reactstrap/lib/Input";
 import { FormGroup, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import { Link } from "react-router-dom";
-
+import { searchForDeck } from "src/services/search";
+import { productList } from "src/services/product";
 
 type LoadParams = {
 	userId : string
@@ -44,6 +45,10 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		this.renderList = this.renderList.bind(this)
 		this.toggle = this.toggle.bind(this)
 		this.deleteCard = this.deleteCard.bind(this)
+		this.renderSearch = this.renderSearch.bind(this)
+		this.searchLoadSymbol = this.searchLoadSymbol.bind(this)
+		this.getCardSearchItems = this.getCardSearchItems.bind(this)
+		this.onSubmit = this.onSubmit.bind(this)
 		this.state = {sortOn : "color",filterLands:true,deletedCards:0}
 	}
 	sortByColor(cards:cardInDeck[]) : sortedByColor {
@@ -149,6 +154,60 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		}
 		
 	}
+	renderSearch(results: productList[]){
+		return <table style={{"maxWidth": "100%", height:"100%"}}>
+			<tbody><tr>
+			{results.map( v=>{
+				return <td style={{height:"40vh"}} key={v.id}><img  src={v.image} style={{height:"100%",maxWidth:"auto"}} className="float-left"/></td>
+			})}
+			</tr>
+			</tbody>
+			</table>
+		/*
+		let cards:JSX.Element = <div/>
+		
+		if (results.length<9){
+			let rowArray:JSX.Element[] = []
+			let row1:JSX.Element = <div/>
+			let row2:JSX.Element = <div/>
+
+			results.forEach(result => {
+				if (rowArray.length>3){
+					if (row1 === <div/>){
+						row1 = <div className="d-flex flex-row">{rowArray[0]}{rowArray[1]}{rowArray[2]}{rowArray[3]}</div>
+					}
+					else{
+						row2 = <div className="d-flex flex-row">{rowArray[0]}{rowArray[1]}{rowArray[2]}{rowArray[3]}</div>
+					}
+					rowArray = []
+				}
+				rowArray.push(
+					<div>{result.name}</div>
+				)
+			})
+			cards = <div>{row1}{row2}</div>
+		}
+		
+		return cards
+		*/
+	}
+	async getCardSearchItems(params : {val: string|undefined}){
+		if(params.val){
+			const getResults = await searchForDeck(params.val)
+			const result = await getResults(1)
+			return result
+		}
+		else{
+			return []
+		}
+	}
+	searchLoadSymbol(){
+		return <LoadSymbol<{val : string | undefined} ,productList[] | undefined>
+			toRender = {this.renderSearch}
+			params = {{ val :this.state.searchTerm}}
+			getData ={this.getCardSearchItems}
+		/>
+	}
 	renderList(list : deckList){
 		let filter : (v:cardInDeck)=>boolean = retTrue
 		if(this.state.filterLands){
@@ -209,31 +268,42 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 			})
 			listForTable.push(toInsertList)
 		}
+
 		return (
 			<>
-				<Row>
-					<Col xs={2}>
-						<h1>{list.commander.name}</h1>
-						<img className="img-fluid" src={list.commander.image}/>
-						<Row className="justify-content-center">
-						<Col md="7">
-						<div className="btn-group">
+				<Row className="justify-content-left">
+					<Col md="3">
+						<h1 style={{marginLeft : "15px"}}>{list.commander.name}</h1>
+					</Col>
+					<Col md="1">
+					<div className="btn-group">
 							{this.renderBuyButton()}
 							{this.renderSortButton()}
 						</div>
-						</Col>
-						</Row>
-						{this.renderFilterButton()}
+					</Col>
+					<Col md="2">
+					{this.renderFilterButton()}
+					</Col>
+					<Col>
+					<form role="form" className="form-inline">
+						<form className="find" onSubmit={this.onSubmit}>
+							<input name="find" type="text" placeholder="Find"/>
+						</form>
+					</form>
+					</Col>
+					
+				</Row>
+
+				<Row style={{height:"44vh"}} >
+					<Col xs={2}>
+						<img className="img-fluid" src={list.commander.image} style={{marginLeft : "15px"}}/>
 					</Col>
 					<Col xs={1}/>
-					<Col xs={7}>
+					<Col xs={9} style={{paddingRight:"0"}}>
 					
-					<Row className="justify-content-center" style = {{"marginTop" : "8em"}}>
-					<Col md="4">
-					<p>Type the name of a card you wish to add</p>
-					<form className="find" onSubmit={this.onSubmit}>
-						<input name="find" type="text" placeholder="Find"/>
-					</form>
+					<Row className="justify-content-center" style={{maxWidth:"100%", overflow:"auto",paddingRight:"0",marginRight:"0"}}>
+					<Col style={{height:"100%"}}>
+					{this.searchLoadSymbol()}
 					</Col>
 					</Row>
 					
