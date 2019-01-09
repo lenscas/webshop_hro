@@ -27,37 +27,37 @@ body, html {
 .background-normal {
   /* The image used */
   /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
-  background-image: url("/NorMagic.jpg");
+  background-image: url("/NorMagic2.jpg");
 }
 .background-black {
   /* The image used */
   /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
-  background-image: url("/BlackMagic.jpg");
+  background-image: url("/BlackMagic2.jpg");
 }
 .background-white {
   /* The image used */
   /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
-  background-image: url("/WhiteMagic.jpg");
+  background-image: url("/WhiteMagic2.jpg");
 }
 .background-green {
   /* The image used */
   /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
-  background-image: url("/GreenMagic.jpg");
+  background-image: url("/GreenMagic2.jpg");
 }
 .background-blue {
   /* The image used */
   /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
-  background-image: url("/BlueMagic.jpg");
+  background-image: url("/BlueMagic2.jpg");
 }
 .background-red {
   /* The image used */
   /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
-  background-image: url("/RedMagic.jpg");
+  background-image: url("/RedMagic2.jpg");
 }
 .background-colorless {
   /* The image used */
   /*background-image: url("https://media3.s-nbcnews.com/j/streams/2013/august/130830/8c8802640-mtg.nbcnews-ux-2880-1000.png");*/
-  background-image: url("/ColorlessMagic.jpg");
+  background-image: url("/ColorlessMagic2.jpg");
 }
 .header {
   height: 6vh;
@@ -186,11 +186,11 @@ height: 92vh;
 .TitleCard :hover{
 	text-decoration: none !important;
 }
-.bgTrans {
+/*.bgTrans {
   background-color: rgba(255,255,255,0.55);
   padding-top: 1vh;
   padding-bottom: 1vh;
-}
+}*/
 .handOnHover{
   cursor: pointer;
 }
