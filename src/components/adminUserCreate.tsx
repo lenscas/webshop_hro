@@ -3,10 +3,10 @@ import { props } from "src/types/BasicProps";
 import * as React from "react";
 import Form, { InputField, FormData } from "../components/form";
 import { RegisterUserAsAdmin } from "src/services/users";
-import { APIReturn } from "src/services/basics";
 import Card from "reactstrap/lib/Card";
 import CardBody from "reactstrap/lib/CardBody";
 import { retTrue } from "src/funcs/lambdas";
+import { APIReturn } from "src/services/basics";
 
 
 export class AdminUserCreate extends BasicComponent<props, { success?: boolean | { success: boolean, message: string } }>{
@@ -14,7 +14,7 @@ export class AdminUserCreate extends BasicComponent<props, { success?: boolean |
         {
             type: "text",
             validator: retTrue,
-            name: "username",
+            name: "name",
             label: "Username",
             placeholder: "Username",
             id: "username",
@@ -44,16 +44,18 @@ export class AdminUserCreate extends BasicComponent<props, { success?: boolean |
             type: "password"
         },
         {
-            type: "text",
-            validator: retTrue,
+            type: "select",
+            // validator: retTrue,
+            options: ["Mr.", "Mrs."],
             name: "approach",
             label: "Title",
             placeholder: "Mr. / Mrs.",
             id: "honorific"
         },
         {
-            type: "text",
-            validator: retTrue,
+            type: "select",
+            // validator: retTrue,
+            options: ["User", "Admin"],
             name: "role",
             label: "Role",
             placeholder: "Admin or User",
@@ -71,6 +73,7 @@ export class AdminUserCreate extends BasicComponent<props, { success?: boolean |
         this.state = {}
     }
     async onSubmit(data: FormData<RegisterUserAsAdmin>) {
+        console.log(data.values)
         const res = await (
             this.props.APIS.req.buildRequest("path", `api/admin/users`)
                 .buildRequest("method", "POST")

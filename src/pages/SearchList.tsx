@@ -3,7 +3,7 @@ import { match, Redirect } from "react-router";
 import BasicPage from "src/types/basicComponent";
 import * as React from "react";
 import CardList from "src/components/ProductList";
-import { searchName } from "src/services/search";
+import { searchAdvancedAsList } from "src/services/search";
 
 type ProductListProps = props &  {
 	match :match<{
@@ -29,7 +29,7 @@ export default class SearchList extends BasicPage<ProductListProps,ProductListSt
 		){
 			return <Redirect to={"/search/"+this.props.match.params.name+"/"+this.state.pageNum}/>
 		}
-		const fetch = searchName(this.props.match.params.name) //(num : number) =>getList(this.props.APIS.req,num)
+		const fetch = searchAdvancedAsList(this.props.match.params.name) //(num : number) =>getList(this.props.APIS.req,num)
 		return <CardList
 			req={this.props.APIS.req}	
 			fetch={fetch}
