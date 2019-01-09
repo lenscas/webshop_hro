@@ -3,7 +3,7 @@ import { props } from "src/types/BasicProps";
 import * as React from "react";
 import { UserData } from "src/services/users";
 import Input from "reactstrap/lib/Input";
-import Form from "reactstrap/lib/Form";
+//import Form from "reactstrap/lib/Form";
 import Button from "reactstrap/lib/Button";
 // import { APIReturn } from "src/services/basics";
 import Modal from "reactstrap/lib/Modal";
@@ -27,7 +27,9 @@ export class EditScreen extends BasicComponent<EditProps, { user: UserData }>{
 
 
 
-    update = () => {
+    update = (e : any) => {
+        e.preventDefault()
+        console.log('test onsubmit')
         this.props.update(this.state.user, this.props.updateScreen)
     }
 
@@ -38,6 +40,7 @@ export class EditScreen extends BasicComponent<EditProps, { user: UserData }>{
     render() {
 
         const updateName = (e) => {
+            console.log("test onchange")
             this.setState({
                 ...this.state,
                 user: {
@@ -78,7 +81,7 @@ export class EditScreen extends BasicComponent<EditProps, { user: UserData }>{
             <Modal isOpen={this.props.open} toggle={this.toggle}>
                 <ModalHeader toggle={this.toggle}>Edit User</ModalHeader>
                 <ModalBody>
-                    <Form>
+                    <form onSubmit={this.update}>
                         <div className="form-group">
                             <label htmlFor="name">Name</label>
                             <Input type="text" className="form-control" id="name" aria-describedby="name" placeholder="Name" value={this.state.user.name} onChange={updateName} />
@@ -103,8 +106,8 @@ export class EditScreen extends BasicComponent<EditProps, { user: UserData }>{
                                 : null
                         }
 
-                        <Button color="primary" onClick={this.update}>Submit</Button>
-                    </Form>
+                        <Button color="primary" onClick={this.update} type='submit'>Submit</Button>
+                    </form>
                 </ModalBody>
             </Modal>
         )
