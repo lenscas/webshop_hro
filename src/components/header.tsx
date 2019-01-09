@@ -59,7 +59,7 @@ export default class Header extends BasicPage<props, { isOpen: boolean }> {
 				return (
 					<>
 						<NavItem>
-							<NavLink tag={Link} to="/products" className="moveDown">Cards</NavLink>
+							<NavLink tag={Link} to="/products/" className="moveDown">Cards</NavLink>
 						</NavItem>
 						<NavItem>
 							<NavLink tag={Link} to="/decks" className="moveDown">Decks</NavLink>
