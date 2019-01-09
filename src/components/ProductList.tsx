@@ -17,7 +17,6 @@ import Modal from "reactstrap/lib/Modal";
 import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalBody from "reactstrap/lib/ModalBody";
 import ModalFooter from "reactstrap/lib/ModalFooter";
-import Filters from "./Filters";
 //import price from "src/components/Price";
 // import { readLocalRaw } from "src/services/localStorage";
 
@@ -214,13 +213,6 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
     render() {
         console.log(this.state.deckList)
 
-        const showFilters = () => {
-            this.setState({
-                ...this.state,
-                filters: !this.state.filters
-            })
-        }
-
         if (readLocalRaw("userId") && !this.state.deckList) {
 
             return <></>
@@ -269,18 +261,6 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
         return (
 
             <div id="cardList" className="row">
-            
-                {
-                    this.state.filters ?
-                        <div className="col-2" style={{ padding: "0" }}>
-                            <Filters showFilters={showFilters}/>
-                        </div>
-                    : <div>
-                        <Button color="primary" onClick={showFilters}>
-                            <i className="fas fa-angle-double-right"/>
-                        </Button>
-                    </div>
-                }
                 <div className="col">
                     <DataTable<splittedCard[]>
 

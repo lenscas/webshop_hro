@@ -11,12 +11,14 @@ import Button from "reactstrap/lib/Button";
 
 type filterState = {
     toSearch: undefined | string;
+    show:boolean
 }
-export default class Filters extends BasicComponent<{showFilters: () => void}, filterState>{
+export default class Filters extends BasicComponent<{}, filterState>{
     constructor(props) {
         super(props)
         this.setFilters = this.setFilters.bind(this)
-        this.state = { toSearch: undefined }
+        this.showFilters = this.showFilters.bind(this)
+        this.state = { toSearch: undefined,show:true }
     }
 
     async setFilters(e: any) {
@@ -60,38 +62,54 @@ export default class Filters extends BasicComponent<{showFilters: () => void}, f
         )
 
     }
+    showFilters(){
+        this.easySetState({show:!this.state.show})
+    }
     render() {
         if (this.state.toSearch) {
             return <Redirect to={"/search/" + this.state.toSearch} />
-        } return (
-            <>
-                <div className="card">
+        }
+        let closedFilter = "fas fa-angle-double-left"
+        let noDisplay :string |undefined
+        let container ="2"
+        let left :string | number ="0"
+        if(!this.state.show){
+          left="0px"
+          container="1"
+          noDisplay ="none"
+          closedFilter ="fas fa-angle-double-right"
+        }    
+        console.log(left)
+        return (
+            <div className={"col-md-"+container} style={{paddingLeft:"0"}}>
+            <div style ={{position:"relative", height:"93vh", left, top:"0"}}>
+                <div className="card" style={{height:"94vh"}} >
                     <div className="card-header bold filterHeader">
+                    <FormGroup>
+                    <Col >
                         Filters
-                        <Button color="primary" size="md" className="moveFilterBar" onClick={this.props.showFilters}> 
-                            <i className="fas fa-angle-double-left"/>
+                        </Col>
+                        <Col >
+                        <Button color="primary" size="md" className="moveFilterBar" onClick={this.showFilters}> 
+                            <i className={closedFilter}/>
                         </Button>
+                        </Col>
+                        </FormGroup>
                     </div>            
-                    <div className="card-body">
+                    <div className="card-body" style ={{paddingBottom: "0", display: noDisplay}}>
 
                         <Form onSubmit={this.setFilters}>
                             <FormGroup row={true}>
-                                <Label for="CardName" sm={3} className="bold">Card Name</Label>
-                                <Col sm={9}>
+                                <Label for="CardName" className="bold">Card Name</Label>
                                     <Input type="textarea" name="name" id="CardName" placeholder="Any words in the name, e.g 'Fire'" />
-                                </Col>
                             </FormGroup>
                             <FormGroup row={true}>
-                                <Label for="Text" sm={3} className="bold">Text</Label>
-                                <Col sm={9}>
+                                <Label for="Text" className="bold">Text</Label>
                                     <Input type="textarea" name="oracle" id="Text" placeholder="Any text, e.g 'draw a card'" />
-                                </Col>
                             </FormGroup>
                             <FormGroup row={true}>
-                                <Label for="TypeLine" sm={3} className="bold">Type Line</Label>
-                                <Col sm={9}>
+                                <Label for="TypeLine" className="bold">Type Line</Label>
                                     <Input type="textarea" name="type" id="TypeLine" placeholder="Enter a type" />
-                                </Col>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="exampleCheckbox" className="bold">Colors</Label>
@@ -157,7 +175,8 @@ export default class Filters extends BasicComponent<{showFilters: () => void}, f
 
                     </div>
                 </div>
-            </>
+                </div>
+            </div>
         )
     }
 

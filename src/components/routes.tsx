@@ -16,6 +16,7 @@ import SearchList from "src/pages/SearchList";
 import Admin from "src/pages/Admin";
 import { StaticContext } from "react-router";
 import Pay from "src/pages/Pay";
+import Filters from "./Filters";
 
 
 export default class Routes extends BasicPage {
@@ -58,10 +59,22 @@ export default class Routes extends BasicPage {
 					<Switch>
 						<Route exact={true} path="/" render={this.renderHome} />
 						<Route exact={true} path="/register"><Register APIS={this.props.APIS} /></Route>
-						<Route exact={true} path="/products"><ProductList APIS={this.props.APIS} /></Route>
-						<Route exact={true} path="/search/:name" render={this.searchListPage} />
-						<Route exact={true} path="/search/:name/:pageNum" render={this.searchListPage} />
-						<Route exact={true} path="/products/:pageNum" render={this.cardListPage} />
+						<Route path="/(search|products)/*">
+							<div className="row">
+								
+								<Filters/>
+								<div className="col" style={{maxHeight:"94vh", overflow:"auto"}}>
+									<Switch>
+										<Route exact={true} path="/products"><ProductList APIS={this.props.APIS} /></Route>
+										<Route exact={true} path="/products/:pageNum" render={this.cardListPage} />
+										<Route exact={true} path="/search/:name" render={this.searchListPage} />
+										<Route exact={true} path="/search/:name/:pageNum" render={this.searchListPage} />
+									</Switch>
+								</div>
+							</div>
+						</Route>
+						
+						
 						<Route exact={true} path="/cart"><Cart APIS={this.props.APIS} /></Route>
 						<Route exact={true} path="/cart/pay"><Pay APIS={this.props.APIS} /></Route>
 						<Route exact={true} path="/cart/:deckId" render={this.renderCart} />
