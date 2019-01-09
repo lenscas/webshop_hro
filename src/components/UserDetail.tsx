@@ -5,13 +5,15 @@ import Button from "reactstrap/lib/Button";
 import { Address, UserData, setDefaultAddress } from "src/services/users";
 import { readLocal, removeLocal, storeLocal } from "src/services/localStorage";
 import RenderAddresses from "./renderAddresses";
+import { EditScreen } from "./EditScreen";
+import { APIReturn } from "src/services/basics";
 
-type UserDetailState = { success?: boolean | { success: boolean, message }, render: string, page: number, selectingDefaultAddress: boolean, removingDefaultAddress: boolean }
+type UserDetailState = { selectingDefaultAddress: boolean, removingDefaultAddress: boolean, open: boolean }
 
-export default class UserDetail extends BasicPage<props & { userdata: UserData }, UserDetailState> {
+export default class UserDetail extends BasicPage<props & { userdata: UserData, update: (params: {}) => Promise<void> }, UserDetailState> {
     constructor(propsy) {
         super(propsy)
-        this.state = { render: "Details", page: 0, selectingDefaultAddress: false, removingDefaultAddress: false }
+        this.state = { selectingDefaultAddress: false, removingDefaultAddress: false, open: false }
     }
 
     setSelectOnClick(selectingDefAddress: boolean) {
@@ -48,7 +50,30 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData }
         removeLocal("defaultAddress")
 
 
-        this.easySetState({ render: this.state.render, removingDefaultAddress: true })
+        this.easySetState({ removingDefaultAddress: true })
+    }
+
+    userEditModelOnClick = (v, update?: (params: {}) => Promise<void>) => {
+        return () => this.userEditModel(v, update)
+    }
+
+    userEditModel = (v, update?: (params: {}) => Promise<void>) => {
+        this.easySetState({
+            open: !this.state.open
+        })
+        if (update) {
+            update({})
+        }
+    }
+
+    update = async (user: UserData, update: (params: {}) => Promise<void>) => {
+        await (
+            this.props.APIS.req.buildRequest("path", `api/user`)
+                .buildRequest("method", "PUT")
+                .buildRequest("body", user)
+                .buildRequest("converter", (t: APIReturn<string>) => (t.data)
+                ).run<UserData[]>())
+        this.userEditModel(undefined, update)
     }
 
     render() {
@@ -105,22 +130,21 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData }
                                         <p>E-Mail: {this.props.userdata.email}</p>
                                     </div>
                                     <div className="d-flex flex-column float-right" style={{ "width": "4rem" }}>
-                                        <Button className="justify-content-start" style={{ "marginBottom": "2rem", "marginTop": "2rem" }}>Edit</Button>
+                                        <Button className="justify-content-start" style={{ "marginBottom": "2rem", "marginTop": "2rem" }} onClick={this.userEditModelOnClick(this.props.userdata)}>Edit</Button>
 
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <EditScreen APIS={this.props.APIS} user={this.props.userdata} close={this.userEditModel} update={this.update} isAdmin={false} updateScreen={this.props.update} open={this.state.open} />
 
                     <table>
                         <tbody className="float-left">
                             <tr><th>All Addresses:</th></tr>
                             <RenderAddresses APIS={this.props.APIS}
                                 addresses={this.props.userdata.addresses}
-                           
                                 width="12rem"
-                                
                                 removingDefaultAddress={this.state.removingDefaultAddress}
                                 selectingDefaultAddress={this.state.selectingDefaultAddress}
                                 setDefaultOnClick={this.setDefaultOnClick}

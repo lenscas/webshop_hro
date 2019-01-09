@@ -4,9 +4,6 @@ import * as React from "react";
 import { UserData } from "src/services/users";
 import LoadSymbol from "./loadSymbol";
 import { APIReturn } from "src/services/basics";
-import Modal from "reactstrap/lib/Modal";
-import ModalHeader from "reactstrap/lib/ModalHeader";
-import ModalBody from "reactstrap/lib/ModalBody";
 // import Button from "reactstrap/lib/Button";
 import { EditScreen } from "./EditScreen";
 
@@ -65,6 +62,16 @@ export class AdminUserDeleteEdit extends BasicComponent<props, state>{
         }
     }
 
+    update = async (user: UserData, update: (params: {}) => Promise<void>) => {
+        await (
+            this.props.APIS.req.buildRequest("path", `api/admin/users/${user.id}`)
+                .buildRequest("method", "PUT")
+                .buildRequest("body", user)
+                .buildRequest("converter", (t: APIReturn<string>) => (t.data)
+                ).run<UserData[]>())
+        this.userEditModel(undefined, update)
+    }
+
     renderDelete(users: UserData[], update: (params: {}) => Promise<void>) {
         return (
             <>
@@ -99,13 +106,9 @@ export class AdminUserDeleteEdit extends BasicComponent<props, state>{
                         }
                     </tbody>
                 </table>
-                <Modal isOpen={this.state.open} toggle={this.userEditModelOnClick(undefined, update)}>
-                    <ModalHeader toggle={this.userEditModelOnClick(undefined, update)}>Edit User</ModalHeader>
-                    <ModalBody>
-                        {this.state.editUser ? <EditScreen APIS={this.props.APIS} user={this.state.editUser} close={this.userEditModel} update={update}/> : "no user found"}
 
-                    </ModalBody>
-                </Modal>
+                {this.state.editUser ? <EditScreen APIS={this.props.APIS} user={this.state.editUser} close={this.userEditModel} update={this.update} isAdmin={true} updateScreen={update} open={this.state.open} /> : null}
+
             </>
         )
     }

@@ -40,10 +40,10 @@ export default class UserPage extends BasicPage<props, {render: string}>{
 
 
 
-    renderTab(id: string, userData: UserData) {
+    renderTab(id: string, userData: UserData, update: (params: {}) => Promise<void>) {
         console.log(id)
         if (id === "Details") {
-            return <UserDetail APIS={this.props.APIS} userdata={userData}/>
+            return <UserDetail APIS={this.props.APIS} userdata={userData} update={update}/>
         }
         else {
             return <div>Sorry, we couldn't find what you're looking for...</div>
@@ -68,13 +68,14 @@ export default class UserPage extends BasicPage<props, {render: string}>{
                 </ul>
 
                 <div className="tab-pane container active" id="userData">
-                    {this.renderTab(this.state.render, userData)}
+                    {this.renderTab(this.state.render, userData, update)}
                 </div>
             </div>
         )
     }
 
     render() {
+        console.log('render')
         const fetch = async () => await getUserData(this.props.APIS.req)
 
         return <LoadSymbol<{}, UserData | undefined>
