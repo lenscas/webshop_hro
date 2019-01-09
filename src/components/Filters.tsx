@@ -69,16 +69,16 @@ export default class Filters extends BasicComponent<{}, filterState>{
         if (this.state.toSearch) {
             return <Redirect to={"/search/" + this.state.toSearch} />
         }
-        let closedFilter = "fas fa-angle-double-left"
-        let noDisplay :string |undefined
-        let container ="2"
-        let left :string | number ="0"
-        if(!this.state.show){
+        //const closedFilter = "fas fa-angle-double-left" // if used again change const to let
+        const noDisplay :string |undefined = undefined
+        const container ="2"
+        const left :string | number ="0"
+        /*if(!this.state.show){
           left="0px"
           container="1"
           noDisplay ="none"
           closedFilter ="fas fa-angle-double-right"
-        }    
+        }    */
         console.log(left)
         return (
             <div className={"col-md-"+container} style={{paddingLeft:"0"}}>
@@ -89,14 +89,14 @@ export default class Filters extends BasicComponent<{}, filterState>{
                     <Col >
                         Filters
                         </Col>
-                        <Col >
+                        {/* <Col >
                         <Button color="primary" size="md" className="moveFilterBar" onClick={this.showFilters}> 
                             <i className={closedFilter}/>
                         </Button>
-                        </Col>
+                        </Col> */}
                         </FormGroup>
                     </div>            
-                    <div className="card-body" style ={{paddingBottom: "0", display: noDisplay}}>
+                    <div className="card-body" style ={{paddingBottom: "0", paddingLeft:"4vh",display: noDisplay}}>
 
                         <Form onSubmit={this.setFilters}>
                             <FormGroup row={true}>
