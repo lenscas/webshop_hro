@@ -20,6 +20,7 @@ export default class ProductList extends BasicPage<ProductListProps,ProductListS
 		this.easySetState({pageNum})
 	}
 	render(){
+		console.log("awesome?")
 		if
 			("match" in this.props && this.props.match !==undefined && 
 			this.props.match.params.pageNum !== this.state.pageNum
@@ -30,6 +31,7 @@ export default class ProductList extends BasicPage<ProductListProps,ProductListS
 			return <Redirect to={"/products/"+this.state.pageNum}/>
 		}
 		const fetch = (num : number) =>getList(this.props.APIS.req,num)
+		console.log("awesome?")
 		return <CardList
 			req={this.props.APIS.req}	
 			fetch={fetch}
