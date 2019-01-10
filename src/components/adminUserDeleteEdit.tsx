@@ -67,30 +67,30 @@ export class AdminUserDeleteEdit extends BasicComponent<props, state>{
 
     renderDelete(users: UserData[], update: (params: {}) => Promise<void>) {
         return (
-            <>
-                <table >
+            <>  <h2 className="titlePage">Edit and Delete Users</h2>
+                <table className="tableDelete">
                     <thead>
-                        <tr className="align" >
-                            <th>UserName</th>
+                        <tr id="Delete" className="align" >
+                            <th className="thDelete">UserName</th>
 
-                            <th>Email</th>
+                            <th className="thDelete">Email</th>
 
-                            <th>Delete</th>
-                            <th>Edit</th>
+                            <th className="thDelete">Delete</th>
+                            <th className="thDelete">Edit</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
                             users.map((v) => {
                                 return (
-                                    <tr className="align" key={v.id}>
-                                        <td>{v.name}</td>
+                                    <tr id="Delete" className="align" key={v.id}>
+                                        <td className="thDelete">{v.name}</td>
 
-                                        <td>{v.email}</td>
+                                        <td className="thDelete">{v.email}</td>
 
                                         {/* <td><Button onClick={this.userDeleteOnClick(v.id)} >Delete</Button></td> */}
-                                        <td><i className="far fa-trash-alt mouse" onClick={this.userDeleteOnClick(v.id, update)} /></td>
-                                        <td><i className="fas fa-wrench  mouse" onClick={this.userEditModelOnClick(v)} /></td>
+                                        <td className="thDelete"><i className="far fa-trash-alt mouse" onClick={this.userDeleteOnClick(v.id, update)} /></td>
+                                        <td className="thDelete"><i className="fas fa-wrench  mouse" onClick={this.userEditModelOnClick(v)} /></td>
                                         {/* <i class="fas fa-wrench"></i> */}
                                     </tr>
                                 )
