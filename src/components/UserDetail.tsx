@@ -107,7 +107,7 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
                                 <p>{defaultAddress.city}</p>
                             </div>
                             <div className="d-flex flex-column float-right" style={{ "width": "4rem" }}>
-                                <Button className="justify-content-end" onClick={this.unsetDefault}>Unset</Button>
+                                <Button id="unsetKnop" className="justify-content-end" onClick={this.unsetDefault}>Unset</Button>
                             </div>
                         </div>
                     </div>
@@ -116,11 +116,11 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
         }
         return (
             <div>
-                <h4><b>Welcome, {this.props.userdata.approach} {this.props.userdata.name}!</b></h4>
-                <div>
+                <h4 className="userWelcome"><b>Welcome, {this.props.userdata.approach} {this.props.userdata.name}!</b></h4>
+                <div className="CardBody">
                     <div className="d-flex flex-row">
                         {defaultAddressView}
-                        <div>
+                        <div  className="userDetail">
                             <div className="card handOnHover" onClick={this.userEditModelOnClick(this.props.userdata)}>
                                 <div className="card-body">
                                     <div className="card-text float-left">
@@ -130,7 +130,7 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
                                         <p>E-Mail: {this.props.userdata.email}</p>
                                     </div>
                                     <div className="d-flex flex-column float-right" style={{ "width": "4rem" }}>
-                                        {/* <Button className="justify-content-start" style={{ "marginBottom": "2rem", "marginTop": "2rem" }} >Edit</Button> */}
+                                        { <Button id="editKnop" className="justify-content-start" style={{ "marginBottom": "2rem", "marginTop": "2rem" }} >Edit</Button> }
 
                                     </div>
                                 </div>

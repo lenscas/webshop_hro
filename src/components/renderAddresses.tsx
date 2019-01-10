@@ -29,7 +29,7 @@ export default class RenderAddresses extends BasicPage<props & RenderAddressesPr
         this.setState({
             ...this.state,
             less: !this.state.less,
-            buttenlessmore: !this.state.less ? "View more" : "View less"
+            buttenlessmore: !this.state.less ? "View more address" : "View less address"
         })
     }
 
@@ -110,8 +110,8 @@ export default class RenderAddresses extends BasicPage<props & RenderAddressesPr
                 </tr>
             )
 
-        const addButton = <td key={"c"}><Button className="float-left" onClick={this.addAddress}>Add</Button></td>
-        const viewMoreLessButton = <td key={"d"}><Button onClick={this.showAddresses}>{this.state.buttenlessmore}</Button></td>
+        const addButton = <td className="vButton" key={"c"}><Button className="float-left" onClick={this.addAddress}>Add a address</Button></td>
+        const viewMoreLessButton = <td className="vButton" key={"d"}><Button  onClick={this.showAddresses}>{this.state.buttenlessmore}</Button></td>
         const middle: JSX.Element[] = []
             rows.push(
                 <tr key={"f"}>

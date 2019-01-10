@@ -238,3 +238,25 @@ div.bgtrans {
   margin-right: 0;
   margin-left: 0;
 }
+.userWelcome{
+  text-align: center;
+    padding: 15px;
+}
+.CardBody{
+  display: table;
+    margin: 0 auto;
+}
+#unsetKnop{
+  position: relative;
+    top: 16vh;
+}
+.userDetail{
+  padding-left: 21px;
+}
+#editKnop{
+  position: relative;
+    top: 12vh;
+}
+.vButton{
+  padding: 20px;
+}
