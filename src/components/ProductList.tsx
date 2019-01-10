@@ -12,14 +12,11 @@ import { cartItem } from "src/services/Cart";
 import { API } from "src/services/basics";
 import { decks, addCardToDeck, getDecks } from "src/services/Decks";
 import SuperDropDown, { dropDownItems } from "./SuperDropDown";
-import { readLocalRaw } from "src/services/localStorage";
+import { readLocalRaw, readLocal } from "src/services/localStorage";
 import Modal from "reactstrap/lib/Modal";
 import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalBody from "reactstrap/lib/ModalBody";
 import ModalFooter from "reactstrap/lib/ModalFooter";
-//import price from "src/components/Price";
-// import { readLocalRaw } from "src/services/localStorage";
-
 
 type fourOfAKind<T> = [T, T?, T?, T?]
 type fourProducts = fourOfAKind<productList>
@@ -106,7 +103,12 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
     }
 
     renderAddToCart = (product: splittedCard) => {
-        if (("price" in product) && !isNaN(product.price)) {
+        const localCart = readLocal<cartItem[]>("cart")
+        let localCartItem : cartItem | undefined
+        if (localCart !== undefined){
+            localCartItem = localCart.find((item)=>item.id === product.id)
+        }
+        if (("price" in product) && !isNaN(product.price) && localCartItem !== undefined) {
             return (
                 <Button
                     onClick={
@@ -120,7 +122,7 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
                                 priceTotal: "",
                                 priceTotalNum: 1
                             },
-                            1
+                            localCartItem.quantity + 1
                         )
                     }
                     color="success"
@@ -211,7 +213,7 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
     }
 
     render() {
-        console.log(this.state.deckList)
+        console.log(readLocal<cartItem[]>("cart"))
 
         if (readLocalRaw("userId") && !this.state.deckList) {
 

@@ -19,7 +19,8 @@ type CartState = {
     card?: string,
     cardName?: string,
     deletedCards: number,
-    redirect: boolean
+    redirect: boolean,
+    clearCart: boolean
 }
 
 export default class Cart extends BasicComponent<CartProps, CartState>{
@@ -29,11 +30,16 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
         this.modOnClick = this.modOnClick.bind(this)
         this.renderCart = this.renderCart.bind(this)
         this.toggle = this.toggle.bind(this)
-        this.state = { erroredCards: [], didLoad: false, deletedCards: 0, redirect: false }
+        this.toggleClear = this.toggleClear.bind(this)
+        this.state = { erroredCards: [], didLoad: false, deletedCards: 0, redirect: false, clearCart: false }
     }
 
     toggle() {
         this.setState((st) => ({ ...st, card: undefined }))
+    }
+
+    toggleClear() {
+        this.easySetState({ clearCart: false })
     }
 
     async componentDidMount() {
@@ -107,6 +113,7 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
         const body = cart.map((item: cartItem) => {
 
             const onClick = () => this.easySetState({ card: item.id, cardName: item.name })
+
             const handleOnChange = (event) => {
                 if(event.target.value.length === 0 || event.target.value === 0) {
                     event.target.value = 1
@@ -130,6 +137,8 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
         }
         )
 
+        const clearCartModal = () => this.easySetState({ clearCart: true})
+
         return (
             <div className="cartPage">
                 <Table>
@@ -149,7 +158,9 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
                             <th />
                             <th>Total: {totals[0]}</th>
                             <th>Total: € {totals[1]}</th>
-                            <th />
+                            <th>
+                            <button className="btn btn-danger" onClick={clearCartModal}>Clear</button>
+                            </th>
                         </tr>
                     </tbody>
                 </Table>
@@ -192,6 +203,15 @@ export default class Cart extends BasicComponent<CartProps, CartState>{
 					</ModalBody>
                     <ModalFooter>
                         <Button color="danger" onClick={click}>Delete</Button>
+                    </ModalFooter>
+                </Modal>
+                <Modal isOpen={this.state.clearCart} toggle={this.toggleClear}>
+                    <ModalHeader toggle={this.toggleClear} />
+                    <ModalBody>
+                        Are you sure you want to clear your shopping cart?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="danger">Clear</Button>
                     </ModalFooter>
                 </Modal>
             </>
