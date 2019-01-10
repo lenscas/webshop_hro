@@ -15,7 +15,7 @@ export default class TextWithSymbols extends BasicComponent<textWithSymbolsProps
                 fullText.push(stringPart)
                 stringPart = ""
             }else if (char === "}"){
-                fullText.push(<span key={k}><img className={this.props.classSymbols || "defaultSymbol"} src={"/symbols/costs/mana"+stringPart.split("/").join("").toLowerCase()+".png"}/></span>)
+                fullText.push(<span key={k}><img className={this.props.classSymbols || "defaultSymbol" } src={"/symbols/costs/mana"+stringPart.split("/").join("").toLowerCase()+".png"}/></span>)
                 stringPart=""
             }
             else if(char==="\n"){

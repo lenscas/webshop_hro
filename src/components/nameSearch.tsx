@@ -27,7 +27,7 @@ export class NameSearch extends BasicComponent<{},NameSearchProps>{
 		}
 		return (
 			<form className="search" onSubmit={this.onSubmit}>
-				<input name="search" type="text" placeholder="Search"/>
+				<input name="search" type="text" placeholder=" Search"/>
 			</form>
 		)
 	}
