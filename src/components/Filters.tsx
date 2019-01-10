@@ -26,23 +26,22 @@ export default class Filters extends BasicComponent<{}, filterState>{
         const values = new FormData(e.target)
         const filtered: { [key: string]: string } = {}
         values.forEach((v, k) => {
-            const asTR = v.toString().trim()
-            if (asTR !== "") {
+            const asStr = v.toString().trim()
+            if (asStr !== "") {
                 if (k.startsWith("color")) {
                     if (!filtered.color) {
                         filtered.color = ""
                     }
                     filtered.color = filtered.color + k.replace("color", "")
-                } else {
-                    filtered[k] = asTR
-                }
-                if (k.startsWith("id")) {
+                } 
+                else if (k.startsWith("id")) {
                     if (!filtered.id) {
                         filtered.id = ""
                     }
                     filtered.id = filtered.id + k.replace("id", "")
-                } else {
-                    filtered[k] = asTR
+                } 
+                else {
+                    filtered[k] = asStr
                 }
 
             }
@@ -53,6 +52,11 @@ export default class Filters extends BasicComponent<{}, filterState>{
                     v => {
                         if (v === "color") {
                             return v + "=" + filtered[v]
+                        } else if (v === "oracle") {
+                            const searchTerms : string[] = filtered[v].split(" ")
+                            searchTerms.forEach((searchTerm)=>v + " " + searchTerm)
+                            const searchTermsJoined : string = v + ":" + searchTerms.join(" " + v + ":")
+                            return searchTermsJoined
                         } else {
                             return v + ":" + filtered[v]
                         }
@@ -60,7 +64,6 @@ export default class Filters extends BasicComponent<{}, filterState>{
                 ).join(" ")
             }
         )
-
     }
     showFilters(){
         this.easySetState({show:!this.state.show})
