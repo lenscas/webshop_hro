@@ -1,6 +1,7 @@
 import { API, APIReturn, BaseAPIReturn } from "./basics";
 import { readLocal, readLocalRaw, removeLocalAll } from "./localStorage";
 import { cartItem, getShoppingCartFromServer } from "./Cart";
+import { OrderItem } from "src/components/History";
 
 export type RegisterUser = {
 	username: string
@@ -178,6 +179,46 @@ export const getUserData = async (api: API) => {
 		return undefined
 	}
 };
+
+export const getHistory = async (api: API) => {
+
+	const res = await (
+		api.buildRequest("path","api/order")
+		.buildRequest("method", "GET")
+		.buildRequest("converter",(t:APIReturn<boolean>)=>({data : t.data}))
+	).run<{data: Array<{ statusString: string, payMethod: string, address: string, date: string, id: number }>}>()
+
+	if(res) {
+		// console.log(new Date(res.data[0].date).toLocaleDateString())
+		return res.data
+	}
+
+	return undefined
+}
+
+export const getHistoryItems = async (api: API, id: number) => {
+
+	const res = await (
+		api.buildRequest("path",`api/order/${id}`)
+		.buildRequest("method", "GET")
+		.buildRequest("converter",(t:APIReturn<boolean>)=>({data : t.data}))
+	).run<{data: OrderItem[]}>()
+
+	if(res) {
+		// console.log(new Date(res.data[0].date).toLocaleDateString())
+		let totalPrice = 0;
+		let quantity = 0
+		res.data.forEach(element => {
+			totalPrice += element.price
+			quantity += element.quantity
+		});
+		res.data.push({id: Math.floor(Math.random() * 1000000) + 1,name:"Total",price:totalPrice, quantity })
+		console.log(totalPrice, quantity)
+		return res.data
+	}
+
+	return undefined
+}
 
 export const setDefaultAddress = async (api: API, address: Address) => {
 
