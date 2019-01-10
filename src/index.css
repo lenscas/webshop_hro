@@ -260,3 +260,56 @@ div.bgtrans {
 .vButton{
   padding: 20px;
 }
+.userWelcome{
+  text-align: center;
+    padding: 15px;
+}
+.CardBody{
+  display: table;
+    margin: 0 auto;
+}
+#unsetKnop{
+  position: relative;
+    top: 16vh;
+}
+.userDetail{
+  padding-left: 21px;
+}
+#editKnop{
+  position: relative;
+    top: 12vh;
+}
+.vButton{
+  padding: 20px;
+
+.history {
+  margin-bottom: 5px;
+}
+
+.centerItems {
+  text-align: center;
+}
+
+.historyModel {
+  margin-top: 0%;
+  margin-bottom: 0%;
+  height: 100vh;
+  overflow: auto;
+}
+
+.historyModelBody {
+  margin: auto;
+}
+
+.historyTotal {
+  font-weight: bold;
+}
+.deckPage{
+  height: 1.5rem;
+}
+.deckBar{
+background-color: rgba(221, 221, 221, 0.7)
+}
+.seperateText{
+  margin-right: 10px
+}
