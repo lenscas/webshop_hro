@@ -122,6 +122,7 @@ export class AdminUserCreate extends BasicComponent<props, { success?: boolean |
         
         const onSubmit = (data: FormData<RegisterUserAsAdmin>) => this.onSubmit(data)
         return <>
+            <h1 className="Ctitle">Create a user</h1>
             {warnings}
             <Form<RegisterUserAsAdmin> onSubmit={onSubmit} inputs={this.fields} />
         </>

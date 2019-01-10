@@ -17,6 +17,7 @@ import { FormGroup, Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap
 import { Link } from "react-router-dom";
 import { searchForDeck } from "src/services/search";
 import { productList } from "src/services/product";
+import TextWithSymbols from "src/components/textWithSymbols";
 
 type LoadParams = {
 	userId : string
@@ -134,7 +135,16 @@ export default class DeckList extends BasicPage<DeckListProps,DeckListState>{
 		})
 	}
 	renderHead(keys:string[]){
-		return keys.map(key=><th key={key} className="text-center">{key}</th>)
+		return keys.map(v=>{
+			if (this.state.sortOn === "color"){
+				if (v === ""){
+					v = "C"
+				}
+				return {k:v,v:<TextWithSymbols  classSymbols="deckPage" key={v} text={v.split("").map(b=>"{"+b+"}").join("")} />}
+			}
+			return {k:v,v}
+		}
+		).map(key=><th className="symbolDeck" key={key.k}>{key.v}</th>)
 	}
 	getOrderOfColors(colors : string){
 		const colorOrder = {
