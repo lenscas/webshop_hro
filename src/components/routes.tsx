@@ -59,7 +59,7 @@ export default class Routes extends BasicPage {
 					<Switch>
 						<Route exact={true} path="/" render={this.renderHome} />
 						<Route exact={true} path="/register"><Register APIS={this.props.APIS} /></Route>
-						<Route path="/(search|products)*">
+						<Route path="/(search|products)/*">
 							<div className="row">
 								<Filters/>
 								<div className="col" style={{maxHeight:"94vh", overflow:"auto"}}>

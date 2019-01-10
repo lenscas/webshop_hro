@@ -239,5 +239,11 @@ div.bgtrans {
   margin-left: 0;
 }
 .deckPage{
-  height: 1.7rem;
+  height: 1.5rem;
+}
+.deckBar{
+background-color: rgba(221, 221, 221, 0.7)
+}
+.seperateText{
+  margin-right: 10px
 }
