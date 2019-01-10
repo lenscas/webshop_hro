@@ -1,5 +1,6 @@
 .payment{
     padding: 35vh;
+
 }
 .pay{
     padding: 15px;
@@ -21,4 +22,17 @@ table.paymentTable td, table.paymentTable tr, table.paymentTable th{
 .logoPay{
     width: 56%;
     padding-left: 18px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.paymentTable{
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 13vh;
+}
+.adresText{
+    font-weight: bold;
+    font-size: 20px
 }
