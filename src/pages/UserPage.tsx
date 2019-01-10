@@ -4,10 +4,11 @@ import { props } from "src/types/BasicProps";
 import { getUserData, UserData} from "src/services/users";
 import BasicPage from "../types/basicComponent";
 import UserDetail from "src/components/UserDetail";
+import HistoryPage from "src/components/History";
 
 export default class UserPage extends BasicPage<props, {render: string}>{
 
-    tabClasses: { [key: string]: string } = { Details: "nav-link active", Edit: "nav-link" }
+    tabClasses: { [key: string]: string } = { Details: "nav-link active", History: "nav-link" }
 
     editClasses: { [key: string]: string } = { changeDetails: "visible", addAddress: "hidden", changePassword: "hidden" }
 
@@ -44,6 +45,8 @@ export default class UserPage extends BasicPage<props, {render: string}>{
         console.log(id)
         if (id === "Details") {
             return <UserDetail APIS={this.props.APIS} userdata={userData} update={update}/>
+        } else if(id === "History") {
+            return <HistoryPage APIS={this.props.APIS}/>
         }
         else {
             return <div>Sorry, we couldn't find what you're looking for...</div>
@@ -63,7 +66,7 @@ export default class UserPage extends BasicPage<props, {render: string}>{
                     </li>
 
                     <li className="nav-item">
-                        <button className={this.tabClasses.Edit} onClick={this.setTabOnClick("Edit")}>History</button>
+                        <button className={this.tabClasses.History} onClick={this.setTabOnClick("History")}>History</button>
                     </li>
                 </ul>
 
