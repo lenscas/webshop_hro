@@ -52,7 +52,7 @@ export default class Filters extends BasicComponent<{}, filterState>{
                     v => {
                         if (v === "color") {
                             return v + "=" + filtered[v]
-                        } else if (v === "oracle") {
+                        } else if (v === "oracle" || v === "type") {
                             const searchTerms : string[] = filtered[v].split(" ")
                             searchTerms.forEach((searchTerm)=>v + " " + searchTerm)
                             const searchTermsJoined : string = v + ":" + searchTerms.join(" " + v + ":")
@@ -70,7 +70,9 @@ export default class Filters extends BasicComponent<{}, filterState>{
     }
     render() {
         if (this.state.toSearch) {
-            return <Redirect to={"/search/" + this.state.toSearch} />
+            const url = this.state.toSearch
+            this.easySetState({toSearch: undefined})
+            return <Redirect to={"/search/" + url} />
         }
         //const closedFilter = "fas fa-angle-double-left" // if used again change const to let
         const noDisplay :string |undefined = undefined
