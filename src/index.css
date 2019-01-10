@@ -242,10 +242,6 @@ div.bgtrans {
   text-align: center;
     padding: 15px;
 }
-.userWelcome{
-  text-align: center;
-    padding: 15px;
-}
 .CardBody{
   display: table;
     margin: 0 auto;
@@ -263,6 +259,7 @@ div.bgtrans {
 }
 .vButton{
   padding: 20px;
+}
 
 .history {
   margin-bottom: 5px;
