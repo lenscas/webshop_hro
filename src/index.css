@@ -67,6 +67,9 @@ body, html {
   font-size: 1.25em;
   font-family: "verdana";
 }
+.Ctitle{
+  text-align: center;
+}
 .payment{
   width: 85%;
   margin-left: auto;
@@ -83,6 +86,9 @@ body, html {
     margin-top: 13vh;
     border: black solid;
     background-image: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+}
+.table-striped{
+  background-image: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
 }
 .tableDelete, .thDelete, {
   border: black solid;

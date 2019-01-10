@@ -1,6 +1,7 @@
 import BasicComponent from "src/types/smallComponent";
 import * as React from "react";
 import { Redirect } from "react-router";
+import Input from "reactstrap/lib/Input";
 //import * as React from "react";
 type NameSearchProps = {
 	name? : string
@@ -27,7 +28,7 @@ export class NameSearch extends BasicComponent<{},NameSearchProps>{
 		}
 		return (
 			<form className="search" onSubmit={this.onSubmit}>
-				<input name="search" type="text" placeholder=" Search"/>
+				<Input name="search" type="text" placeholder="Search"/>
 			</form>
 		)
 	}
