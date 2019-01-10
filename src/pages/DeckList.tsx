@@ -13,7 +13,7 @@ import { match, Redirect } from "react-router";
 import { retTrue } from "src/funcs/lambdas";
 import Label from "reactstrap/lib/Label";
 import Input from "reactstrap/lib/Input";
-import { FormGroup, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { FormGroup, Modal, ModalHeader, ModalBody, ModalFooter, Form } from "reactstrap";
 import { Link } from "react-router-dom";
 import { searchForDeck } from "src/services/search";
 import { productList } from "src/services/product";
@@ -94,10 +94,20 @@ export default class DeckList extends BasicPage<DeckListProps, DeckListState>{
 			onClick = () => this.easySetState({ filterLands: true })
 		}
 		return (
-			<FormGroup check={true}>
-				<Input id="showLands" type="checkbox" onClick={onClick} />
-				<span><Label for="showLands" check={true}><h4>Show lands</h4></Label></span>
-			</FormGroup>
+			<>
+			<Form className="form-inline">
+				<div className="form-check mb-2 mr-sm-2">
+					<Label className="form-check-label showLands" for="inlineFormCheck ">
+						<h4>Show lands :</h4>
+					</Label>
+					<Input className="form-check-input showLands" type="checkbox" id="inlineFormCheck" onClick={onClick} />
+				</div>
+					{/* <FormGroup check={true}>
+						<Input id="showLands" type="checkbox" onClick={onClick} />
+						<span><Label for="showLands" check={true}><h4>Show lands</h4></Label></span>
+					</FormGroup> */}
+			</Form>
+			</>
 		)
 	}
 	renderBuyButton() {

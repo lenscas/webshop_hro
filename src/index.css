@@ -268,7 +268,11 @@ div.bgtrans {
 background-color: rgba(221, 221, 221, 0.7)
 }
 .seperateText{
-  margin-right: 10px
+  margin-right: 10px;
+}
+label.form-check-label.showLands {
+  margin-right: 10px;
+  margin-top: 1px;
 }
 .userWelcome{
   text-align: center;
