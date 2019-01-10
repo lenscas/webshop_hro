@@ -34,9 +34,6 @@ export const searchCommander = async (name:string):Promise<searchResult[]>=>{
 }
 
 export const searchForDeck = (name : string)=>{
-	if(name.length <= 3){
-		return async (pageNR : number ) => []
-	}
 	return async (pageNR : number ) => productListConvert(await searchAdvanced("name:" + name))
 }
 
