@@ -46,7 +46,7 @@ export default class Admin extends BasicPage<props, { render: string}> {
                 <div className="tabs">
                     <ul className="nav nav-pills">
                         <li className="nav-item">
-                            <button className={this.tabClasses.Hangfire} onClick={this.setTabOnClick("Hangfire")} >hangfire</button>
+                            <button color="secondary" className={this.tabClasses.Hangfire} onClick={this.setTabOnClick("Hangfire")} >hangfire</button>
                         </li>
 
                         <li className="nav-item">
