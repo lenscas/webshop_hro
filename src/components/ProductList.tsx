@@ -108,7 +108,18 @@ export default class CardList extends BasicPage<ProductListProps, CardListState>
         if (localCart !== undefined){
             localCartItem = localCart.find((item)=>item.id === product.id)
         }
-        if (("price" in product) && !isNaN(product.price) && localCartItem !== undefined) {
+        if (localCartItem === undefined){
+            localCartItem = {
+                id: product.id,
+                name: "",
+                price: "",
+                priceNum: 0,
+                quantity: 0,
+                priceTotal: "",
+                priceTotalNum: 1
+            }
+        }
+        if (("price" in product) && !isNaN(product.price)) {
             return (
                 <Button
                     onClick={

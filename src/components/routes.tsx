@@ -64,7 +64,7 @@ export default class Routes extends BasicPage {
 								<Filters/>
 								<div className="col" style={{maxHeight:"94vh", overflow:"auto"}}>
 									<Switch>
-										<Route exact={true} path="/products"><ProductList APIS={this.props.APIS} /></Route>
+										<Route exact={true} path="/products/"><ProductList APIS={this.props.APIS} /></Route>
 										<Route exact={true} path="/products/:pageNum" render={this.cardListPage} />
 										<Route exact={true} path="/search/:name" render={this.searchListPage} />
 										<Route exact={true} path="/search/:name/:pageNum" render={this.searchListPage} />
