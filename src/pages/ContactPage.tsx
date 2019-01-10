@@ -54,8 +54,8 @@ export default class ContactPage extends BasicPage<props,feedbackState> {
                 name: "subject",
                 label: "Subject",
                 id : "subject",
-                type: "textarea",
-                validator:retTrue
+                type: "select",
+                options: ["Question","Suggestion","Complaint","Bug report","Other"]
             },
             {
                 name: "message",
