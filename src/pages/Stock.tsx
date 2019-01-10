@@ -61,11 +61,14 @@ export default class Stock extends BasicPage<props,StockState> {
 		this.easySetState({pageNumber:pageNum})
 	}
 	render(){
-		return <DataTable
+		return <div>
+			<h1 className="Ctitle">Product Stocks</h1>
+			<DataTable
 			fetch={this.getData}
 			render={this.renderLines}
 			pageNumber={Number(this.state.pageNumber)}
 			setUrlHandler={this.pageNumHandler}
 		/>
+		</div>
 	}
 }
