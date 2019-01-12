@@ -193,3 +193,15 @@ export const setDefaultAddress = async (api: API, address: Address) => {
 	}
 	return false
 }
+
+export const deleteAddress = async (api: API, addressId: number, toggle: () => void) => {
+	const res = await (
+		api.buildRequest("path",`api/address/${addressId}`)
+		.buildRequest("method", "DELETE")
+		.buildRequest("converter",(t:APIReturn<boolean>)=>({success : t.success}))
+	).run<{success: boolean}>()
+
+	if(res && res.success) {
+		toggle()
+	}
+}

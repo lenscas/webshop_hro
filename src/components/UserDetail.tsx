@@ -1,19 +1,23 @@
 import BasicPage from "src/types/basicComponent";
 import { props } from "src/types/BasicProps";
 import * as React from "react";
-import Button from "reactstrap/lib/Button";
 import { Address, UserData, setDefaultAddress } from "src/services/users";
 import { readLocal, removeLocal, storeLocal } from "src/services/localStorage";
 import RenderAddresses from "./renderAddresses";
 import { EditScreen } from "./EditScreen";
 import { APIReturn } from "src/services/basics";
+import Modal from "reactstrap/lib/Modal";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+import ModalBody from "reactstrap/lib/ModalBody";
+import ModalFooter from "reactstrap/lib/ModalFooter";
+import Button from "reactstrap/lib/Button";
 
-type UserDetailState = { selectingDefaultAddress: boolean, removingDefaultAddress: boolean, open: boolean }
+type UserDetailState = { selectingDefaultAddress: boolean, removingDefaultAddress: boolean, open: boolean, modelUnset: boolean }
 
 export default class UserDetail extends BasicPage<props & { userdata: UserData, update: (params: {}) => Promise<void> }, UserDetailState> {
     constructor(propsy) {
         super(propsy)
-        this.state = { selectingDefaultAddress: false, removingDefaultAddress: false, open: false }
+        this.state = { selectingDefaultAddress: false, removingDefaultAddress: false, open: false, modelUnset: false }
     }
 
     setSelectOnClick(selectingDefAddress: boolean) {
@@ -24,7 +28,7 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
         this.easySetState({ selectingDefaultAddress: selectingDefAddress })
     }
 
-    setDefault = (address: Address) => {
+    setDefault = (address: Address, toggle?: () => void) => {
 
         this.setSelect(false)
         address.main = true
@@ -32,12 +36,16 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
         setDefaultAddress(this.props.APIS.req, address)
 
         storeLocal("defaultAddress", address)
+        if (toggle) {
+            toggle()
+        }
+
 
     }
 
-    setDefaultOnClick = (address: Address) => {
+    setDefaultOnClick = (address: Address, toggle: () => void) => {
 
-        return () => this.setDefault(address)
+        return () => this.setDefault(address, toggle)
     }
 
     unsetDefault = async () => {
@@ -50,7 +58,13 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
         removeLocal("defaultAddress")
 
 
-        this.easySetState({ removingDefaultAddress: true })
+        this.easySetState({ removingDefaultAddress: true, modelUnset: false })
+    }
+    toggle = () => {
+        this.setState({
+            ...history.state,
+            modelUnset: !this.state.modelUnset
+        })
     }
 
     userEditModelOnClick = (v, update?: (params: {}) => Promise<void>) => {
@@ -80,16 +94,16 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
         const defaultAddress: Address | undefined = readLocal("defaultAddress")
         let defaultAddressView = (
             <div>
-                <div className="card">
+                <div className="card" >
                     <div className="card-body">
                         <div className="card-text float-left">
                             <b>You don't have a default address set!</b>
-                            <p>Press select to pick one now.</p>
-                            {
+                            <p>choice a address below click on it and the choice set as default.</p>
+                            {/* {
                                 this.state.selectingDefaultAddress ?
                                     <Button onClick={this.setSelectOnClick(false)}>Cancel</Button>
                                     : <Button onClick={this.setSelectOnClick(true)}>Select</Button>
-                            }
+                            } */}
                         </div>
                     </div>
                 </div>
@@ -98,7 +112,7 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
         if (defaultAddress !== undefined) {
             defaultAddressView = (
                 <div>
-                    <div className="card">
+                    <div className="card handOnHover" onClick={this.toggle}>
                         <div className="card-body">
                             <div className="card-text float-left">
                                 <b>Your Default Address:</b>
@@ -106,9 +120,9 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
                                 <p>{defaultAddress.zipCode}</p>
                                 <p>{defaultAddress.city}</p>
                             </div>
-                            <div className="d-flex flex-column float-right" style={{ "width": "4rem" }}>
+                            {/* <div className="d-flex flex-column float-right" style={{ "width": "4rem" }}>
                                 <Button id="unsetKnop" className="justify-content-end" onClick={this.unsetDefault}>Unset</Button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -120,7 +134,7 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
                 <div className="CardBody">
                     <div className="d-flex flex-row">
                         {defaultAddressView}
-                        <div  className="userDetail">
+                        <div className="userDetail">
                             <div className="card handOnHover" onClick={this.userEditModelOnClick(this.props.userdata)}>
                                 <div className="card-body">
                                     <div className="card-text float-left">
@@ -129,10 +143,10 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
                                         <p>Name: {this.props.userdata.name}</p>
                                         <p>E-Mail: {this.props.userdata.email}</p>
                                     </div>
-                                    <div className="d-flex flex-column float-right" style={{ "width": "4rem" }}>
+                                    {/* <div className="d-flex flex-column float-right" style={{ "width": "4rem" }}>
                                         { <Button id="editKnop" className="justify-content-start" style={{ "marginBottom": "2rem", "marginTop": "2rem" }} >Edit</Button> }
 
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
@@ -150,6 +164,15 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
                                 setDefaultOnClick={this.setDefaultOnClick}
                                 setDefault={this.setDefault} />
                         </tbody>
+                        <Modal isOpen={this.state.modelUnset} toggle={this.toggle}>
+                            <ModalHeader toggle={this.toggle}>Address</ModalHeader>
+                            <ModalBody>
+                                Click on Unset to delete your default address or on the cross or next to this popup to go back.
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button onClick={this.unsetDefault} color="danger">Unset</Button>
+                            </ModalFooter>
+                        </Modal>
                     </table>
                 </div>
             </div>
