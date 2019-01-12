@@ -11,7 +11,6 @@ type BasicInputField = {
 	label?: string,
 	placeholder?: string,
 	isOptional?: boolean,
-	value?: string
 }
 
 export type InputField = BasicInputField & (
@@ -174,8 +173,6 @@ export default class Form<T> extends BasicComponent<FormProps<T>, FormState<T>> 
 					placeholder?: string,
 					id: string,
 					required: boolean,
-					value: string,
-					name: string
 				} = {
 					key: input.name,
 					valid: tooltip.isValid,
@@ -186,8 +183,6 @@ export default class Form<T> extends BasicComponent<FormProps<T>, FormState<T>> 
 					placeholder: input.placeholder || input.label,
 					id: input.id,
 					required: !input.isOptional,
-					value: input.value ? input.value : '',
-					name: input.name
 				}
 				if (!hasBeenInserted) {
 					props.valid = undefined
@@ -245,7 +240,7 @@ export default class Form<T> extends BasicComponent<FormProps<T>, FormState<T>> 
 				event: e
 			}
 			for (let index = 0; index < this.props.inputs.length; index++) {
-				if(e.target[index].localName !== 'button') {
+				if(e.target[index].localName === 'select') {
 					formData.values[e.target[index].name] = e.target[index].value
 				}
 				if(e.target[index].localName !== 'select' && e.target[index].type !== 'button') {
