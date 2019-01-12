@@ -11,6 +11,7 @@ type BasicInputField = {
 	label?: string,
 	placeholder?: string,
 	isOptional?: boolean,
+	value?: string
 }
 
 export type InputField = BasicInputField & (
@@ -20,7 +21,7 @@ export type InputField = BasicInputField & (
 
 	} | {
 		type: "email" | "text" | "hidden" | "password"
-		validator: formValidation<string>
+		validator: formValidation<string>,
 	} |
 	{
 		type: "button"
@@ -172,7 +173,9 @@ export default class Form<T> extends BasicComponent<FormProps<T>, FormState<T>> 
 					onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
 					placeholder?: string,
 					id: string,
-					required: boolean
+					required: boolean,
+					value: string,
+					name: string
 				} = {
 					key: input.name,
 					valid: tooltip.isValid,
@@ -182,7 +185,9 @@ export default class Form<T> extends BasicComponent<FormProps<T>, FormState<T>> 
 					onChange,
 					placeholder: input.placeholder || input.label,
 					id: input.id,
-					required: !input.isOptional
+					required: !input.isOptional,
+					value: input.value ? input.value : '',
+					name: input.name
 				}
 				if (!hasBeenInserted) {
 					props.valid = undefined
@@ -240,8 +245,7 @@ export default class Form<T> extends BasicComponent<FormProps<T>, FormState<T>> 
 				event: e
 			}
 			for (let index = 0; index < this.props.inputs.length; index++) {
-				if(e.target[index].localName === 'select') {
-					// tslint:disable-next-line:no-unused-expression
+				if(e.target[index].localName !== 'button') {
 					formData.values[e.target[index].name] = e.target[index].value
 				}
 				if(e.target[index].localName !== 'select' && e.target[index].type !== 'button') {

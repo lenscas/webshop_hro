@@ -6,7 +6,7 @@ import BasicPage from "../types/basicComponent";
 import UserDetail from "src/components/UserDetail";
 import HistoryPage from "src/components/History";
 
-export default class UserPage extends BasicPage<props, {render: string}>{
+export default class UserPage extends BasicPage<props, {render: string, less: boolean}>{
 
     tabClasses: { [key: string]: string } = { Details: "nav-link active", History: "nav-link" }
 
@@ -14,7 +14,7 @@ export default class UserPage extends BasicPage<props, {render: string}>{
 
     constructor(propsy) {
         super(propsy);
-        this.state = { render: "Details"}
+        this.state = { render: "Details", less: true}
         this.renderUserData = this.renderUserData.bind(this)
     }
 
@@ -39,14 +39,20 @@ export default class UserPage extends BasicPage<props, {render: string}>{
         this.setTab(tabId)
     }
 
-
+    showAddresses = () => {
+        this.setState({
+            ...this.state,
+            less: !this.state.less,
+        })
+    }
 
     renderTab(id: string, userData: UserData, update: (params: {}) => Promise<void>) {
         console.log(id)
         if (id === "Details") {
-            return <UserDetail APIS={this.props.APIS} userdata={userData} update={update}/>
+            return <UserDetail APIS={this.props.APIS} userdata={userData} update={update} less={this.state.less} showAddresses={this.showAddresses}/>
         } else if(id === "History") {
             return <HistoryPage APIS={this.props.APIS}/>
+            
         }
         else {
             return <div>Sorry, we couldn't find what you're looking for...</div>
