@@ -2,15 +2,16 @@ import BasicPage from "src/types/basicComponent";
 import * as React from "react";
 import Button from "reactstrap/lib/Button";
 import { props } from "src/types/BasicProps";
-import { Address } from "src/services/users";
+import { Address, deleteAddress } from "src/services/users";
 import { readLocalRaw } from "src/services/localStorage";
 import AddressModal from "./AddressModal";
 import Modal from "reactstrap/lib/Modal";
 import ModalHeader from "reactstrap/lib/ModalHeader";
 import ModalBody from "reactstrap/lib/ModalBody";
 import ModalFooter from "reactstrap/lib/ModalFooter";
+import EditAddress from "./editAddres";
 
-type UserDetailState = { less: boolean, buttenlessmore: string, perRow: number, model: boolean, open: boolean, editAddres: boolean, addressItem?: Address }
+type UserDetailState = { buttenlessmore: string, perRow: number, model: boolean, open: boolean, editAddres: boolean, addressItem?: Address }
 
 type RenderAddressesProps = {
     addresses: Address[],
@@ -18,21 +19,28 @@ type RenderAddressesProps = {
     removingDefaultAddress: boolean,
     selectingDefaultAddress: boolean,
     setDefaultOnClick: (address: Address, toggle?: () => void) => () => void,
-    setDefault: (addres: Address, toggle?: () => void) => void
+    setDefault: (addres: Address, toggle?: () => void) => void,
+    update: (params: {}) => Promise<void>,
+    less: boolean,
+    showAddresses: () => void
 }
 
 export default class RenderAddresses extends BasicPage<props & RenderAddressesProps, UserDetailState> {
 
     constructor(propsy) {
         super(propsy)
-        this.state = { less: true, buttenlessmore: "View more", perRow: 3, model: false, open: false, editAddres: false }
+        this.state = { buttenlessmore: "View more", perRow: 3, model: false, open: false, editAddres: false }
     }
 
     toggleOnclick = (address) => {
         return () => this.toggle(address)
     }
 
-    toggle = (address? : Address) => {
+    onClickDelete = (addressId: number, update?: (params: {}) => Promise<void>) => {
+        return () => deleteAddress(this.props.APIS.req, addressId, this.toggle, update)
+    }
+
+    toggle = (address?: Address) => {
         this.setState({
             ...this.state,
             open: !this.state.open,
@@ -50,10 +58,10 @@ export default class RenderAddresses extends BasicPage<props & RenderAddressesPr
 
 
     showAddresses = () => {
+        this.props.showAddresses()
         this.setState({
             ...this.state,
-            less: !this.state.less,
-            buttenlessmore: !this.state.less ? "View more address" : "View less address"
+            buttenlessmore: !this.props.less ? "View more address" : "View less address"
         })
     }
 
@@ -76,7 +84,7 @@ export default class RenderAddresses extends BasicPage<props & RenderAddressesPr
                 }
 
                 const max = 3
-                if (this.state.less) {
+                if (this.props.less) {
                     if (i < max) {
                         row.push(address)
                     }
@@ -143,19 +151,22 @@ export default class RenderAddresses extends BasicPage<props & RenderAddressesPr
                     <ModalBody>
                         {
                             this.state.editAddres ?
-                                !this.state.addressItem ? <div> no addres found</div> : <div>Edit: {this.state.addressItem.id}</div>
+                                !this.state.addressItem ? <div> no addres found</div> : <EditAddress APIS={this.props.APIS} succes={this.toggle} address={this.state.addressItem}/>
                                 : <div>What do you want to do? Choose one of the three options below, or click on the cross or next to this popup to do nothing.</div>
                         }
                     </ModalBody>
                     <ModalFooter>
                         {
                             this.state.addressItem ?
-                                <Button color="primary" onClick={this.props.setDefaultOnClick(this.state.addressItem, this.toggle)}>Set as default</Button>
+                                <>
+                                    <Button color="primary" onClick={this.props.setDefaultOnClick(this.state.addressItem, this.toggle)}>Set as default</Button>
+                                    <Button color="success" onClick={this.editAddres}>Edit address</Button>
+                                    <Button color="danger" onClick={this.onClickDelete(this.state.addressItem.id, this.props.update)}>Delete address</Button>
+                                </>
                                 : null
                         }
 
-                        <Button color="success" onClick={this.editAddres}>Edit address</Button>
-                        <Button color="danger">Delete address</Button>
+
                     </ModalFooter>
                 </Modal>
             </>

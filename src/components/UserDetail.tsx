@@ -14,7 +14,7 @@ import Button from "reactstrap/lib/Button";
 
 type UserDetailState = { selectingDefaultAddress: boolean, removingDefaultAddress: boolean, open: boolean, modelUnset: boolean }
 
-export default class UserDetail extends BasicPage<props & { userdata: UserData, update: (params: {}) => Promise<void> }, UserDetailState> {
+export default class UserDetail extends BasicPage<props & { userdata: UserData, update: (params: {}) => Promise<void>, less: boolean, showAddresses: () => void }, UserDetailState> {
     constructor(propsy) {
         super(propsy)
         this.state = { selectingDefaultAddress: false, removingDefaultAddress: false, open: false, modelUnset: false }
@@ -162,7 +162,10 @@ export default class UserDetail extends BasicPage<props & { userdata: UserData, 
                                 removingDefaultAddress={this.state.removingDefaultAddress}
                                 selectingDefaultAddress={this.state.selectingDefaultAddress}
                                 setDefaultOnClick={this.setDefaultOnClick}
-                                setDefault={this.setDefault} />
+                                setDefault={this.setDefault} 
+                                update={this.props.update}
+                                less={this.props.less}
+                                showAddresses={this.props.showAddresses}/>
                         </tbody>
                         <Modal isOpen={this.state.modelUnset} toggle={this.toggle}>
                             <ModalHeader toggle={this.toggle}>Address</ModalHeader>

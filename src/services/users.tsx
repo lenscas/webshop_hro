@@ -194,7 +194,7 @@ export const setDefaultAddress = async (api: API, address: Address) => {
 	return false
 }
 
-export const deleteAddress = async (api: API, addressId: number, toggle: () => void) => {
+export const deleteAddress = async (api: API, addressId: number, toggle: () => void, update?: (params: {}) => Promise<void>) => {
 	const res = await (
 		api.buildRequest("path",`api/address/${addressId}`)
 		.buildRequest("method", "DELETE")
@@ -202,6 +202,25 @@ export const deleteAddress = async (api: API, addressId: number, toggle: () => v
 	).run<{success: boolean}>()
 
 	if(res && res.success) {
+		if(update) {
+			update({})
+		}
+		toggle()
+	}
+}
+
+export const updateAddress = async (api: API, address: Address, toggle: () => void, update?: (params: {}) => Promise<void>) => {
+	const res = await (
+		api.buildRequest("path",`api/address/${address.id}`)
+		.buildRequest("method", "PUT")
+		.buildRequest("body",address)
+		.buildRequest("converter",(t:APIReturn<boolean>)=>({success : t.success}))
+	).run<{success: boolean}>()
+
+	if(res && res.success) {
+		if(update) {
+			update({})
+		}
 		toggle()
 	}
 }
