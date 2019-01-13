@@ -100,8 +100,8 @@ export default class Pay extends BasicPage<props, PayState> {
     }
     close = () => {
         if(this.state.method!=="Choose a payment method"){
-        this.order();
-        this.toggle();
+            this.order();
+            this.toggle();
         }
     }
 
