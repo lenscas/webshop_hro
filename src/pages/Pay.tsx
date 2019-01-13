@@ -30,8 +30,8 @@ export default class Pay extends BasicPage<props, PayState> {
     constructor(propsy) {
         super(propsy)
         this.state = {
-            payMethods: ["Ideal", "Mastercard", "Visa", "American Express", "PayPal", "gift card"],
-            method: "pay",
+            payMethods: ["Ideal", "Mastercard", "Visa", "American Express", "PayPal", "Gift card"],
+            method: "Choose a payment method",
             addresses: [],
             orderd: false,
             open: false,
@@ -99,9 +99,10 @@ export default class Pay extends BasicPage<props, PayState> {
 
     }
     close = () => {
+        if(this.state.method!=="Choose a payment method"){
         this.order();
         this.toggle();
-
+        }
     }
 
     update = async() => {
@@ -135,7 +136,7 @@ export default class Pay extends BasicPage<props, PayState> {
                     <tr>
                         <td>
                             <div className="adres">
-                            <h2>select address : </h2>
+                            <h2>Please select an address : </h2>
                                 {this.state.addresses && this.state.addresses.length > 0 && typeof this.state.addresses !== 'string' ?
                                     <Input type="select" name="select" id="exampleSelect" onInput={setAddress} value={this.state.addres ? this.state.addres.street + " " +this.state.addres.number : ""}>
                                         {
@@ -188,10 +189,10 @@ export default class Pay extends BasicPage<props, PayState> {
                                 <Modal isOpen={this.state.open} toggle={this.toggle}>
                                     <ModalHeader toggle={this.toggle} />
                                     <ModalBody>
-                                        are you sure you want to Order?
+                                        Are you sure you want to order?
                                     </ModalBody>
                                     <ModalFooter>
-                                        <Button color="danger" onClick={this.close}>Order</Button>
+                                        <Button color="primary" onClick={this.close}>Order</Button>
                                     </ModalFooter>
                                 </Modal>
                             </div>
