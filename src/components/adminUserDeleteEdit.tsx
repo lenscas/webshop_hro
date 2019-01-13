@@ -6,6 +6,7 @@ import LoadSymbol from "./loadSymbol";
 import { APIReturn } from "src/services/basics";
 // import Button from "reactstrap/lib/Button";
 import { EditScreen } from "./EditScreen";
+import UserRow from "./UserRow";
 
 type state = {
     success?: boolean | {
@@ -13,7 +14,7 @@ type state = {
         message: string
     }, users: UserData[] | undefined,
     open: boolean,
-    editUser?: UserData
+    editUser?: UserData,
 }
 
 export class AdminUserDeleteEdit extends BasicComponent<props, state>{
@@ -72,40 +73,15 @@ export class AdminUserDeleteEdit extends BasicComponent<props, state>{
         this.userEditModel(undefined, update)
     }
 
+
+
     renderDelete(users: UserData[], update: (params: {}) => Promise<void>) {
         return (
-            <>  <h2 className="titlePage">Edit and Delete Users</h2>
-                <table className="tableDelete">
-                    <thead>
-                        <tr id="Delete" className="align" >
-                            <th className="thDelete">UserName</th>
+            <>
+                <h2 className="titlePage">Edit and Delete Users</h2>
 
-                            <th className="thDelete">Email</th>
+                <UserRow APIS={this.props.APIS} users={users} update={update} userDelete={this.usersDelete} userEditModel={this.userEditModel} />
 
-                            <th className="thDelete">Delete</th>
-                            <th className="thDelete">Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            users.map((v) => {
-                                return (
-                                    <tr id="Delete" className="align" key={v.id}>
-                                        <td className="thDelete">{v.name}</td>
-
-                                        <td className="thDelete">{v.email}</td>
-
-                                        {/* <td><Button onClick={this.userDeleteOnClick(v.id)} >Delete</Button></td> */}
-                                        <td className="thDelete"><i className="far fa-trash-alt mouse" onClick={this.userDeleteOnClick(v.id, update)} /></td>
-                                        <td className="thDelete"><i className="fas fa-wrench  mouse" onClick={this.userEditModelOnClick(v)} /></td>
-                                        {/* <i class="fas fa-wrench"></i> */}
-                                    </tr>
-                                )
-                            })
-
-                        }
-                    </tbody>
-                </table>
 
                 {this.state.editUser ? <EditScreen APIS={this.props.APIS} user={this.state.editUser} close={this.userEditModel} update={this.update} isAdmin={true} updateScreen={update} open={this.state.open} /> : null}
 

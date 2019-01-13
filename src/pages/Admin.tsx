@@ -1,11 +1,13 @@
 import * as React from "react";
 import { props } from "src/types/BasicProps";
 import BasicPage from "src/types/basicComponent";
-import { apiUrl } from 'src/config';
 import "../style/admin.css";
 import Stock from "./Stock";
 import { AdminUserCreate } from "src/components/adminUserCreate";
 import { AdminUserDeleteEdit } from "src/components/adminUserDeleteEdit";
+import Hangfire from 'src/components/Hangfire';
+import { readLocalRaw } from "src/services/localStorage";
+import { Redirect } from "react-router";
 
 export default class Admin extends BasicPage<props, { render: string}> {
 
@@ -22,10 +24,7 @@ export default class Admin extends BasicPage<props, { render: string}> {
     
     renderHangfire() {
         return (
-            <div className="con">
-
-                <iframe src={apiUrl + "hangfire"} className="hangfire" />
-            </div>
+            <Hangfire APIS={this.props.APIS}/>
         )
     }
 
@@ -40,6 +39,10 @@ export default class Admin extends BasicPage<props, { render: string}> {
     }
 
     render() {
+        const role = readLocalRaw('role')
+        if(role !== 'Admin') {
+            return <Redirect to="/"/>
+        }
 
         return (
             <div className="mainAdmin">

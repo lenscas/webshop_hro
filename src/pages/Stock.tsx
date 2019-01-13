@@ -4,17 +4,28 @@ import DataTable from "src/components/DataTable";
 import { getList, productList } from "src/services/product";
 import { props } from "src/types/BasicProps";
 import { setStock } from "src/services/stock";
+import Modal from "reactstrap/lib/Modal";
+import ModalHeader from "reactstrap/lib/ModalHeader";
+import ModalBody from "reactstrap/lib/ModalBody";
 type StockState = {
-	pageNumber:string
+	pageNumber:string,
+	open: boolean
 }
 export default class Stock extends BasicPage<props,StockState> {
 	constructor(propsy){
 		super(propsy)
-		this.state = {pageNumber:"1"}
+		this.state = {pageNumber:"1", open: false}
 		this.getData = this.getData.bind(this)
 		this.renderLines = this.renderLines.bind(this)
 		this.pageNumHandler = this.pageNumHandler.bind(this)
 	}
+
+	toggle = () => {
+		this.setState({
+			open: !this.state.open
+		})
+	}
+
 	getData(pageNR : number){
 		return getList(this.props.APIS.req,pageNR)
 	}
@@ -30,6 +41,7 @@ export default class Stock extends BasicPage<props,StockState> {
 			const amount = new FormData(ba.target).get("amount")
 			if(amount){
 				setStock(this.props.APIS.req,line.id,Number(amount))
+				this.toggle()
 			}
 			
 
@@ -69,6 +81,12 @@ export default class Stock extends BasicPage<props,StockState> {
 			pageNumber={Number(this.state.pageNumber)}
 			setUrlHandler={this.pageNumHandler}
 		/>
+		<Modal isOpen={this.state.open} toggle={this.toggle}>
+                <ModalHeader toggle={this.toggle}>Edit User</ModalHeader>
+                <ModalBody>
+                   Stock is updated
+                </ModalBody>
+            </Modal>
 		</div>
 	}
 }

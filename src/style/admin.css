@@ -26,3 +26,11 @@ th{
 .align {
     text-align: center;
 }
+
+.button {
+    margin-bottom: 5px;
+}
+
+.buttonPrice {
+    margin-left: 5px;
+}
