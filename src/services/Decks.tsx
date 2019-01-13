@@ -54,6 +54,7 @@ export interface ICardResponce {
 	typeLine:   string;
 	color:      color[];
 	mana:       IManaResponce[];
+	quantity:   number;
 }
 
 export interface IManaResponce {
@@ -68,6 +69,50 @@ export type insertDeck = {
 	commander_name_2? : string
 
 }
+function getOrderOfColors(colors: string) {
+	const colorOrder = {
+		"W": 1,
+		"U": 2,
+		"B": 3,
+		"R": 4,
+		"G": 5
+	}
+	return colors.split("").sort( (v,k)=>{
+		const pos1= colorOrder[v]
+		const pos2 = colorOrder[k]
+		if(pos1 > pos2){
+			return 1
+		}
+		if(pos1 < pos2){
+			return -1
+		}
+		return 0
+	} ).join("")
+}
+function uniqyfy(arr : ICardResponce[]) : ICardResponce[] {
+	type cardContainer = {
+		names : {
+			[key : string] : true
+		},
+		card : ICardResponce
+	}
+	const cache : {[key: string]: cardContainer} = {}
+	arr.forEach(v=>{
+		if( cache[v.id]){
+			if(cache[v.id].names[v.name]){
+				return
+			}
+			cache[v.id].names[v.name] = true;
+			cache[v.id].card.name = cache[v.id].card.name + " // " + v.name
+			return
+		}
+		cache[v.id]= {
+			names : {[v.name]:true},
+			card : {...v}
+		}
+	})
+	return Object.keys(cache).map(v=>cache[v].card)
+}
 export const getDeckList = async (api: API, id:string): Promise<deckList | undefined> => {
 	return await api.doRequest<IDeckListResponce,deckList>(
 		"api/decks/"+id,
@@ -76,8 +121,8 @@ export const getDeckList = async (api: API, id:string): Promise<deckList | undef
 				name : t.data.name,
 				image : t.data.fullImage
 			},
-			cards : t.data.cards.map(v=>({
-				colors : v.color,
+			cards : uniqyfy(t.data.cards).map(v=>({
+				colors : getOrderOfColors(v.color.join("")),
 				name : v.name,
 				image : v.image,
 				typeLine : v.typeLine,
@@ -93,7 +138,7 @@ export const getDeckList = async (api: API, id:string): Promise<deckList | undef
 
 		})
 	)
-	
+
 }
 export const getDecks = async (api : API): Promise<decks[]> => {
 	return (await api.doRequest<decks[]>("api/decks",(t:any)=>t.data) || [])
@@ -116,7 +161,7 @@ export const createDeck = async(api:API,deck:insertDeck)=>{
 		.buildRequest("body",{
 			Name : deck.deck_name,
 			Commander : mainCommander.id,
-			SecondaryCommander : secondCommander && secondCommander.id 
+			SecondaryCommander : secondCommander && secondCommander.id
 		})
 		.buildRequest("converter",(t:any)=>t.data.deckId)
 	).run<number>()

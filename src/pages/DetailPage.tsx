@@ -34,7 +34,7 @@ export default class Products extends BasicComponent<ProductProps,productState> 
         this.productAdded     = this.productAdded.bind(this);
         this.getDecks         = this.getDecks.bind(this)
         this.state            = {modal:false,pushedButton:"deck"}
-         
+
     }
     modOnClick(cart: product, mod: number){
         const cartThing: cartItem = {id: cart.id, name: cart.name, price: "", priceNum : cart.price, quantity : 1, priceTotal : "", priceTotalNum : 0}
@@ -83,11 +83,11 @@ export default class Products extends BasicComponent<ProductProps,productState> 
         if(!card){
             return <></>
         }
-        
+
         const deckList = data[1]
-        let priceShow = <h3>Price: <Price price={card.price}/></h3>
+        let priceShow = <h3>Price: {card.price ? <Price price={card.price} /> : "N/A"}</h3>
         let addCartButton = <button onClick={this.modOnClick(card, 1)} className="btn btn-success float-right" id="buttonCart">Add to cart</button>
-        if (card.price === 0){
+        if (!card.price){
             priceShow = <h3/>
             addCartButton = <button className="btn btn-success float-right" id="buttonCart" disabled={true}>Add to cart</button>
         }
@@ -113,7 +113,7 @@ export default class Products extends BasicComponent<ProductProps,productState> 
                         <img className="img-fluid" src={card.image}/>
                     </Col>
                     <Col xs="4">
-                       
+
                         <h2 className="titleP magic-font">{card.name}<TextWithSymbols classSymbols="bigSymbol" text={card.mana.map(v => v.strSymbol).join("")}/></h2>
                         <h3 className="magic-font">{card.typeLine}</h3>
                         {this.renderAbilities(card)}
@@ -153,12 +153,12 @@ export default class Products extends BasicComponent<ProductProps,productState> 
         );
         return (
             <>
-                
-                <LoadSymbol<paramsForLoad,renderType> 
+
+                <LoadSymbol<paramsForLoad,renderType>
                     toRender={this.renderCard}
                     params={{cardId:this.props.match.params.id}}
                     getData={getData}
-                    
+
                 />
             </>
         );

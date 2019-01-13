@@ -15,7 +15,7 @@ type NewDeckProps = {match? : match<{cardId:string}>} & props
 type NewDeckState = {
 	autoCompleted : searchResult[][]
 	redirectTo? : number
-	
+
 }
 
 export default class NewDeck extends BasicPage<NewDeckProps,NewDeckState>{
@@ -35,28 +35,23 @@ export default class NewDeck extends BasicPage<NewDeckProps,NewDeckState>{
 			this.state.autoCompleted[version] = res;
 			this.easySetState({autoCompleted : this.state.autoCompleted})
 		}
-	} 
+	}
 	async submit(e : any){
 		e.preventDefault()
 		const test = new FormData(e.target)
 		const mainCommander = test.get("commander_name0")
-		const secondCommander = test.get("commander_name1")
 		const deckName = test.get("deck_name")
 		if(! (mainCommander && deckName) ){
 			return
 		}
 		if(! (
 			typeof mainCommander === "string" &&
-			typeof secondCommander === "string" &&
 			typeof deckName === "string"
 		)){
-			// tslint:disable-next-line:no-debugger
-			debugger;
-			return 
+			return
 		}
 		const res = await createDeck(this.props.APIS.req,{
 			commander_name_1 : mainCommander,
-			commander_name_2 : secondCommander,
 			deck_name : deckName
 
 		})
@@ -66,7 +61,7 @@ export default class NewDeck extends BasicPage<NewDeckProps,NewDeckState>{
 			}
 			this.easySetState({redirectTo:res})
 		}
-		
+
 	}
 	getItemValue(item : searchResult){
 		return item.id
@@ -92,7 +87,7 @@ export default class NewDeck extends BasicPage<NewDeckProps,NewDeckState>{
 				</Row>
 				{this.renderOptions(num)}
 			</FormGroup>
-			
+
 		)
 	}
 	render(){
