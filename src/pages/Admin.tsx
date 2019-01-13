@@ -46,17 +46,17 @@ export default class Admin extends BasicPage<props, { render: string}> {
                 <div className="tabs">
                     <ul className="nav nav-pills">
                         <li className="nav-item">
-                            <button color="secondary" className={this.tabClasses.Hangfire} onClick={this.setTabOnClick("Hangfire")} >hangfire</button>
+                            <button color="secondary" className={this.tabClasses.Hangfire} onClick={this.setTabOnClick("Hangfire")} >Manage updates</button>
                         </li>
 
                         <li className="nav-item">
-                            <button className={this.tabClasses.Create} onClick={this.setTabOnClick("Create")} >Create user</button>
+                            <button className={this.tabClasses.Create} onClick={this.setTabOnClick("Create")} >Create users</button>
                         </li>
                         <li className="nav-item">
-                            <button className={this.tabClasses.Delete} onClick={this.setTabOnClick("Delete")} >Edit / Delete user</button>
+                            <button className={this.tabClasses.Delete} onClick={this.setTabOnClick("Delete")} >Edit / Delete users</button>
                         </li>
                         <li className="nav-item">
-                            <button className={this.tabClasses.Stock} onClick={this.setTabOnClick("Stock")} >stock</button>
+                            <button className={this.tabClasses.Stock} onClick={this.setTabOnClick("Stock")} >Manage stock</button>
                         </li>
                     </ul>
                 </div>

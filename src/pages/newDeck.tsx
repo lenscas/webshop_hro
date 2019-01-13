@@ -110,7 +110,7 @@ export default class NewDeck extends BasicPage<NewDeckProps,NewDeckState>{
 					</Row>
 				</FormGroup>
 				{this.renderInput(0,"Main commander name")}
-				{this.renderInput(1,"Second commander name (partner)")}
+				{/* {this.renderInput(1,"Second commander name (partner)")} */}
 				<FormGroup>
 					<Row className="justify-content-center">
 						<Col xs={6}>
